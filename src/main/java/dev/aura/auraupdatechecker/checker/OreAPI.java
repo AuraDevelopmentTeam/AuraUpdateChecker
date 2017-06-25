@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -12,7 +13,6 @@ import org.spongepowered.api.plugin.PluginContainer;
 import dev.aura.auraupdatechecker.AuraUpdateChecker;
 import dev.aura.auraupdatechecker.util.PluginContainerUtil;
 import lombok.Cleanup;
-import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -21,11 +21,14 @@ public class OreAPI {
     public static final String PROJECT_CALL = "projects/<pluginId>";
     public static final int DEFAULT_TIMEOUT = 250;
 
-    @Getter
-    private static int errorCounter = 0;
+    private static AtomicInteger errorCounter = new AtomicInteger(0);
+
+    public static int getErrorCounter() {
+        return errorCounter.get();
+    }
 
     public static void resetErrorCounter() {
-        errorCounter = 0;
+        errorCounter.set(0);
     }
 
     public static boolean isOnOre(PluginContainer plugin) {
@@ -37,7 +40,7 @@ public class OreAPI {
 
             return connection.getResponseCode() == 200;
         } catch (ClassCastException | IOException e) {
-            if (errorCounter == 0) {
+            if (errorCounter.get() == 0) {
                 AuraUpdateChecker.getLogger().warn("Could not contact the Ore Repository API for plugin "
                         + PluginContainerUtil.getPluginString(plugin), e);
             } else {
@@ -45,7 +48,7 @@ public class OreAPI {
                         + PluginContainerUtil.getPluginString(plugin) + ": " + e.getClass().getName());
             }
 
-            errorCounter++;
+            errorCounter.incrementAndGet();
 
             return false;
         }
