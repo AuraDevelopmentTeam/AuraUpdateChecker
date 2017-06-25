@@ -95,8 +95,10 @@ public class AuraUpdateChecker {
 
     @Listener
     public void loadComplete(GameLoadCompleteEvent event) {
-        Task.builder().execute(() -> versionChecker.checkForPluginAvailability()).delay(5, TimeUnit.SECONDS).async()
-                .name(ID + "-availablity-check").submit(this);
+        Task task = Task.builder().execute(() -> versionChecker.checkForPluginAvailability()).delay(5, TimeUnit.SECONDS)
+                .async().name(ID + "-availablity-check").submit(this);
+
+        logger.debug("Started \"" + task.getName() + '"');
     }
 
     @Listener
