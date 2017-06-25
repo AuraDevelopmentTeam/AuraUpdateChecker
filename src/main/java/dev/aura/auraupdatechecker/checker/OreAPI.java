@@ -37,7 +37,7 @@ public class OreAPI {
             throws MalformedURLException, IOException {
         String url = API_URL + PluginContainerUtil.replacePluginPlaceHolders(call, plugin);
 
-        AuraUpdateChecker.getLogger().trace("Contacting URL " + url);
+        AuraUpdateChecker.getLogger().trace("Contacting URL: " + url);
 
         return (HttpsURLConnection) new URL(url).openConnection();
     }

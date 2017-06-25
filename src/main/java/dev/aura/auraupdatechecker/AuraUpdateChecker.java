@@ -1,6 +1,7 @@
 package dev.aura.auraupdatechecker;
 
 import java.nio.file.Path;
+import java.util.concurrent.TimeUnit;
 
 import org.bstats.MetricsLite;
 import org.slf4j.Logger;
@@ -94,7 +95,7 @@ public class AuraUpdateChecker {
 
     @Listener
     public void loadComplete(GameLoadCompleteEvent event) {
-        Task.builder().execute(() -> versionChecker.checkForPluginAvailability()).async()
+        Task.builder().execute(() -> versionChecker.checkForPluginAvailability()).delay(5, TimeUnit.SECONDS).async()
                 .name(ID + "-availablity-check").submit(this);
     }
 
