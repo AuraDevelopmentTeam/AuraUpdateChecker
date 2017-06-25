@@ -12,6 +12,7 @@ import org.spongepowered.api.plugin.PluginContainer;
 import dev.aura.auraupdatechecker.AuraUpdateChecker;
 import dev.aura.auraupdatechecker.util.PluginContainerUtil;
 import lombok.Cleanup;
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -19,6 +20,13 @@ public class OreAPI {
     public static final String API_URL = "https://ore.spongepowered.org/api/";
     public static final String PROJECT_CALL = "projects/<pluginId>";
     public static final int DEFAULT_TIMEOUT = 250;
+
+    @Getter
+    private static int errorCounter = 0;
+
+    public static void resetErrorCounter() {
+        errorCounter = 0;
+    }
 
     public static boolean isOnOre(PluginContainer plugin) {
         try {
@@ -29,15 +37,22 @@ public class OreAPI {
 
             return connection.getResponseCode() == 200;
         } catch (ClassCastException | IOException e) {
-            AuraUpdateChecker.getLogger().warn("Could not contact the Ore Repository API for plugin "
-                    + PluginContainerUtil.getPluginString(plugin), e);
+            if (errorCounter == 0) {
+                AuraUpdateChecker.getLogger().warn("Could not contact the Ore Repository API for plugin "
+                        + PluginContainerUtil.getPluginString(plugin), e);
+            } else {
+                AuraUpdateChecker.getLogger().warn("Could not contact the Ore Repository API for plugin "
+                        + PluginContainerUtil.getPluginString(plugin) + ": " + e.getClass().getName());
+            }
+
+            errorCounter++;
 
             return false;
         }
     }
 
     private static HttpsURLConnection getConnectionForCall(String call, PluginContainer plugin)
-            throws MalformedURLException, IOException {
+            throws ClassCastException, MalformedURLException, IOException {
         String url = API_URL + PluginContainerUtil.replacePluginPlaceHolders(call, plugin);
 
         AuraUpdateChecker.getLogger().trace("Contacting URL: " + url);

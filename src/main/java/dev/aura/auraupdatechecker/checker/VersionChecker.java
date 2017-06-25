@@ -27,6 +27,8 @@ public class VersionChecker {
             return;
         }
 
+        OreAPI.resetErrorCounter();
+
         checkablePlugins = availablePlugins.parallelStream().filter(plugin -> {
             final String pluginName = PluginContainerUtil.getPluginString(plugin);
             logger.trace("Started checking if plugin " + pluginName + " is available on Ore Repository.");
@@ -41,6 +43,12 @@ public class VersionChecker {
 
             return isOnOre;
         }).collect(Collectors.toList());
+
+        if (OreAPI.getErrorCounter() == availablePlugins.size()) {
+            logger.warn(
+                    "It appears that your internet connection is down or not working properly, because all HTTPS requests failed.");
+            logger.info("If it is working again, run \"/uc reload\", to reenable update checking.");
+        }
 
         logger.debug("Finished checking plugins for availability on Ore Repository!");
         logger.debug(checkablePlugins.size() + " plugins available for update checks!");
