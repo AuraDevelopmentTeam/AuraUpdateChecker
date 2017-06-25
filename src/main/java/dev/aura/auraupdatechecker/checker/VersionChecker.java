@@ -27,12 +27,16 @@ public class VersionChecker {
             return;
         }
 
-        checkablePlugins = availablePlugins.stream().filter(plugin -> {
-            boolean isOnOre = OreAPI.isOnOre(plugin);
+        checkablePlugins = availablePlugins.parallelStream().filter(plugin -> {
+            final String pluginName = PluginContainerUtil.getPluginString(plugin);
+            logger.trace("Started checking if plugin " + pluginName + " is available on Ore Repository.");
+
+            final boolean isOnOre = OreAPI.isOnOre(plugin);
 
             if (isOnOre) {
-                logger.debug(
-                        "Plugin " + PluginContainerUtil.getPluginString(plugin) + " is available on Ore Repository.");
+                logger.debug("Plugin " + pluginName + " is available on Ore Repository.");
+            } else {
+                logger.trace("Plugin " + pluginName + " is NOT available on Ore Repository.");
             }
 
             return isOnOre;
