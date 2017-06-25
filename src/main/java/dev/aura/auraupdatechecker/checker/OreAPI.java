@@ -2,6 +2,7 @@ package dev.aura.auraupdatechecker.checker;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -17,11 +18,13 @@ import lombok.experimental.UtilityClass;
 public class OreAPI {
     public static final String API_URL = "https://ore.spongepowered.org/api/";
     public static final String PROJECT_CALL = "projects/<pluginId>";
+    public static final int DEFAULT_TIMEOUT = 250;
 
     public static boolean isOnOre(PluginContainer plugin) {
         try {
             @Cleanup("disconnect")
             HttpsURLConnection connection = getConnectionForCall(PROJECT_CALL, plugin);
+            applyDefaultSettings(connection);
             connection.connect();
 
             return connection.getResponseCode() == 200;
@@ -40,5 +43,13 @@ public class OreAPI {
         AuraUpdateChecker.getLogger().trace("Contacting URL: " + url);
 
         return (HttpsURLConnection) new URL(url).openConnection();
+    }
+
+    private static void applyDefaultSettings(HttpsURLConnection connection) throws ProtocolException {
+        connection.setRequestMethod("GET");
+        connection.setConnectTimeout(DEFAULT_TIMEOUT);
+        connection.setReadTimeout(DEFAULT_TIMEOUT);
+        connection.setUseCaches(false);
+        connection.setInstanceFollowRedirects(true);
     }
 }
