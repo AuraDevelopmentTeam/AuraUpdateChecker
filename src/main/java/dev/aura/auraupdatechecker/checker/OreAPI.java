@@ -25,7 +25,7 @@ public class OreAPI {
             connection.connect();
 
             return connection.getResponseCode() == 200;
-        } catch (IOException e) {
+        } catch (ClassCastException | IOException e) {
             AuraUpdateChecker.getLogger().warn("Could not contact the Ore Repository API for plugin "
                     + PluginContainerUtil.getPluginString(plugin), e);
 
@@ -36,6 +36,8 @@ public class OreAPI {
     private static HttpsURLConnection getConnectionForCall(String call, PluginContainer plugin)
             throws MalformedURLException, IOException {
         String url = API_URL + PluginContainerUtil.replacePluginPlaceHolders(call, plugin);
+
+        AuraUpdateChecker.getLogger().trace("Contacting URL " + url);
 
         return (HttpsURLConnection) new URL(url).openConnection();
     }
