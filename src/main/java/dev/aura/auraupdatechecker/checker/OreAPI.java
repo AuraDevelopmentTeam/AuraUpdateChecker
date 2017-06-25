@@ -40,15 +40,13 @@ public class OreAPI {
 
             return connection.getResponseCode() == 200;
         } catch (ClassCastException | IOException e) {
-            if (errorCounter.get() == 0) {
+            if (errorCounter.incrementAndGet() == 1) {
                 AuraUpdateChecker.getLogger().warn("Could not contact the Ore Repository API for plugin "
                         + PluginContainerUtil.getPluginString(plugin), e);
             } else {
                 AuraUpdateChecker.getLogger().warn("Could not contact the Ore Repository API for plugin "
                         + PluginContainerUtil.getPluginString(plugin) + ": " + e.getClass().getName());
             }
-
-            errorCounter.incrementAndGet();
 
             return false;
         }
