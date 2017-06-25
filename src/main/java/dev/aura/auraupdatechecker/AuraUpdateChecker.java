@@ -94,10 +94,8 @@ public class AuraUpdateChecker {
 
     @Listener
     public void loadComplete(GameLoadCompleteEvent event) {
-        Task.builder().execute(() -> {
-            versionChecker.checkForPluginAvailability();
-            logger.debug("Finished checking plugins for availability");
-        }).async().submit(this);
+        Task.builder().execute(() -> versionChecker.checkForPluginAvailability()).async()
+                .name(ID + "-availablity-check").submit(this);
     }
 
     @Listener

@@ -9,6 +9,7 @@ import javax.net.ssl.HttpsURLConnection;
 import org.spongepowered.api.plugin.PluginContainer;
 
 import dev.aura.auraupdatechecker.AuraUpdateChecker;
+import dev.aura.auraupdatechecker.util.PluginContainerUtil;
 import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
 
@@ -25,8 +26,8 @@ public class OreAPI {
 
             return connection.getResponseCode() == 200;
         } catch (IOException e) {
-            AuraUpdateChecker.getLogger()
-                    .warn("Could not contact the Ore Repository API for plugin " + plugin.getName(), e);
+            AuraUpdateChecker.getLogger().warn("Could not contact the Ore Repository API for plugin "
+                    + PluginContainerUtil.getPluginString(plugin), e);
 
             return false;
         }
@@ -34,7 +35,7 @@ public class OreAPI {
 
     private static HttpsURLConnection getConnectionForCall(String call, PluginContainer plugin)
             throws MalformedURLException, IOException {
-        String url = API_URL + call.replace("<pluginId>", plugin.getId());
+        String url = API_URL + PluginContainerUtil.replacePluginPlaceHolders(call, plugin);
 
         return (HttpsURLConnection) new URL(url).openConnection();
     }
