@@ -1,4 +1,4 @@
-package dev.aura.auraupdatechecker;
+package dev.aura.updatechecker;
 
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +21,7 @@ import org.spongepowered.api.scheduler.Task;
 
 import com.google.inject.Inject;
 
-import dev.aura.auraupdatechecker.checker.VersionChecker;
+import dev.aura.updatechecker.checker.VersionChecker;
 import lombok.Getter;
 import lombok.NonNull;
 

@@ -1,4 +1,4 @@
-package dev.aura.auraupdatechecker.version;
+package dev.aura.updatechecker.version;
 
 public class Version implements Comparable<Version> {
     public Version(String version) {

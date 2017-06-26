@@ -1,4 +1,4 @@
-package dev.aura.auraupdatechecker.checker;
+package dev.aura.updatechecker.checker;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -10,8 +10,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.spongepowered.api.plugin.PluginContainer;
 
-import dev.aura.auraupdatechecker.AuraUpdateChecker;
-import dev.aura.auraupdatechecker.util.PluginContainerUtil;
+import dev.aura.updatechecker.AuraUpdateChecker;
+import dev.aura.updatechecker.util.PluginContainerUtil;
 import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
 

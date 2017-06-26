@@ -1,4 +1,4 @@
-package dev.aura.auraupdatechecker.util;
+package dev.aura.updatechecker.util;
 
 import java.util.HashMap;
 import java.util.Map;

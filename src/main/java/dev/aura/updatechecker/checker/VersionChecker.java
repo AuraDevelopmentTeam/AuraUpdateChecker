@@ -1,4 +1,4 @@
-package dev.aura.auraupdatechecker.checker;
+package dev.aura.updatechecker.checker;
 
 import java.util.Collection;
 import java.util.List;
@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.spongepowered.api.plugin.PluginContainer;
 
-import dev.aura.auraupdatechecker.AuraUpdateChecker;
-import dev.aura.auraupdatechecker.util.PluginContainerUtil;
+import dev.aura.updatechecker.AuraUpdateChecker;
+import dev.aura.updatechecker.util.PluginContainerUtil;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
