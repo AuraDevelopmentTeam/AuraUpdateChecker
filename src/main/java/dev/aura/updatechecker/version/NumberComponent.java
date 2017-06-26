@@ -1,20 +1,29 @@
 package dev.aura.updatechecker.version;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class NumberComponent implements VersionComponent {
     protected final int number;
-    
-    protected NumberComponent(String number) {
-        this.number = Integer.parseInt(number);
-    }
-    
+
     @Override
     public final VersionComponentType getVersionComponentType() {
         return VersionComponentType.NUMBER;
     }
-    
+
     @Override
-    public int compareTo(VersionComponent arg0) {
-        // TODO Auto-generated method stub
-        return 0;
+    public int compareTo(VersionComponent that) {
+        VersionComponentType thatType = that.getVersionComponentType();
+
+        if (thatType == VersionComponentType.LIST)
+            return that.compareTo(this);
+
+        else if (thatType == VersionComponentType.STRING)
+            return 1;
+
+        NumberComponent thatNumber = (NumberComponent) that;
+
+        return Integer.compare(number, thatNumber.number);
     }
 }
