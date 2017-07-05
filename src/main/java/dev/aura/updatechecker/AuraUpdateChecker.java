@@ -25,13 +25,14 @@ import dev.aura.updatechecker.checker.VersionChecker;
 import lombok.Getter;
 import lombok.NonNull;
 
-@Plugin(id = AuraUpdateChecker.ID, name = AuraUpdateChecker.NAME, version = AuraUpdateChecker.VERSION, description = AuraUpdateChecker.DESCRIPTION, authors = {
+@Plugin(id = AuraUpdateChecker.ID, name = AuraUpdateChecker.NAME, version = AuraUpdateChecker.VERSION, description = AuraUpdateChecker.DESCRIPTION, url = AuraUpdateChecker.URL, authors = {
         AuraUpdateChecker.AUTHOR_BRAINSTONE })
 public class AuraUpdateChecker {
     public static final String ID = "@id@";
     public static final String NAME = "@name@";
     public static final String VERSION = "@version@";
     public static final String DESCRIPTION = "@description@";
+    public static final String URL = "https://github.com/AuraDevelopmentTeam/AuraUpdateChecker";
     public static final String AUTHOR_BRAINSTONE = "The_BrainStone";
 
     @NonNull
