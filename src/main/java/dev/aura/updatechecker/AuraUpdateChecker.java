@@ -3,7 +3,7 @@ package dev.aura.updatechecker;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 
-import org.bstats.MetricsLite;
+import org.bstats.sponge.MetricsLite;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
