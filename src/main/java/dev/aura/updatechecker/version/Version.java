@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Version implements Comparable<Version> {
-    public static final NumberComponent ZERO = new NumberComponent(0);
+    protected static final NumberComponent ZERO = new NumberComponent(0);
 
     private static final Pattern[] listSeparators = new Pattern[] { Pattern.compile("_"), Pattern.compile("-"),
             Pattern.compile("\\."), Pattern.compile("(?=\\d)(?<=[a-z])|(?=[a-z])(?<=\\d)", Pattern.CASE_INSENSITIVE) };
