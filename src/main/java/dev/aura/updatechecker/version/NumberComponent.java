@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class NumberComponent implements VersionComponent {
+class NumberComponent implements VersionComponent {
     protected final int number;
 
     @Override

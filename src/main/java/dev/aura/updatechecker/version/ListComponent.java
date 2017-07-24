@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class ListComponent implements VersionComponent {
+class ListComponent implements VersionComponent {
     protected final List<VersionComponent> components;
 
     @Override

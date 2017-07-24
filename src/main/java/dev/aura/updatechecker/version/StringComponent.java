@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class StringComponent implements VersionComponent {
+class StringComponent implements VersionComponent {
     protected final String string;
 
     @Override
