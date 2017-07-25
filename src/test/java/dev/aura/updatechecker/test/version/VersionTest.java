@@ -44,6 +44,17 @@ public class VersionTest {
     }
 
     @Test
+    public void bigIntTest() {
+        final Version[] expectedOrder = Arrays.asList(
+                "1234567890123456789012345678901234567890123456789012345678901234567890",
+                "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+                "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")
+                .stream().map(Version::new).toArray(Version[]::new);
+
+        testArray(expectedOrder);
+    }
+
+    @Test
     public void duplicateTest() {
         final Version[] expectedOrder = Arrays.asList("1.0.0", "1.0.0", "2.0.0", "2.0.0", "3.0.0", "3.0.0").stream()
                 .map(Version::new).toArray(Version[]::new);
@@ -114,11 +125,11 @@ public class VersionTest {
 
     @Test
     public void toStringTest() {
-        final Version expectedOrder = new Version("1.2.3_DEV");
+        final Version version = new Version("1.2.3_DEV");
 
         assertEquals(
                 "Version(input=1.2.3_DEV, component=ListComponent([ListComponent([NumberComponent(1), NumberComponent(2), NumberComponent(3)]), StringComponent(DEV)]))",
-                expectedOrder.toString());
+                version.toString());
     }
 
     // TODO: More tests for more cases!

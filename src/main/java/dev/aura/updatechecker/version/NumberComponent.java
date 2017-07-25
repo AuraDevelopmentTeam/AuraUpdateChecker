@@ -1,5 +1,7 @@
 package dev.aura.updatechecker.version;
 
+import java.math.BigInteger;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -7,7 +9,7 @@ import lombok.ToString;
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(includeFieldNames = false)
 public class NumberComponent implements VersionComponent {
-    protected final int number;
+    protected final BigInteger number;
 
     @Override
     public final VersionComponentType getVersionComponentType() {
@@ -25,6 +27,6 @@ public class NumberComponent implements VersionComponent {
 
         NumberComponent thatNumber = (NumberComponent) that;
 
-        return Integer.compare(number, thatNumber.number);
+        return number.compareTo(thatNumber.number);
     }
 }

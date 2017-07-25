@@ -1,5 +1,6 @@
 package dev.aura.updatechecker.version;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,7 +10,7 @@ import lombok.ToString;
 
 @ToString
 public class Version implements Comparable<Version> {
-    protected static final NumberComponent ZERO = new NumberComponent(0);
+    protected static final NumberComponent ZERO = new NumberComponent(BigInteger.ZERO);
 
     private static final Pattern[] listSeparators = new Pattern[] { Pattern.compile("_"), Pattern.compile("-"),
             Pattern.compile("\\."), Pattern.compile("(?=\\d)(?<=[a-z])|(?=[a-z])(?<=\\d)", Pattern.CASE_INSENSITIVE) };
@@ -48,7 +49,7 @@ public class Version implements Comparable<Version> {
         }
 
         if (number.matcher(version).find())
-            return new NumberComponent(Integer.parseInt(version));
+            return new NumberComponent(new BigInteger(version));
         else
             return new StringComponent(version);
     }
