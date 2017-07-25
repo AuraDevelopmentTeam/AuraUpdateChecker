@@ -1,8 +1,8 @@
 package dev.aura.updatechecker.checker;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -39,7 +39,7 @@ public class OreAPI {
             connection.connect();
 
             return connection.getResponseCode() == 200;
-        } catch (ClassCastException | IOException e) {
+        } catch (ClassCastException | IOException | URISyntaxException e) {
             if (errorCounter.incrementAndGet() == 1) {
                 AuraUpdateChecker.getLogger().warn("Could not contact the Ore Repository API for plugin "
                         + PluginContainerUtil.getPluginString(plugin), e);
@@ -53,12 +53,16 @@ public class OreAPI {
     }
 
     private static HttpsURLConnection getConnectionForCall(String call, PluginContainer plugin)
-            throws ClassCastException, MalformedURLException, IOException {
-        String url = API_URL + PluginContainerUtil.replacePluginPlaceHolders(call, plugin);
+            throws ClassCastException, IOException, URISyntaxException {
+        String urlStr = API_URL + PluginContainerUtil.replacePluginPlaceHolders(call, plugin);
 
-        AuraUpdateChecker.getLogger().trace("Contacting URL: " + url);
+        AuraUpdateChecker.getLogger().trace("Contacting URL: " + urlStr);
 
-        return (HttpsURLConnection) new URL(url).openConnection();
+        URL url = new URL(urlStr);
+        // Verify URL
+        url.toURI();
+
+        return (HttpsURLConnection) url.openConnection();
     }
 
     private static void applyDefaultSettings(HttpsURLConnection connection) throws ProtocolException {
