@@ -2,9 +2,11 @@ package dev.aura.updatechecker.version;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-class NumberComponent implements VersionComponent {
+@ToString(includeFieldNames = false)
+public class NumberComponent implements VersionComponent {
     protected final int number;
 
     @Override
@@ -17,8 +19,7 @@ class NumberComponent implements VersionComponent {
         VersionComponentType thatType = that.getVersionComponentType();
 
         if (thatType == VersionComponentType.LIST)
-            return that.compareTo(this);
-
+            return -that.compareTo(this);
         else if (thatType == VersionComponentType.STRING)
             return 1;
 

@@ -5,6 +5,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import lombok.ToString;
+
+@ToString
 public class Version implements Comparable<Version> {
     protected static final NumberComponent ZERO = new NumberComponent(0);
 
@@ -12,15 +15,25 @@ public class Version implements Comparable<Version> {
             Pattern.compile("\\."), Pattern.compile("(?=\\d)(?<=[a-z])|(?=[a-z])(?<=\\d)", Pattern.CASE_INSENSITIVE) };
     private static final Pattern number = Pattern.compile("^\\d+$");
 
+    private final String input;
     private final VersionComponent component;
 
     public Version(String version) {
+        input = version;
         component = parse(version);
     }
 
     @Override
     public int compareTo(Version other) {
         return component.compareTo(other.component);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if ((other == null) || !(other instanceof Version))
+            return false;
+
+        return compareTo((Version) other) == 0;
     }
 
     private static VersionComponent parse(String version) {

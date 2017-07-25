@@ -3,10 +3,13 @@ package dev.aura.updatechecker.version;
 import java.util.Arrays;
 import java.util.List;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
-@RequiredArgsConstructor
-class ListComponent implements VersionComponent {
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(includeFieldNames = false)
+public class ListComponent implements VersionComponent {
     protected final List<VersionComponent> components;
 
     @Override
