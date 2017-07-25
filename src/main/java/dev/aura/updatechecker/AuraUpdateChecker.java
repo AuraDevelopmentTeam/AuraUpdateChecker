@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.bstats.sponge.MetricsLite;
 import org.slf4j.Logger;
+import org.slf4j.helpers.NOPLogger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.config.DefaultConfig;
@@ -37,26 +38,29 @@ public class AuraUpdateChecker {
 
     @NonNull
     @Getter
-    private static AuraUpdateChecker instance = null;
+    protected static AuraUpdateChecker instance = null;
 
     @Inject
     protected MetricsLite metrics;
     @Inject
     @NonNull
-    private Logger logger;
+    protected Logger logger;
     @Inject
     @DefaultConfig(sharedRoot = false)
     @NonNull
-    private Path configFile;
+    protected Path configFile;
     @Inject
     @ConfigDir(sharedRoot = false)
     @NonNull
-    private Path configDir;
+    protected Path configDir;
     @NonNull
-    private VersionChecker versionChecker;
+    protected VersionChecker versionChecker;
 
     public static Logger getLogger() {
-        return instance.logger;
+        if ((instance == null) || (instance.logger == null))
+            return NOPLogger.NOP_LOGGER;
+        else
+            return instance.logger;
     }
 
     public static Path getConfigFile() {
