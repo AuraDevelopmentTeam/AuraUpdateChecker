@@ -17,6 +17,23 @@ import dev.aura.updatechecker.version.Version;
 public class VersionTest {
     private final static int SHUFFLES = 10000;
 
+    private static void testArray(Version[] expectedOrder) {
+        List<Version> versions = new ArrayList<>(Arrays.asList(expectedOrder));
+        Version[] sortedVersions;
+
+        for (int i = 0; i < SHUFFLES; ++i) {
+            Collections.shuffle(versions);
+            sortedVersions = versions.stream().sorted().toArray(Version[]::new);
+
+            try {
+                assertArrayEquals(expectedOrder, sortedVersions);
+            } catch (ArrayComparisonFailure e) {
+                assertArrayEquals("Sorting failed for shuffle:\n" + versions + "\nSorted result:\n"
+                        + Arrays.toString(sortedVersions) + '\n', expectedOrder, sortedVersions);
+            }
+        }
+    }
+
     @Test
     public void basicTest() {
         final Version[] expectedOrder = Arrays
@@ -95,22 +112,14 @@ public class VersionTest {
         testArray(expectedOrder);
     }
 
-    // TODO: More tests for more cases!
+    @Test
+    public void toStringTest() {
+        final Version expectedOrder = new Version("1.2.3_DEV");
 
-    private static void testArray(Version[] expectedOrder) {
-        List<Version> versions = new ArrayList<>(Arrays.asList(expectedOrder));
-        Version[] sortedVersions;
-
-        for (int i = 0; i < SHUFFLES; ++i) {
-            Collections.shuffle(versions);
-            sortedVersions = versions.stream().sorted().toArray(Version[]::new);
-
-            try {
-                assertArrayEquals(expectedOrder, sortedVersions);
-            } catch (ArrayComparisonFailure e) {
-                assertArrayEquals("Sorting failed for shuffle:\n" + versions + "\nSorted result:\n"
-                        + Arrays.toString(sortedVersions) + '\n', expectedOrder, sortedVersions);
-            }
-        }
+        assertEquals(
+                "Version(input=1.2.3_DEV, component=ListComponent([ListComponent([NumberComponent(1), NumberComponent(2), NumberComponent(3)]), StringComponent(DEV)]))",
+                expectedOrder.toString());
     }
+
+    // TODO: More tests for more cases!
 }
