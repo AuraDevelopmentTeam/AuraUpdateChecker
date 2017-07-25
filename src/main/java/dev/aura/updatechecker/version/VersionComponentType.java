@@ -1,5 +1,5 @@
 package dev.aura.updatechecker.version;
 
-enum VersionComponentType {
+public enum VersionComponentType {
     LIST, NUMBER, STRING;
 }
