@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +32,20 @@ public class OreAPITest {
         assertFalse("Expected thisIDdoesntexistbfjsdgbhjbhghhsfgdsghfh not to be available",
                 OreAPI.isOnOre(nonExistingContainer));
         assertEquals("No errors should have happend", 0, OreAPI.getErrorCounter());
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void constructorTest() throws Throwable {
+        try {
+            Constructor<OreAPI> contructor = OreAPI.class.getDeclaredConstructor();
+            contructor.setAccessible(true);
+            contructor.newInstance();
+        } catch (InvocationTargetException e) {
+            if (e.getCause().getClass() == UnsupportedOperationException.class)
+                throw e.getCause();
+            else
+                throw e;
+        }
     }
 
     @Test
