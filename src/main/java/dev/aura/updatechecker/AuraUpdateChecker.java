@@ -15,12 +15,14 @@ import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.SpongeEventFactory;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.event.game.GameReloadEvent;
-import org.spongepowered.api.event.game.state.GameConstructionEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameLoadCompleteEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.Task;
 
 @Plugin(
@@ -41,6 +43,7 @@ public class AuraUpdateChecker {
 
   @NonNull @Getter protected static AuraUpdateChecker instance = null;
 
+  @Inject @NonNull private PluginContainer container;
   @Inject protected Metrics2 metrics;
   @Inject @NonNull protected Logger logger;
 
@@ -55,6 +58,12 @@ public class AuraUpdateChecker {
   protected Path configDir;
 
   @NonNull protected VersionChecker versionChecker;
+
+  public AuraUpdateChecker() {
+    if (instance != null) throw new IllegalStateException("Instance already exists!");
+
+    instance = this;
+  }
 
   public static Logger getLogger() {
     if ((instance == null) || (instance.logger == null)) return NOPLogger.NOP_LOGGER;
@@ -71,11 +80,6 @@ public class AuraUpdateChecker {
 
   public static VersionChecker getVersionChecker() {
     return instance.versionChecker;
-  }
-
-  @Listener
-  public void gameConstruct(GameConstructionEvent event) {
-    instance = this;
   }
 
   @Listener
@@ -111,7 +115,10 @@ public class AuraUpdateChecker {
 
   @Listener
   public void reload(GameReloadEvent event) throws Exception {
-    Cause cause = Cause.source(this).build();
+    Cause cause =
+        Cause.builder()
+            .append(this)
+            .build(EventContext.builder().add(EventContextKeys.PLUGIN, container).build());
 
     // Unregistering everything
     GameStoppingEvent gameStoppingEvent = SpongeEventFactory.createGameStoppingEvent(cause);
