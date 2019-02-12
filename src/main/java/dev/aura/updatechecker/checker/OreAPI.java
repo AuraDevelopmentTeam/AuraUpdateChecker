@@ -14,7 +14,7 @@ import org.spongepowered.api.plugin.PluginContainer;
 
 @UtilityClass
 public class OreAPI {
-  public static final String API_URL = "https://ore.spongepowered.org/api/";
+  public static final String API_URL = "https://ore.spongepowered.org/api/v1/";
   public static final String PROJECT_CALL = "projects/<pluginId>";
   public static final int DEFAULT_TIMEOUT = 250;
 
