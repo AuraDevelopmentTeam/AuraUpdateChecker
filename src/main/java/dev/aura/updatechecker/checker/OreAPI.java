@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.net.ssl.HttpsURLConnection;
 import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
+import org.slf4j.Logger;
 import org.spongepowered.api.plugin.PluginContainer;
 
 @UtilityClass
@@ -40,26 +41,12 @@ public class OreAPI {
     try {
       @Cleanup("disconnect")
       HttpsURLConnection connection = getConnectionForCall(PROJECT_CALL, plugin);
-      applyDefaultSettings(connection);
       connection.setRequestMethod("HEAD"); // We don't care about the content yet
       connection.connect();
 
       return connection.getResponseCode() == 200;
     } catch (ClassCastException | IOException | URISyntaxException e) {
-      if (errorCounter.incrementAndGet() == 1) {
-        AuraUpdateChecker.getLogger()
-            .warn(
-                "Could not contact the Ore Repository API for plugin "
-                    + PluginContainerUtil.getPluginString(plugin),
-                e);
-      } else {
-        AuraUpdateChecker.getLogger()
-            .warn(
-                "Could not contact the Ore Repository API for plugin "
-                    + PluginContainerUtil.getPluginString(plugin)
-                    + ": "
-                    + e.getClass().getName());
-      }
+      printErrorMessage(plugin, e);
 
       return false;
     }
@@ -69,7 +56,6 @@ public class OreAPI {
     try {
       @Cleanup("disconnect")
       HttpsURLConnection connection = getConnectionForCall(PROJECT_CALL, plugin);
-      applyDefaultSettings(connection);
       connection.connect();
 
       final String recommendedVersion =
@@ -90,20 +76,7 @@ public class OreAPI {
 
       return Optional.of(new Version(recommendedVersion));
     } catch (ClassCastException | IOException | URISyntaxException | IllegalStateException e) {
-      if (errorCounter.incrementAndGet() == 1) {
-        AuraUpdateChecker.getLogger()
-            .warn(
-                "Could not contact the Ore Repository API for plugin "
-                    + PluginContainerUtil.getPluginString(plugin),
-                e);
-      } else {
-        AuraUpdateChecker.getLogger()
-            .warn(
-                "Could not contact the Ore Repository API for plugin "
-                    + PluginContainerUtil.getPluginString(plugin)
-                    + ": "
-                    + e.getClass().getName());
-      }
+      printErrorMessage(plugin, e);
 
       return Optional.empty();
     }
@@ -119,7 +92,10 @@ public class OreAPI {
     // Verify URL
     url.toURI();
 
-    return (HttpsURLConnection) url.openConnection();
+    final HttpsURLConnection httpsConnection = (HttpsURLConnection) url.openConnection();
+    applyDefaultSettings(httpsConnection);
+
+    return httpsConnection;
   }
 
   private static void applyDefaultSettings(HttpsURLConnection connection) throws ProtocolException {
@@ -128,5 +104,22 @@ public class OreAPI {
     connection.setReadTimeout(DEFAULT_TIMEOUT);
     connection.setUseCaches(false);
     connection.setInstanceFollowRedirects(true);
+  }
+
+  private static void printErrorMessage(PluginContainer plugin, Throwable e) {
+    final Logger logger = AuraUpdateChecker.getLogger();
+
+    if (errorCounter.incrementAndGet() == 1) {
+      logger.warn(
+          "Could not contact the Ore Repository API for plugin "
+              + PluginContainerUtil.getPluginString(plugin),
+          e);
+    } else {
+      logger.warn(
+          "Could not contact the Ore Repository API for plugin "
+              + PluginContainerUtil.getPluginString(plugin)
+              + ": "
+              + e.getClass().getName());
+    }
   }
 }
