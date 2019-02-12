@@ -15,7 +15,7 @@ public class VersionCheckerTest {
                 new DummyPluginContainer("error!&!&&!&##"),
                 new DummyPluginContainer("error!&!&&!&##")));
 
-    checker.checkForPluginAvailability();
+    checker.checkForPluginAvailability(null);
 
     assertEquals("Expected 3 errors", 3, OreAPI.getErrorCounter());
   }
@@ -29,7 +29,7 @@ public class VersionCheckerTest {
                 new DummyPluginContainer("notavailablegfndfngkd"),
                 new DummyPluginContainer("error!&!&&!&##")));
 
-    checker.checkForPluginAvailability();
+    checker.checkForPluginAvailability(null);
 
     assertEquals("Expected 1 error", 1, OreAPI.getErrorCounter());
   }
