@@ -1,12 +1,12 @@
 apply from: "GradleCommon/common.gradle"
 
 repositories {
-    maven {
-        name "AuraDevelopmentTeam"
-        url "https://maven.jnc.world"
-    }
+    // Additional repositories
 }
 
 dependencies {
+    shadow("dev.aura.lib.messagestranslator:MessagesTranslator:${messagesTranslator_version}") {
+        transitive = false
+    }
     shadow "dev.aura.lib.version:VersionLib:${versionLib_version}"
 }
