@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.NonNull;
-import org.bstats.sponge.MetricsLite;
+import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
 import org.slf4j.helpers.NOPLogger;
 import org.spongepowered.api.Sponge;
@@ -41,7 +41,7 @@ public class AuraUpdateChecker {
 
   @NonNull @Getter protected static AuraUpdateChecker instance = null;
 
-  @Inject protected MetricsLite metrics;
+  @Inject protected Metrics2 metrics;
   @Inject @NonNull protected Logger logger;
 
   @Inject
