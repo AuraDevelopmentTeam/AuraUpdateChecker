@@ -4,15 +4,30 @@ import dev.aura.updatechecker.AuraUpdateChecker;
 import dev.aura.updatechecker.util.PluginContainerUtil;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.scheduler.Task;
 
 @RequiredArgsConstructor
 public class VersionChecker {
   private final Collection<PluginContainer> availablePlugins;
   private List<PluginContainer> checkablePlugins;
+
+  public void start() {
+    // Starting new task to discover checkable plugins
+    Task task =
+        Task.builder()
+            .execute(this::checkForPluginAvailability)
+            .delay(5, TimeUnit.SECONDS)
+            .async()
+            .name(AuraUpdateChecker.ID + "-availablity-check")
+            .submit(this);
+
+    AuraUpdateChecker.getLogger().debug("Started task \"" + task.getName() + '"');
+  }
 
   public void checkForPluginAvailability() {
     final Logger logger = AuraUpdateChecker.getLogger();

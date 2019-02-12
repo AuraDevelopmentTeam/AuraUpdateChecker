@@ -3,7 +3,6 @@ package dev.aura.updatechecker;
 import com.google.inject.Inject;
 import dev.aura.updatechecker.checker.VersionChecker;
 import java.nio.file.Path;
-import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bstats.sponge.Metrics2;
@@ -19,11 +18,10 @@ import org.spongepowered.api.event.cause.EventContext;
 import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
-import org.spongepowered.api.event.game.state.GameLoadCompleteEvent;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
-import org.spongepowered.api.scheduler.Task;
 
 @Plugin(
   id = AuraUpdateChecker.ID,
@@ -95,22 +93,14 @@ public class AuraUpdateChecker {
       logger.info("Things might not work properly!");
     }
 
-    versionChecker = new VersionChecker(Sponge.getPluginManager().getPlugins());
-
     logger.info("Loaded successfully!");
   }
 
   @Listener
-  public void loadComplete(GameLoadCompleteEvent event) {
-    Task task =
-        Task.builder()
-            .execute(() -> versionChecker.checkForPluginAvailability())
-            .delay(5, TimeUnit.SECONDS)
-            .async()
-            .name(ID + "-availablity-check")
-            .submit(this);
+  public void serverStarted(GameStartedServerEvent event) {
+    versionChecker = new VersionChecker(Sponge.getPluginManager().getPlugins());
 
-    logger.debug("Started \"" + task.getName() + '"');
+    versionChecker.start();
   }
 
   @Listener
@@ -128,9 +118,9 @@ public class AuraUpdateChecker {
     GameInitializationEvent gameInitializationEvent =
         SpongeEventFactory.createGameInitializationEvent(cause);
     init(gameInitializationEvent);
-    GameLoadCompleteEvent gameLoadCompleteEvent =
-        SpongeEventFactory.createGameLoadCompleteEvent(cause);
-    loadComplete(gameLoadCompleteEvent);
+    GameStartedServerEvent gameStartedServerEvent =
+        SpongeEventFactory.createGameStartedServerEvent(cause);
+    serverStarted(gameStartedServerEvent);
 
     logger.info("Reloaded successfully!");
   }
