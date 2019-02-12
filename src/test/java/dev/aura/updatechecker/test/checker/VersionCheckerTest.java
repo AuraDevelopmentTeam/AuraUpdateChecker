@@ -2,31 +2,37 @@ package dev.aura.updatechecker.test.checker;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-
-import org.junit.Test;
-
 import dev.aura.updatechecker.checker.OreAPI;
 import dev.aura.updatechecker.checker.VersionChecker;
+import java.util.Arrays;
+import org.junit.Test;
 
 public class VersionCheckerTest {
-    @Test
-    public void allErrorTest() {
-        VersionChecker checker = new VersionChecker(Arrays.asList(new DummyPluginContainer("error!&!&&!&##"),
-                new DummyPluginContainer("error!&!&&!&##"), new DummyPluginContainer("error!&!&&!&##")));
+  @Test
+  public void allErrorTest() {
+    VersionChecker checker =
+        new VersionChecker(
+            Arrays.asList(
+                new DummyPluginContainer("error!&!&&!&##"),
+                new DummyPluginContainer("error!&!&&!&##"),
+                new DummyPluginContainer("error!&!&&!&##")));
 
-        checker.checkForPluginAvailability();
+    checker.checkForPluginAvailability();
 
-        assertEquals("Expected 3 errors", 3, OreAPI.getErrorCounter());
-    }
-    
-    @Test
-    public void availabilityTest() {
-        VersionChecker checker = new VersionChecker(Arrays.asList(new DummyPluginContainer("invsync"),
-                new DummyPluginContainer("notavailablegfndfngkd"), new DummyPluginContainer("error!&!&&!&##")));
+    assertEquals("Expected 3 errors", 3, OreAPI.getErrorCounter());
+  }
 
-        checker.checkForPluginAvailability();
+  @Test
+  public void availabilityTest() {
+    VersionChecker checker =
+        new VersionChecker(
+            Arrays.asList(
+                new DummyPluginContainer("invsync"),
+                new DummyPluginContainer("notavailablegfndfngkd"),
+                new DummyPluginContainer("error!&!&&!&##")));
 
-        assertEquals("Expected 1 error", 1, OreAPI.getErrorCounter());
-    }
+    checker.checkForPluginAvailability();
+
+    assertEquals("Expected 1 error", 1, OreAPI.getErrorCounter());
+  }
 }
