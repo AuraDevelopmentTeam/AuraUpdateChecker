@@ -24,9 +24,13 @@ public class VersionChecker {
             .delay(5, TimeUnit.SECONDS)
             .async()
             .name(AuraUpdateChecker.ID + "-availablity-check")
-            .submit(this);
+            .submit(AuraUpdateChecker.getInstance());
 
     AuraUpdateChecker.getLogger().debug("Started task \"" + task.getName() + '"');
+  }
+
+  public void stop() {
+    // Nothing yet
   }
 
   public void checkForPluginAvailability() {

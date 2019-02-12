@@ -129,7 +129,9 @@ public class AuraUpdateChecker {
   public void stop(GameStoppingEvent event) throws Exception {
     logger.info("Shutting down " + NAME + " Version " + VERSION);
 
-    // TODO
+    if (versionChecker != null) {
+      versionChecker.stop();
+    }
 
     logger.info("Unloaded successfully!");
   }
