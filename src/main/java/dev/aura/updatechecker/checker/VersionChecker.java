@@ -69,7 +69,7 @@ public class VersionChecker {
                 })
             .collect(Collectors.toList());
 
-    if (OreAPI.getErrorCounter() == availablePlugins.size()) {
+    if (OreAPI.getErrorCounter() >= availablePlugins.size()) {
       logger.warn(
           "It appears that your internet connection is down or not working properly, because all HTTPS requests failed.");
       logger.info("If it is working again, run \"/uc reload\", to reenable update checking.");
