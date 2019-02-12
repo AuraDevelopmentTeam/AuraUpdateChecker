@@ -1,4 +1,4 @@
-package dev.aura.updatechecker.checker;
+package dev.aura.updatechecker.util;
 
 import com.google.common.collect.ImmutableMap;
 import dev.aura.lib.version.Version;
