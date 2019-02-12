@@ -58,6 +58,10 @@ public class OreAPI {
       HttpsURLConnection connection = getConnectionForCall(PROJECT_CALL, plugin);
       connection.connect();
 
+      if (connection.getResponseCode() != 200) {
+        return Optional.empty();
+      }
+
       final String recommendedVersion =
           gson.fromJson(
                   new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8),
