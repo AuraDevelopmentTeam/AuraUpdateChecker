@@ -1,10 +1,9 @@
-package dev.aura.updatechecker.test.checker;
+package dev.aura.updatechecker.checker;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import dev.aura.updatechecker.checker.OreAPI;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import org.junit.After;

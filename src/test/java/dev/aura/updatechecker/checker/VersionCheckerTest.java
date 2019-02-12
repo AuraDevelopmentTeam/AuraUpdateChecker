@@ -1,9 +1,7 @@
-package dev.aura.updatechecker.test.checker;
+package dev.aura.updatechecker.checker;
 
 import static org.junit.Assert.assertEquals;
 
-import dev.aura.updatechecker.checker.OreAPI;
-import dev.aura.updatechecker.checker.VersionChecker;
 import java.util.Arrays;
 import org.junit.Test;
 

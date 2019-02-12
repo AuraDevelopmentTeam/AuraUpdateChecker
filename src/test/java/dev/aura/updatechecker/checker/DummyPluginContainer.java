@@ -1,4 +1,4 @@
-package dev.aura.updatechecker.test.checker;
+package dev.aura.updatechecker.checker;
 
 import lombok.Value;
 import org.spongepowered.api.plugin.PluginContainer;
