@@ -41,7 +41,7 @@ public class AuraUpdateChecker {
   public static final String URL = "https://github.com/AuraDevelopmentTeam/AuraUpdateChecker";
   public static final String AUTHOR_BRAINSTONE = "The_BrainStone";
 
-  @NonNull @Getter protected static AuraUpdateChecker instance = null;
+  @NonNull @Getter private static AuraUpdateChecker instance = null;
 
   @Inject @NonNull private PluginContainer container;
   @Inject protected Metrics2 metrics;
