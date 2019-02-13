@@ -34,7 +34,7 @@ import org.spongepowered.api.plugin.PluginContainer;
 public class OreAPI {
   public static final String API_URL = "https://ore.spongepowered.org/api/v1/";
   public static final String PROJECT_CALL = "projects/<pluginId>";
-  public static final String VERSION_CALL = PROJECT_CALL + "/versions";
+  public static final String VERSION_CALL = PROJECT_CALL + "/versions?limit=10&offset=";
   public static final int DEFAULT_TIMEOUT = 250;
 
   private static final AtomicInteger errorCounter = new AtomicInteger(0);
@@ -99,34 +99,44 @@ public class OreAPI {
 
   public static Optional<SortedMap<Date, Version>> getAllVersions(PluginContainer plugin) {
     try {
-      @Cleanup("disconnect")
-      HttpsURLConnection connection = getConnectionForCall(VERSION_CALL, plugin);
-      connection.connect();
-
-      if (connection.getResponseCode() != 200) {
-        return Optional.empty();
-      }
-
       final SortedMap<Date, Version> allVersions = new TreeMap<>(Comparator.reverseOrder());
-
-      final JsonArray versions =
-          gson.fromJson(
-              new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8),
-              JsonArray.class);
       final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
 
-      for (JsonElement version : versions) {
-        final Date date =
-            dateFormat.parse(version.getAsJsonObject().get("createdAt").getAsString());
-        final Version pluginVersion =
-            new Version(version.getAsJsonObject().get("name").getAsString());
+      for (int i = 0; true; i += 10) {
+        @Cleanup("disconnect")
+        HttpsURLConnection connection = getConnectionForCall(VERSION_CALL + i, plugin);
+        connection.connect();
 
-        allVersions.put(date, pluginVersion);
+        if (connection.getResponseCode() != 200) {
+          return Optional.empty();
+        }
+
+        final JsonArray versions =
+            gson.fromJson(
+                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8),
+                JsonArray.class);
+
+        if (versions.size() <= 0) {
+          break;
+        }
+
+        for (JsonElement version : versions) {
+          final Date date =
+              dateFormat.parse(version.getAsJsonObject().get("createdAt").getAsString());
+          final Version pluginVersion =
+              new Version(version.getAsJsonObject().get("name").getAsString());
+
+          allVersions.put(date, pluginVersion);
+        }
+
+        if (versions.size() < 10) {
+          break;
+        }
       }
 
       AuraUpdateChecker.getLogger()
           .debug(
-              "Most recenet 10 Versions for plugin "
+              "Available Versions for plugin "
                   + PluginContainerUtil.getPluginString(plugin)
                   + " are: "
                   + allVersions
