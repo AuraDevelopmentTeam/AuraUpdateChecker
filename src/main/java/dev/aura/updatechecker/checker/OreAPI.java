@@ -1,18 +1,29 @@
 package dev.aura.updatechecker.checker;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.aura.lib.version.Version;
 import dev.aura.updatechecker.AuraUpdateChecker;
 import dev.aura.updatechecker.util.PluginContainerUtil;
+import dev.aura.updatechecker.util.PluginVersionInfo;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ProtocolException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.Optional;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import javax.net.ssl.HttpsURLConnection;
 import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
@@ -84,6 +95,72 @@ public class OreAPI {
 
       return Optional.empty();
     }
+  }
+
+  public static Optional<SortedMap<Date, Version>> getAllVersions(PluginContainer plugin) {
+    try {
+      @Cleanup("disconnect")
+      HttpsURLConnection connection = getConnectionForCall(VERSION_CALL, plugin);
+      connection.connect();
+
+      if (connection.getResponseCode() != 200) {
+        return Optional.empty();
+      }
+
+      final SortedMap<Date, Version> allVersions = new TreeMap<>(Comparator.reverseOrder());
+
+      final JsonArray versions =
+          gson.fromJson(
+              new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8),
+              JsonArray.class);
+      final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+
+      for (JsonElement version : versions) {
+        final Date date =
+            dateFormat.parse(version.getAsJsonObject().get("createdAt").getAsString());
+        final Version pluginVersion =
+            new Version(version.getAsJsonObject().get("name").getAsString());
+
+        allVersions.put(date, pluginVersion);
+      }
+
+      AuraUpdateChecker.getLogger()
+          .debug(
+              "Most recenet 10 Versions for plugin "
+                  + PluginContainerUtil.getPluginString(plugin)
+                  + " are: "
+                  + allVersions
+                      .entrySet()
+                      .stream()
+                      .map(
+                          entry ->
+                              dateFormat.format(entry.getKey())
+                                  + ": "
+                                  + entry.getValue().getInput())
+                      .collect(Collectors.joining("\n\t", "\n\t", "")));
+
+      return Optional.of(allVersions);
+    } catch (ClassCastException | IOException | URISyntaxException | ParseException e) {
+      printErrorMessage(plugin, e);
+
+      return Optional.empty();
+    }
+  }
+
+  public static Optional<PluginVersionInfo> getPluginVersionInfo(PluginContainer plugin) {
+    final Optional<Version> recommendedVersion = getRecommendedVersion(plugin);
+
+    if (!recommendedVersion.isPresent()) {
+      return Optional.empty();
+    }
+
+    final Optional<SortedMap<Date, Version>> allVersions = getAllVersions(plugin);
+
+    if (!allVersions.isPresent()) {
+      return Optional.empty();
+    }
+
+    return Optional.of(new PluginVersionInfo(recommendedVersion.get(), allVersions.get()));
   }
 
   private static HttpsURLConnection getConnectionForCall(String call, PluginContainer plugin)

@@ -5,6 +5,7 @@ import dev.aura.updatechecker.util.PluginContainerUtil;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -26,18 +27,16 @@ public class VersionChecker {
     active.set(true);
 
     // Starting new task to discover checkable plugins
-    Task task =
+    final Task task =
         startTask(
             Task.builder()
-                .execute(this::checkForPluginAvailability)
+                .execute(this::checkForPluginAvailabilityTask)
                 .delay(5, TimeUnit.SECONDS)
                 .async()
                 .name(AuraUpdateChecker.ID + "-availablity-check"));
 
     if (task != null) {
       scheduledTasks.add(task);
-
-      AuraUpdateChecker.getLogger().debug("Started task \"" + task.getName() + '"');
     }
   }
 
@@ -47,7 +46,7 @@ public class VersionChecker {
     scheduledTasks.forEach(Task::cancel);
   }
 
-  public void checkForPluginAvailability(Task self) {
+  public Optional<Integer> checkForPluginAvailability() {
     final Logger logger = AuraUpdateChecker.getLogger();
 
     logger.debug("Start checking plugins for availability on Ore Repository...");
@@ -55,14 +54,14 @@ public class VersionChecker {
     if (checkablePlugins != null) {
       logger.info("Already checked plugins for availability!");
 
-      return;
+      return Optional.empty();
     }
 
     OreAPI.resetErrorCounter();
 
     checkablePlugins =
         availablePlugins
-            .parallelStream()
+            .stream()
             .filter(
                 plugin -> {
                   final String pluginName = PluginContainerUtil.getPluginString(plugin);
@@ -92,6 +91,43 @@ public class VersionChecker {
     logger.debug("Finished checking plugins for availability on Ore Repository!");
     logger.debug(checkablePlugins.size() + " plugins available for update checks!");
 
+    return Optional.of(OreAPI.getErrorCounter());
+  }
+
+  public void checkForPluginUpdates() {
+    final Logger logger = AuraUpdateChecker.getLogger();
+
+    logger.debug("Start fetching plugin versions from the Ore Repository...");
+    
+    availablePlugins.forEach(OreAPI::getPluginVersionInfo);
+    
+    logger.debug("Finished fetching plugin versions from the Ore Repository!");
+  }
+
+  public void checkForPluginUpdatesTask(Task self) {
+    checkForPluginUpdates();
+  }
+
+  public void checkForPluginAvailabilityTask(Task self) {
+    final int errorCount = checkForPluginAvailability().orElse(Integer.MAX_VALUE);
+
+    if (errorCount >= availablePlugins.size()) {
+      active.set(false);
+    }
+
+    final Task task =
+        startTask(
+            Task.builder()
+                .execute(this::checkForPluginUpdatesTask)
+                .delay(5, TimeUnit.SECONDS)
+                .interval(30, TimeUnit.MINUTES)
+                .async()
+                .name(AuraUpdateChecker.ID + "-update-check"));
+
+    if (task != null) {
+      scheduledTasks.add(task);
+    }
+
     scheduledTasks.remove(self);
   }
 
@@ -101,6 +137,10 @@ public class VersionChecker {
       return null;
     }
 
-    return taskBuilder.submit(AuraUpdateChecker.getInstance());
+    final Task task = taskBuilder.submit(AuraUpdateChecker.getInstance());
+
+    AuraUpdateChecker.getLogger().debug("Started task \"" + task.getName() + '"');
+
+    return task;
   }
 }

@@ -3,6 +3,7 @@ package dev.aura.updatechecker.checker;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
+import java.util.Optional;
 import org.junit.Test;
 
 public class VersionCheckerTest {
@@ -15,9 +16,7 @@ public class VersionCheckerTest {
                 new DummyPluginContainer("error!&!&&!&##"),
                 new DummyPluginContainer("error!&!&&!&##")));
 
-    checker.checkForPluginAvailability(null);
-
-    assertEquals("Expected 3 errors", 3, OreAPI.getErrorCounter());
+    assertEquals("Expected 3 errors", Optional.of(3), checker.checkForPluginAvailability());
   }
 
   @Test
@@ -29,8 +28,6 @@ public class VersionCheckerTest {
                 new DummyPluginContainer("notavailablegfndfngkd"),
                 new DummyPluginContainer("error!&!&&!&##")));
 
-    checker.checkForPluginAvailability(null);
-
-    assertEquals("Expected 1 error", 1, OreAPI.getErrorCounter());
+    assertEquals("Expected 1 error", Optional.of(1), checker.checkForPluginAvailability());
   }
 }
