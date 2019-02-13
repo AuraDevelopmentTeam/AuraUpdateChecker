@@ -98,9 +98,9 @@ public class VersionChecker {
     final Logger logger = AuraUpdateChecker.getLogger();
 
     logger.debug("Start fetching plugin versions from the Ore Repository...");
-    
-    availablePlugins.forEach(OreAPI::getPluginVersionInfo);
-    
+
+    checkablePlugins.forEach(OreAPI::getPluginVersionInfo);
+
     logger.debug("Finished fetching plugin versions from the Ore Repository!");
   }
 
