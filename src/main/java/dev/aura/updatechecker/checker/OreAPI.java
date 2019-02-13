@@ -116,10 +116,6 @@ public class OreAPI {
                 new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8),
                 JsonArray.class);
 
-        if (versions.size() <= 0) {
-          break;
-        }
-
         for (JsonElement version : versions) {
           final Date date =
               dateFormat.parse(version.getAsJsonObject().get("createdAt").getAsString());
