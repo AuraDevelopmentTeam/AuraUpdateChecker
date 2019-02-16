@@ -23,6 +23,7 @@ public class PluginVersionInfo {
   private final ImmutableMap<Date, Version> allVersions;
 
   @Delegate(excludes = Enum.class)
+  @EqualsAndHashCode.Exclude
   private final PluginStatus pluginStatus;
 
   public PluginVersionInfo(
