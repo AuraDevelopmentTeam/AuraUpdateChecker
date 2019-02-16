@@ -145,8 +145,7 @@ public class VersionChecker {
       String message =
           PluginContainerUtil.getPluginString(plugin)
               + ":\n\tCurrent version: "
-              + pluginVersionInfo.getCurrentVersion().getInput()
-              + "\n\t";
+              + pluginVersionInfo.getCurrentVersion().getInput();
 
       if (pluginVersionInfo.isNewRecommended()) {
         message +=
