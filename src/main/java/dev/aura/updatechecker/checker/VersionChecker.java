@@ -2,6 +2,7 @@ package dev.aura.updatechecker.checker;
 
 import com.google.common.collect.ImmutableMap;
 import dev.aura.updatechecker.AuraUpdateChecker;
+import dev.aura.updatechecker.permission.PermissionRegistry;
 import dev.aura.updatechecker.util.PluginContainerUtil;
 import dev.aura.updatechecker.util.PluginVersionInfo;
 import java.util.Collection;
@@ -17,8 +18,11 @@ import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.service.pagination.PaginationList;
+import org.spongepowered.api.text.Text;
 
 @RequiredArgsConstructor
 public class VersionChecker {
@@ -30,6 +34,7 @@ public class VersionChecker {
 
   @Getter private boolean notifyAdmins = false;
   @Getter private ImmutableMap<PluginContainer, PluginVersionInfo> versionInfo = ImmutableMap.of();
+  @Getter private String updateMessage = "";
 
   public void start() {
     active.set(true);
@@ -132,7 +137,7 @@ public class VersionChecker {
       return;
     }
 
-    logger.info("Updates available for:");
+    StringBuilder message = new StringBuilder("Updates available for:");
 
     for (Map.Entry<PluginContainer, PluginVersionInfo> entry : versionInfo.entrySet()) {
       final PluginVersionInfo pluginVersionInfo = entry.getValue();
@@ -142,21 +147,32 @@ public class VersionChecker {
       }
 
       final PluginContainer plugin = entry.getKey();
-      String message =
-          PluginContainerUtil.getPluginString(plugin)
+      message.append(
+          '\n'
+              + PluginContainerUtil.getPluginString(plugin)
               + ":\n\tCurrent version: "
-              + pluginVersionInfo.getCurrentVersion().getInput();
+              + pluginVersionInfo.getCurrentVersion().getInput());
 
       if (pluginVersionInfo.isNewRecommended()) {
-        message +=
-            "\n\tRecommended version: " + pluginVersionInfo.getRecommendedVersion().getInput();
+        message.append(
+            "\n\tRecommended version: " + pluginVersionInfo.getRecommendedVersion().getInput());
       }
       if (pluginVersionInfo.isNewLatest()) {
-        message += "\n\tLatest version: " + pluginVersionInfo.getLatestVersion().getInput();
+        message.append("\n\tLatest version: " + pluginVersionInfo.getLatestVersion().getInput());
       }
-
-      logger.info(message);
     }
+
+    updateMessage = message.toString();
+    logger.info(updateMessage);
+
+    // Inform all admins
+    Sponge.getServer()
+        .getOnlinePlayers()
+        .stream()
+        .filter(
+            player ->
+                player.hasPermission(PermissionRegistry.NOTIFICATION_UPDATE_AVAIABLE_PERIODIC))
+        .forEach(getPagination()::sendTo);
   }
 
   public void checkForPluginUpdatesTask(Task self) {
@@ -197,5 +213,9 @@ public class VersionChecker {
     AuraUpdateChecker.getLogger().debug("Started task \"" + task.getName() + '"');
 
     return task;
+  }
+
+  public PaginationList getPagination() {
+    return PaginationList.builder().contents(Text.of(updateMessage)).build();
   }
 }

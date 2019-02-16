@@ -14,6 +14,11 @@ public class PermissionRegistry {
   public static final String BASE = AuraUpdateChecker.ID;
   public static final String COMMAND = BASE + ".command";
   public static final String NOTIFICATION = BASE + ".notification";
+  public static final String NOTIFICATION_UPDATE_AVAIABLE = NOTIFICATION + ".update_available";
+  public static final String NOTIFICATION_UPDATE_AVAIABLE_JOIN =
+      NOTIFICATION_UPDATE_AVAIABLE + ".join";
+  public static final String NOTIFICATION_UPDATE_AVAIABLE_PERIODIC =
+      NOTIFICATION_UPDATE_AVAIABLE + ".periodic";
 
   private final AuraUpdateChecker plugin;
   private final PermissionService service =
@@ -24,6 +29,18 @@ public class PermissionRegistry {
     registerPermission(COMMAND, "Permission for all commands", PermissionDescription.ROLE_ADMIN);
     registerPermission(
         NOTIFICATION, "Permission for all notifications", PermissionDescription.ROLE_ADMIN);
+    registerPermission(
+        NOTIFICATION_UPDATE_AVAIABLE,
+        "Permission to receive the update available notifcations",
+        PermissionDescription.ROLE_ADMIN);
+    registerPermission(
+        NOTIFICATION_UPDATE_AVAIABLE_JOIN,
+        "Permission to receive the update available notifcation when joining",
+        PermissionDescription.ROLE_ADMIN);
+    registerPermission(
+        NOTIFICATION_UPDATE_AVAIABLE_PERIODIC,
+        "Permission to receive the update available notifcation when a new update has been released while the server is running",
+        PermissionDescription.ROLE_ADMIN);
   }
 
   private Builder getBuilder() {
