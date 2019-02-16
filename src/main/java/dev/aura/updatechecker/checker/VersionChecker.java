@@ -1,15 +1,20 @@
 package dev.aura.updatechecker.checker;
 
+import com.google.common.collect.ImmutableMap;
 import dev.aura.updatechecker.AuraUpdateChecker;
 import dev.aura.updatechecker.util.PluginContainerUtil;
+import dev.aura.updatechecker.util.PluginVersionInfo;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -22,6 +27,9 @@ public class VersionChecker {
   private List<PluginContainer> checkablePlugins = null;
   private final List<Task> scheduledTasks = new LinkedList<>();
   private final AtomicBoolean active = new AtomicBoolean(false);
+
+  @Getter private boolean notifyAdmins = false;
+  @Getter private ImmutableMap<PluginContainer, PluginVersionInfo> versionInfo = ImmutableMap.of();
 
   public void start() {
     active.set(true);
@@ -99,9 +107,55 @@ public class VersionChecker {
 
     logger.debug("Start fetching plugin versions from the Ore Repository...");
 
-    checkablePlugins.forEach(OreAPI::getPluginVersionInfo);
+    final Map<PluginContainer, PluginVersionInfo> newVersionInfo = new HashMap<>();
+    boolean updatesAvailable = false;
+
+    for (PluginContainer plugin : checkablePlugins) {
+      final Optional<PluginVersionInfo> pluginInfo = OreAPI.getPluginVersionInfo(plugin);
+
+      if (pluginInfo.isPresent()) {
+        newVersionInfo.put(plugin, pluginInfo.get());
+        updatesAvailable = updatesAvailable || !pluginInfo.get().isUpToDate();
+      }
+    }
 
     logger.debug("Finished fetching plugin versions from the Ore Repository!");
+
+    if (newVersionInfo.equals(versionInfo)) {
+      return;
+    }
+
+    notifyAdmins = true;
+    versionInfo = ImmutableMap.copyOf(newVersionInfo);
+
+    if (!updatesAvailable) {
+      return;
+    }
+
+    logger.info("Updates available for:");
+
+    for (Map.Entry<PluginContainer, PluginVersionInfo> entry : versionInfo.entrySet()) {
+      final PluginVersionInfo pluginVersionInfo = entry.getValue();
+
+      if (pluginVersionInfo.isUpToDate()) {
+        continue;
+      }
+
+      final PluginContainer plugin = entry.getKey();
+      String message =
+          PluginContainerUtil.getPluginString(plugin)
+              + ":\n\tCurrent Version"
+              + pluginVersionInfo.getCurrentVersion().getInput()
+              + "\n\t";
+
+      if (pluginVersionInfo.getPluginStatus() == PluginVersionInfo.PluginStatus.NEW_RECOMMENDED) {
+        message += "Recommended version: " + pluginVersionInfo.getRecommendedVersion().getInput();
+      } else {
+        message += "Latest version: " + pluginVersionInfo.getLatestVersion().getInput();
+      }
+
+      logger.info(message);
+    }
   }
 
   public void checkForPluginUpdatesTask(Task self) {
