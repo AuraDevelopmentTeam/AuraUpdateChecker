@@ -43,7 +43,9 @@ public class PluginVersionInfo {
 
     pluginStatus =
         (currentVersion.compareTo(recommendedVersion) < 0)
-            ? PluginStatus.NEW_RECOMMENDED
+            ? ((recommendedVersion.compareTo(latestVersion) < 0)
+                ? PluginStatus.NEW_BOTH
+                : PluginStatus.NEW_RECOMMENDED)
             : ((currentVersion.compareTo(latestVersion) < 0)
                 ? PluginStatus.NEW_LATEST
                 : PluginStatus.UP_TO_DATE);
@@ -53,10 +55,13 @@ public class PluginVersionInfo {
   @AllArgsConstructor
   @ToString
   public static enum PluginStatus {
-    UP_TO_DATE(true),
-    NEW_RECOMMENDED(false),
-    NEW_LATEST(false);
+    UP_TO_DATE(true, false, false),
+    NEW_RECOMMENDED(false, true, false),
+    NEW_LATEST(false, false, true),
+    NEW_BOTH(false, true, true);
 
     private final boolean upToDate;
+    private final boolean newRecommended;
+    private final boolean newLatest;
   }
 }

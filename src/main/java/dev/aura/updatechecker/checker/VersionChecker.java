@@ -148,10 +148,12 @@ public class VersionChecker {
               + pluginVersionInfo.getCurrentVersion().getInput()
               + "\n\t";
 
-      if (pluginVersionInfo.getPluginStatus() == PluginVersionInfo.PluginStatus.NEW_RECOMMENDED) {
-        message += "Recommended version: " + pluginVersionInfo.getRecommendedVersion().getInput();
-      } else {
-        message += "Latest version: " + pluginVersionInfo.getLatestVersion().getInput();
+      if (pluginVersionInfo.isNewRecommended()) {
+        message +=
+            "\n\tRecommended version: " + pluginVersionInfo.getRecommendedVersion().getInput();
+      }
+      if (pluginVersionInfo.isNewLatest()) {
+        message += "\n\tLatest version: " + pluginVersionInfo.getLatestVersion().getInput();
       }
 
       logger.info(message);
