@@ -1,10 +1,19 @@
 package dev.aura.updatechecker;
 
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
+import dev.aura.lib.messagestranslator.MessagesTranslator;
 import dev.aura.updatechecker.checker.VersionChecker;
+import dev.aura.updatechecker.config.Config;
+import java.io.IOException;
 import java.nio.file.Path;
 import lombok.Getter;
 import lombok.NonNull;
+import ninja.leaping.configurate.ConfigurationOptions;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.GuiceObjectMapperFactory;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
 import org.slf4j.helpers.NOPLogger;
@@ -39,16 +48,17 @@ public class AuraUpdateChecker {
   public static final String URL = "https://github.com/AuraDevelopmentTeam/AuraUpdateChecker";
   public static final String AUTHOR_BRAINSTONE = "The_BrainStone";
 
-  @NonNull @Getter private static AuraUpdateChecker instance = null;
+  @NonNull @Getter protected static AuraUpdateChecker instance = null;
 
-  @Inject @NonNull private PluginContainer container;
+  @Inject @NonNull protected PluginContainer container;
   @Inject protected Metrics2 metrics;
   @Inject @NonNull protected Logger logger;
 
+  @Inject protected GuiceObjectMapperFactory factory;
+
   @Inject
   @DefaultConfig(sharedRoot = false)
-  @NonNull
-  protected Path configFile;
+  protected ConfigurationLoader<CommentedConfigurationNode> loader;
 
   @Inject
   @ConfigDir(sharedRoot = false)
@@ -56,6 +66,8 @@ public class AuraUpdateChecker {
   protected Path configDir;
 
   @NonNull protected VersionChecker versionChecker;
+  @NonNull protected Config config;
+  @NonNull protected MessagesTranslator translator;
 
   public AuraUpdateChecker() {
     if (instance != null) throw new IllegalStateException("Instance already exists!");
@@ -68,10 +80,6 @@ public class AuraUpdateChecker {
     else return instance.logger;
   }
 
-  public static Path getConfigFile() {
-    return instance.configFile;
-  }
-
   public static Path getConfigDir() {
     return instance.configDir;
   }
@@ -80,8 +88,16 @@ public class AuraUpdateChecker {
     return instance.versionChecker;
   }
 
+  public static Config getConfig() {
+    return instance.config;
+  }
+
+  public static MessagesTranslator getTranslator() {
+    return instance.translator;
+  }
+
   @Listener
-  public void init(GameInitializationEvent event) {
+  public void init(GameInitializationEvent event) throws IOException, ObjectMappingException {
     logger.info("Initializing " + NAME + " Version " + VERSION);
 
     if (VERSION.contains("SNAPSHOT")) {
@@ -93,7 +109,24 @@ public class AuraUpdateChecker {
       logger.info("Things might not work properly!");
     }
 
+    loadConfig();
+
     logger.info("Loaded successfully!");
+  }
+
+  private void loadConfig() throws IOException, ObjectMappingException {
+    final TypeToken<Config> configToken = TypeToken.of(Config.class);
+
+    logger.debug("Loading config...");
+
+    CommentedConfigurationNode node =
+        loader.load(ConfigurationOptions.defaults().setObjectMapperFactory(factory));
+
+    config = node.<Config>getValue(configToken, Config::new);
+
+    logger.debug("Saving/Formatting config...");
+    node.setValue(configToken, config);
+    loader.save(node);
   }
 
   @Listener
