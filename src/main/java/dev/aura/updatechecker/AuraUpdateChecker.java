@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import dev.aura.lib.messagestranslator.MessagesTranslator;
 import dev.aura.updatechecker.checker.VersionChecker;
 import dev.aura.updatechecker.config.Config;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import lombok.Getter;
@@ -48,7 +49,7 @@ public class AuraUpdateChecker {
   public static final String URL = "https://github.com/AuraDevelopmentTeam/AuraUpdateChecker";
   public static final String AUTHOR_BRAINSTONE = "The_BrainStone";
 
-  @NonNull @Getter protected static AuraUpdateChecker instance = null;
+  @NonNull @Getter private static AuraUpdateChecker instance = null;
 
   @Inject @NonNull protected PluginContainer container;
   @Inject protected Metrics2 metrics;
@@ -110,6 +111,10 @@ public class AuraUpdateChecker {
     }
 
     loadConfig();
+
+    translator =
+        new MessagesTranslator(
+            new File(getConfigDir().toFile(), "lang"), config.getGeneral().getLanguage(), this);
 
     logger.info("Loaded successfully!");
   }
