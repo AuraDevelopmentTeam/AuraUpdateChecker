@@ -39,7 +39,7 @@ public class PluginVersionInfo {
     this.latestVersion = allVersions.get(allVersionsSorted.firstKey());
     this.allVersions = ImmutableMap.copyOf(allVersionsSorted);
     this.currentVersion = currentVersion;
-    
+
     pluginStatus =
         (currentVersion.compareTo(recommendedVersion) < 0)
             ? PluginStatus.NEW_RECOMMENDED
