@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import dev.aura.lib.messagestranslator.MessagesTranslator;
 import dev.aura.updatechecker.checker.VersionChecker;
 import dev.aura.updatechecker.config.Config;
+import dev.aura.updatechecker.permission.PermissionRegistry;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -69,6 +70,7 @@ public class AuraUpdateChecker {
   @NonNull protected VersionChecker versionChecker;
   @NonNull protected Config config;
   @NonNull protected MessagesTranslator translator;
+  protected PermissionRegistry permissionRegistry;
 
   public AuraUpdateChecker() {
     if (instance != null) throw new IllegalStateException("Instance already exists!");
@@ -111,6 +113,11 @@ public class AuraUpdateChecker {
     }
 
     loadConfig();
+
+    if (permissionRegistry == null) {
+      permissionRegistry = new PermissionRegistry(this);
+      logger.debug("Registered permissions");
+    }
 
     translator =
         new MessagesTranslator(
