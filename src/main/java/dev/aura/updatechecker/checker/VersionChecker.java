@@ -174,7 +174,8 @@ public class VersionChecker {
     }
 
     updateMessage = message.toString();
-    logger.info(PluginMessages.NOTIFICATION_UPDATE_AVAILABLE_TITLE.getMessageRaw() +'\n'+ updateMessage);
+    logger.info(
+        PluginMessages.NOTIFICATION_UPDATE_AVAILABLE_TITLE.getMessageRaw() + '\n' + updateMessage);
 
     updateMessagePagination =
         PaginationList.builder()
@@ -209,7 +210,7 @@ public class VersionChecker {
             Task.builder()
                 .execute(this::checkForPluginUpdatesTask)
                 .delay(5, TimeUnit.SECONDS)
-                .interval(1, TimeUnit.MINUTES)
+                .interval(30, TimeUnit.MINUTES)
                 .async()
                 .name(AuraUpdateChecker.ID + "-update-check"));
 

@@ -1,6 +1,7 @@
 package dev.aura.updatechecker.permission;
 
 import dev.aura.updatechecker.AuraUpdateChecker;
+import dev.aura.updatechecker.command.CommandReload;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.spongepowered.api.Sponge;
@@ -40,6 +41,11 @@ public class PermissionRegistry {
     registerPermission(
         NOTIFICATION_UPDATE_AVAIABLE_PERIODIC,
         "Permission to receive the update available notifcation when a new update has been released while the server is running",
+        PermissionDescription.ROLE_ADMIN);
+
+    registerPermission(
+        CommandReload.RELOAD_PERMISSION,
+        "Permission to be able to reload the plugin",
         PermissionDescription.ROLE_ADMIN);
   }
 

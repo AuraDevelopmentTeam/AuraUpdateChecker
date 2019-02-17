@@ -4,6 +4,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import dev.aura.lib.messagestranslator.MessagesTranslator;
 import dev.aura.updatechecker.checker.VersionChecker;
+import dev.aura.updatechecker.command.CommandBase;
 import dev.aura.updatechecker.config.Config;
 import dev.aura.updatechecker.permission.PermissionRegistry;
 import java.io.File;
@@ -122,6 +123,8 @@ public class AuraUpdateChecker {
     translator =
         new MessagesTranslator(
             new File(getConfigDir().toFile(), "lang"), config.getGeneral().getLanguage(), this);
+
+    CommandBase.register(this);
 
     logger.info("Loaded successfully!");
   }
