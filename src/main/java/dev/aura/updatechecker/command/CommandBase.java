@@ -12,7 +12,7 @@ public class CommandBase {
   public static void register(AuraUpdateChecker plugin) {
     CommandSpec updatechecker =
         CommandSpec.builder()
-            .description(Text.of("Enables or disables synchronizing the world time with realtime."))
+            .description(Text.of("Base command for the plugin. Does nothing on its own."))
             .child(CommandReload.create(plugin), "reload", "r", "rl", "re", "rel")
             .build();
 

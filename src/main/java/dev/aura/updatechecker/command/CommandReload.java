@@ -23,7 +23,7 @@ public class CommandReload implements CommandExecutor {
   public static CommandSpec create(AuraUpdateChecker plugin) {
     return CommandSpec.builder()
         .permission(RELOAD_PERMISSION)
-        .description(Text.of("Send a mail"))
+        .description(Text.of("Reloads the plugin."))
         .executor(new CommandReload(plugin))
         .build();
   }
