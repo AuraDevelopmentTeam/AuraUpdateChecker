@@ -2,6 +2,7 @@ package dev.aura.updatechecker.checker;
 
 import com.google.common.collect.ImmutableMap;
 import dev.aura.updatechecker.AuraUpdateChecker;
+import dev.aura.updatechecker.message.PluginMessages;
 import dev.aura.updatechecker.permission.PermissionRegistry;
 import dev.aura.updatechecker.util.PluginContainerUtil;
 import dev.aura.updatechecker.util.PluginVersionInfo;
@@ -22,7 +23,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.pagination.PaginationList;
-import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 @RequiredArgsConstructor
 public class VersionChecker {
@@ -35,6 +36,7 @@ public class VersionChecker {
   @Getter private boolean notifyAdmins = false;
   @Getter private ImmutableMap<PluginContainer, PluginVersionInfo> versionInfo = ImmutableMap.of();
   @Getter private String updateMessage = "";
+  @Getter private PaginationList updateMessagePagination = null;
 
   public void start() {
     active.set(true);
@@ -137,7 +139,8 @@ public class VersionChecker {
       return;
     }
 
-    StringBuilder message = new StringBuilder("Updates available for:");
+    StringBuilder message = new StringBuilder();
+    Map<String, String> replacements = new HashMap<String, String>();
 
     for (Map.Entry<PluginContainer, PluginVersionInfo> entry : versionInfo.entrySet()) {
       final PluginVersionInfo pluginVersionInfo = entry.getValue();
@@ -147,23 +150,38 @@ public class VersionChecker {
       }
 
       final PluginContainer plugin = entry.getKey();
-      message.append(
-          '\n'
-              + PluginContainerUtil.getPluginString(plugin)
-              + ":\n\tCurrent version: "
-              + pluginVersionInfo.getCurrentVersion().getInput());
 
-      if (pluginVersionInfo.isNewRecommended()) {
-        message.append(
-            "\n\tRecommended version: " + pluginVersionInfo.getRecommendedVersion().getInput());
-      }
-      if (pluginVersionInfo.isNewLatest()) {
-        message.append("\n\tLatest version: " + pluginVersionInfo.getLatestVersion().getInput());
-      }
+      replacements.put("plugin", PluginContainerUtil.getPluginString(plugin));
+      replacements.put(
+          "current",
+          PluginMessages.NOTIFICATION_UPDATE_AVAILABLE_CURRENT.getMessageRaw(
+              ImmutableMap.of("version", pluginVersionInfo.getCurrentVersion().getInput())));
+      replacements.put(
+          "recommended",
+          pluginVersionInfo.isNewRecommended()
+              ? PluginMessages.NOTIFICATION_UPDATE_AVAILABLE_RECOMMENDED.getMessageRaw(
+                  ImmutableMap.of("version", pluginVersionInfo.getRecommendedVersion().getInput()))
+              : "");
+      replacements.put(
+          "latest",
+          pluginVersionInfo.isNewLatest()
+              ? PluginMessages.NOTIFICATION_UPDATE_AVAILABLE_LATEST.getMessageRaw(
+                  ImmutableMap.of("version", pluginVersionInfo.getLatestVersion().getInput()))
+              : "");
+
+      message.append(PluginMessages.NOTIFICATION_UPDATE_AVAILABLE.getMessageRaw(replacements));
+      replacements.clear();
     }
 
     updateMessage = message.toString();
-    logger.info(updateMessage);
+    logger.info(PluginMessages.NOTIFICATION_UPDATE_AVAILABLE_TITLE.getMessageRaw() +'\n'+ updateMessage);
+
+    updateMessagePagination =
+        PaginationList.builder()
+            .padding(PluginMessages.NOTIFICATION_UPDATE_AVAILABLE_PADDING.getMessage())
+            .title(PluginMessages.NOTIFICATION_UPDATE_AVAILABLE_TITLE.getMessage())
+            .contents(TextSerializers.FORMATTING_CODE.deserialize(updateMessage))
+            .build();
 
     // Inform all admins
     Sponge.getServer()
@@ -172,7 +190,7 @@ public class VersionChecker {
         .filter(
             player ->
                 player.hasPermission(PermissionRegistry.NOTIFICATION_UPDATE_AVAIABLE_PERIODIC))
-        .forEach(getPagination()::sendTo);
+        .forEach(updateMessagePagination::sendTo);
   }
 
   public void checkForPluginUpdatesTask(Task self) {
@@ -191,7 +209,7 @@ public class VersionChecker {
             Task.builder()
                 .execute(this::checkForPluginUpdatesTask)
                 .delay(5, TimeUnit.SECONDS)
-                .interval(30, TimeUnit.MINUTES)
+                .interval(1, TimeUnit.MINUTES)
                 .async()
                 .name(AuraUpdateChecker.ID + "-update-check"));
 
@@ -213,9 +231,5 @@ public class VersionChecker {
     AuraUpdateChecker.getLogger().debug("Started task \"" + task.getName() + '"');
 
     return task;
-  }
-
-  public PaginationList getPagination() {
-    return PaginationList.builder().contents(Text.of(updateMessage)).build();
   }
 }
