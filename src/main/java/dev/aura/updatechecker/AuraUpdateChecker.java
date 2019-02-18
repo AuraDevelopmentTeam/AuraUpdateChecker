@@ -128,7 +128,7 @@ public class AuraUpdateChecker {
 
     translator =
         new MessagesTranslator(
-            new File(getConfigDir().toFile(), "lang"), config.getGeneral().getLanguage(), this);
+            new File(getConfigDir().toFile(), "lang"), config.getGeneral().getLanguage(), this, ID);
 
     CommandBase.register(this);
     logger.debug("Registered commands");
