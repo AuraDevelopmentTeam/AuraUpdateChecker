@@ -17,7 +17,7 @@
 # NOTE:
 # If you have translated this into an other language, please create an pull request on our GitHub
 # repo, so that everyone can use it!
-# https://github.com/AuraDevelopmentTeam/AuraBlockLimit/pulls
+# https://github.com/AuraDevelopmentTeam/AuraUpdateChecker/pulls
 # (Use http://patorjk.com/software/taag/#h=0&v=0&c=bash&f=Standard for ASCII-Art header and copy
 # this note. Thanks!)
 ####################################################################################################
@@ -30,7 +30,7 @@
 ####################################################################################################
 # Admin Messages
 ####################################################################################################
-reloadSuccessful: "&aAuraBlockLimit reloaded successfully!"
+reloadSuccessful: "&aAuraUpdateChecker reloaded successfully!"
 reloadNotSuccessful: "&cError while reloading the plugin: %error%\n&cSee console for a more detailed error message.\n&cThe plugin may be in a severely corrupted state. It's best to restart the server!"
 
 ####################################################################################################
