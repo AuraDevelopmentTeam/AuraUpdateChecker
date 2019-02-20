@@ -165,7 +165,7 @@ public class OreAPI {
       return Optional.empty();
     }
 
-    return Optional.of(new PluginVersionInfo(recommendedVersion.get(), allVersions.get(), plugin));
+    return Optional.of(new PluginVersionInfo(plugin, recommendedVersion.get(), allVersions.get()));
   }
 
   private static HttpsURLConnection getConnectionForCall(String call, PluginContainer plugin)

@@ -38,7 +38,7 @@ reloadNotSuccessful: "&cError while reloading the plugin: %error%\n&cSee console
 ####################################################################################################
 updateAvailablePadding: "&f="
 updateAvailableTitle: "Updates available for:"
-updateAvailable: "\n%plugin%:%current%%recommended%%latest%\n"
-updateAvailableCurrent: "\n  - Current version: %version%"
+updateAvailable: "\n%plugin%:%installed%%recommended%%latest%\n"
+updateAvailableInstalled: "\n  - Installed version: %version%"
 updateAvailableRecommended: "\n  - Recommended version: %version%"
 updateAvailableLatest: "\n  - Latest version: %version%" 

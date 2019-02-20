@@ -155,9 +155,9 @@ public class VersionChecker {
 
       replacements.put("plugin", PluginContainerUtil.getPluginString(plugin));
       replacements.put(
-          "current",
-          PluginMessages.NOTIFICATION_UPDATE_AVAILABLE_CURRENT.getMessageRaw(
-              ImmutableMap.of("version", pluginVersionInfo.getCurrentVersion().getInput())));
+          "installed",
+          PluginMessages.NOTIFICATION_UPDATE_AVAILABLE_INSTALLED.getMessageRaw(
+              ImmutableMap.of("version", pluginVersionInfo.getInstalledVersion().getInput())));
       replacements.put(
           "recommended",
           pluginVersionInfo.isNewRecommended()

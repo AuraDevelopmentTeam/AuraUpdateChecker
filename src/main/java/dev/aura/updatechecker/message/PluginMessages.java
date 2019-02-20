@@ -17,7 +17,7 @@ public enum PluginMessages implements Message {
   NOTIFICATION_UPDATE_AVAILABLE_PADDING("updateAvailablePadding"),
   NOTIFICATION_UPDATE_AVAILABLE_TITLE("updateAvailableTitle"),
   NOTIFICATION_UPDATE_AVAILABLE("updateAvailable"),
-  NOTIFICATION_UPDATE_AVAILABLE_CURRENT("updateAvailableCurrent"),
+  NOTIFICATION_UPDATE_AVAILABLE_INSTALLED("updateAvailableInstalled"),
   NOTIFICATION_UPDATE_AVAILABLE_RECOMMENDED("updateAvailableRecommended"),
   NOTIFICATION_UPDATE_AVAILABLE_LATEST("updateAvailableLatest");
 

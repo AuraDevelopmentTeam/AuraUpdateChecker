@@ -17,9 +17,9 @@ import org.spongepowered.api.plugin.PluginContainer;
 
 @Value
 public class PluginVersionInfo {
+  private final Version installedVersion;
   private final Version recommendedVersion;
   @EqualsAndHashCode.Exclude private final Version latestVersion;
-  private final Version currentVersion;
   private final ImmutableMap<Date, Version> allVersions;
 
   @Delegate(excludes = Enum.class)
@@ -27,26 +27,26 @@ public class PluginVersionInfo {
   private final PluginStatus pluginStatus;
 
   public PluginVersionInfo(
-      Version recommendedVersion, Map<Date, Version> allVersions, PluginContainer plugin) {
-    this(recommendedVersion, allVersions, new Version(plugin.getVersion().orElse("0.0.0")));
+      PluginContainer plugin, Version recommendedVersion, Map<Date, Version> allVersions) {
+    this(new Version(plugin.getVersion().orElse("0.0.0")), recommendedVersion, allVersions);
   }
 
   public PluginVersionInfo(
-      Version recommendedVersion, Map<Date, Version> allVersions, Version currentVersion) {
+      Version installedVersion, Version recommendedVersion, Map<Date, Version> allVersions) {
     final SortedMap<Date, Version> allVersionsSorted = new TreeMap<>(Comparator.reverseOrder());
     allVersionsSorted.putAll(allVersions);
 
     this.recommendedVersion = recommendedVersion;
     this.latestVersion = allVersions.get(allVersionsSorted.firstKey());
     this.allVersions = ImmutableMap.copyOf(allVersionsSorted);
-    this.currentVersion = currentVersion;
+    this.installedVersion = installedVersion;
 
     pluginStatus =
-        (currentVersion.compareTo(recommendedVersion) < 0)
+        (installedVersion.compareTo(recommendedVersion) < 0)
             ? ((recommendedVersion.compareTo(latestVersion) < 0)
                 ? PluginStatus.NEW_BOTH
                 : PluginStatus.NEW_RECOMMENDED)
-            : ((currentVersion.compareTo(latestVersion) < 0)
+            : ((installedVersion.compareTo(latestVersion) < 0)
                 ? PluginStatus.NEW_LATEST
                 : PluginStatus.UP_TO_DATE);
   }
