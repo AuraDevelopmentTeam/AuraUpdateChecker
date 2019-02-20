@@ -35,7 +35,6 @@ public class OreAPI {
   public static final String API_URL = "https://ore.spongepowered.org/api/v1/";
   public static final String PROJECT_CALL = "projects/<pluginId>";
   public static final String VERSION_CALL = PROJECT_CALL + "/versions?limit=10&offset=";
-  public static final int DEFAULT_TIMEOUT = 500;
 
   private static final AtomicInteger errorCounter = new AtomicInteger(0);
   private static final Gson gson = new Gson();
@@ -186,9 +185,11 @@ public class OreAPI {
   }
 
   private static void applyDefaultSettings(HttpsURLConnection connection) throws ProtocolException {
+    final int defaultTimeout = AuraUpdateChecker.getConfig().getTiming().getConnectionTimeout();
+
     connection.setRequestMethod("GET");
-    connection.setConnectTimeout(DEFAULT_TIMEOUT);
-    connection.setReadTimeout(DEFAULT_TIMEOUT);
+    connection.setConnectTimeout(defaultTimeout);
+    connection.setReadTimeout(defaultTimeout);
     connection.setUseCaches(false);
     connection.setInstanceFollowRedirects(true);
   }

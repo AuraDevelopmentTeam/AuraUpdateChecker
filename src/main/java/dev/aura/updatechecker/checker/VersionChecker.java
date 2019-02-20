@@ -2,6 +2,7 @@ package dev.aura.updatechecker.checker;
 
 import com.google.common.collect.ImmutableMap;
 import dev.aura.updatechecker.AuraUpdateChecker;
+import dev.aura.updatechecker.config.Config;
 import dev.aura.updatechecker.message.PluginMessages;
 import dev.aura.updatechecker.permission.PermissionRegistry;
 import dev.aura.updatechecker.util.PluginContainerUtil;
@@ -28,6 +29,7 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 @RequiredArgsConstructor
 public class VersionChecker {
   private final Collection<PluginContainer> availablePlugins;
+  private final Config config;
 
   private List<PluginContainer> checkablePlugins = null;
   private final List<Task> scheduledTasks = new LinkedList<>();
@@ -210,7 +212,7 @@ public class VersionChecker {
             Task.builder()
                 .execute(this::checkForPluginUpdatesTask)
                 .delay(5, TimeUnit.SECONDS)
-                .interval(30, TimeUnit.MINUTES)
+                .interval(config.getTiming().getUpdateVersionInfoInterval(), TimeUnit.MINUTES)
                 .async()
                 .name(AuraUpdateChecker.ID + "-update-check"));
 

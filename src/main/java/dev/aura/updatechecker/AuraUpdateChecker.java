@@ -99,7 +99,8 @@ public class AuraUpdateChecker {
   }
 
   public static Config getConfig() {
-    return instance.config;
+    if ((instance == null) || (instance.logger == null)) return Config.DEFAULT_CONFIG;
+    else return instance.config;
   }
 
   public static MessagesTranslator getTranslator() {
@@ -156,7 +157,7 @@ public class AuraUpdateChecker {
 
   @Listener
   public void serverStarted(GameStartedServerEvent event) {
-    versionChecker = new VersionChecker(Sponge.getPluginManager().getPlugins());
+    versionChecker = new VersionChecker(Sponge.getPluginManager().getPlugins(), config);
 
     versionChecker.start();
   }
