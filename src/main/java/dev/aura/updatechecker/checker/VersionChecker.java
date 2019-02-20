@@ -66,7 +66,7 @@ public class VersionChecker {
   public Optional<Integer> checkForPluginAvailability() {
     final Logger logger = AuraUpdateChecker.getLogger();
 
-    logger.debug("Start checking plugins for availability on Ore Repository...");
+    logDebug(logger, "Start checking plugins for availability on Ore Repository...");
 
     if (checkablePlugins != null) {
       logger.info("Already checked plugins for availability!");
@@ -82,7 +82,8 @@ public class VersionChecker {
             .filter(
                 plugin -> {
                   final String pluginName = PluginContainerUtil.getPluginString(plugin);
-                  logger.trace(
+                  logTrace(
+                      logger,
                       "Started checking if plugin "
                           + pluginName
                           + " is available on Ore Repository.");
@@ -90,9 +91,10 @@ public class VersionChecker {
                   final boolean isOnOre = OreAPI.isOnOre(plugin);
 
                   if (isOnOre) {
-                    logger.debug("Plugin " + pluginName + " is available on Ore Repository.");
+                    logDebug(logger, "Plugin " + pluginName + " is available on Ore Repository.");
                   } else {
-                    logger.trace("Plugin " + pluginName + " is NOT available on Ore Repository.");
+                    logDebug(
+                        logger, "Plugin " + pluginName + " is NOT available on Ore Repository.");
                   }
 
                   return isOnOre;
@@ -105,8 +107,8 @@ public class VersionChecker {
       logger.info("If it is working again, run \"/uc reload\", to reenable update checking.");
     }
 
-    logger.debug("Finished checking plugins for availability on Ore Repository!");
-    logger.debug(checkablePlugins.size() + " plugins available for update checks!");
+    logDebug(logger, "Finished checking plugins for availability on Ore Repository!");
+    logDebug(logger, checkablePlugins.size() + " plugins available for update checks!");
 
     return Optional.of(OreAPI.getErrorCounter());
   }
@@ -114,7 +116,7 @@ public class VersionChecker {
   public void checkForPluginUpdates() {
     final Logger logger = AuraUpdateChecker.getLogger();
 
-    logger.debug("Start fetching plugin versions from the Ore Repository...");
+    logDebug(logger, "Start fetching plugin versions from the Ore Repository...");
 
     final Map<PluginContainer, PluginVersionInfo> newVersionInfo = new HashMap<>();
     boolean updatesAvailable = false;
@@ -128,7 +130,7 @@ public class VersionChecker {
       }
     }
 
-    logger.debug("Finished fetching plugin versions from the Ore Repository!");
+    logDebug(logger, "Finished fetching plugin versions from the Ore Repository!");
 
     if (newVersionInfo.equals(versionInfo)) {
       return;
@@ -234,5 +236,21 @@ public class VersionChecker {
     AuraUpdateChecker.getLogger().debug("Started task \"" + task.getName() + '"');
 
     return task;
+  }
+
+  private void logDebug(Logger logger, String message) {
+    if (config.getGeneral().getDebug()) {
+      logger.info("[Debug]: " + message);
+    } else {
+      logger.debug(message);
+    }
+  }
+
+  private void logTrace(Logger logger, String message) {
+    if (config.getGeneral().getDebug()) {
+      logger.info("[Trace]: " + message);
+    } else {
+      logger.trace(message);
+    }
   }
 }

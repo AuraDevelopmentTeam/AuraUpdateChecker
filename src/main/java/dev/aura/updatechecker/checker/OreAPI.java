@@ -81,12 +81,11 @@ public class OreAPI {
               .get("name")
               .getAsString();
 
-      AuraUpdateChecker.getLogger()
-          .debug(
-              "Recommended Version for plugin "
-                  + PluginContainerUtil.getPluginString(plugin)
-                  + " is: "
-                  + recommendedVersion);
+      logDebug(
+          "Recommended Version for plugin "
+              + PluginContainerUtil.getPluginString(plugin)
+              + " is: "
+              + recommendedVersion);
 
       return Optional.of(new Version(recommendedVersion));
     } catch (ClassCastException | IOException | URISyntaxException | IllegalStateException e) {
@@ -129,20 +128,17 @@ public class OreAPI {
         }
       }
 
-      AuraUpdateChecker.getLogger()
-          .debug(
-              "Available Versions for plugin "
-                  + PluginContainerUtil.getPluginString(plugin)
-                  + " are: "
-                  + allVersions
-                      .entrySet()
-                      .stream()
-                      .map(
-                          entry ->
-                              dateFormat.format(entry.getKey())
-                                  + ": "
-                                  + entry.getValue().getInput())
-                      .collect(Collectors.joining("\n\t", "\n\t", "")));
+      logDebug(
+          "Available Versions for plugin "
+              + PluginContainerUtil.getPluginString(plugin)
+              + " are: "
+              + allVersions
+                  .entrySet()
+                  .stream()
+                  .map(
+                      entry ->
+                          dateFormat.format(entry.getKey()) + ": " + entry.getValue().getInput())
+                  .collect(Collectors.joining("\n\t", "\n\t", "")));
 
       return Optional.of(allVersions);
     } catch (ClassCastException | IOException | URISyntaxException | ParseException e) {
@@ -172,7 +168,7 @@ public class OreAPI {
       throws ClassCastException, IOException, URISyntaxException {
     String urlStr = API_URL + PluginContainerUtil.replacePluginPlaceHolders(call, plugin);
 
-    AuraUpdateChecker.getLogger().trace("Contacting URL: " + urlStr);
+    logTrace("Contacting URL: " + urlStr);
 
     URL url = new URL(urlStr);
     // Verify URL
@@ -208,6 +204,26 @@ public class OreAPI {
               + PluginContainerUtil.getPluginString(plugin)
               + ": "
               + e.getClass().getName());
+    }
+  }
+
+  private static void logDebug(String message) {
+    final Logger logger = AuraUpdateChecker.getLogger();
+
+    if (AuraUpdateChecker.getConfig().getGeneral().getDebug()) {
+      logger.info("[Debug]: " + message);
+    } else {
+      logger.debug(message);
+    }
+  }
+
+  private static void logTrace(String message) {
+    final Logger logger = AuraUpdateChecker.getLogger();
+
+    if (AuraUpdateChecker.getConfig().getGeneral().getDebug()) {
+      logger.info("[Trace]: " + message);
+    } else {
+      logger.trace(message);
     }
   }
 }
