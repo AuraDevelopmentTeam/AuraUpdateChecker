@@ -17,6 +17,7 @@ public class CommandBase {
             .build();
 
     Sponge.getCommandManager()
-        .register(plugin, updatechecker, "updatechecker", "updatecheck", "uc", "upcheck", "up");
+        .register(
+            plugin, updatechecker, AuraUpdateChecker.ID, "updatecheck", "uc", "upcheck", "up");
   }
 }
