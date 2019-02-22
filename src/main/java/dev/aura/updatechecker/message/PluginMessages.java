@@ -1,6 +1,7 @@
 package dev.aura.updatechecker.message;
 
 import dev.aura.lib.messagestranslator.Message;
+import dev.aura.lib.messagestranslator.MessagesTranslator;
 import dev.aura.updatechecker.AuraUpdateChecker;
 import java.util.Map;
 import lombok.Getter;
@@ -43,6 +44,12 @@ public enum PluginMessages implements Message {
   }
 
   public String getMessageRaw(Map<String, String> replacements) {
-    return AuraUpdateChecker.getTranslator().translateWithFallback(this, replacements);
+    final MessagesTranslator translator = AuraUpdateChecker.getTranslator();
+
+    if (translator == null) {
+      return getStringPath();
+    } else {
+      return translator.translateWithFallback(this, replacements);
+    }
   }
 }

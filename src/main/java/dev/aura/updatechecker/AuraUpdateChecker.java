@@ -104,7 +104,8 @@ public class AuraUpdateChecker {
   }
 
   public static MessagesTranslator getTranslator() {
-    return instance.translator;
+    if ((instance == null) || (instance.translator == null)) return null;
+    else return instance.translator;
   }
 
   @Listener
