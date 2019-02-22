@@ -66,10 +66,10 @@ public class VersionChecker {
   public Optional<Integer> checkForPluginAvailability() {
     final Logger logger = AuraUpdateChecker.getLogger();
 
-    logDebug(logger, "Start checking plugins for availability on Ore Repository...");
+    logDebug(logger, PluginMessages.LOG_STARTING_CHECKS.getMessageRaw());
 
     if (checkablePlugins != null) {
-      logger.info("Already checked plugins for availability!");
+      logger.info(PluginMessages.LOG_ALREADY_CHECKED.getMessageRaw());
 
       return Optional.empty();
     }
@@ -84,17 +84,21 @@ public class VersionChecker {
                   final String pluginName = PluginContainerUtil.getPluginString(plugin);
                   logTrace(
                       logger,
-                      "Started checking if plugin "
-                          + pluginName
-                          + " is available on Ore Repository.");
+                      PluginMessages.LOG_ALREADY_CHECKED.getMessageRaw(
+                          ImmutableMap.of("plugin", pluginName)));
 
                   final boolean isOnOre = OreAPI.isOnOre(plugin);
 
                   if (isOnOre) {
-                    logDebug(logger, "Plugin " + pluginName + " is available on Ore Repository.");
+                    logDebug(
+                        logger,
+                        PluginMessages.LLOG_PLUGIN_ON_ORE.getMessageRaw(
+                            ImmutableMap.of("plugin", pluginName)));
                   } else {
                     logDebug(
-                        logger, "Plugin " + pluginName + " is NOT available on Ore Repository.");
+                        logger,
+                        PluginMessages.LLOG_PLUGIN_NOT_ON_ORE.getMessageRaw(
+                            ImmutableMap.of("plugin", pluginName)));
                   }
 
                   return isOnOre;
@@ -102,13 +106,15 @@ public class VersionChecker {
             .collect(Collectors.toList());
 
     if (OreAPI.getErrorCounter() >= availablePlugins.size()) {
-      logger.warn(
-          "It appears that your internet connection is down or not working properly, because all HTTPS requests failed.");
-      logger.info("If it is working again, run \"/uc reload\", to reenable update checking.");
+      logger.warn(PluginMessages.LOG_INTERNET_DOWN.getMessageRaw());
+      logger.info(PluginMessages.LOG_RUN_RELOAD.getMessageRaw());
     }
 
-    logDebug(logger, "Finished checking plugins for availability on Ore Repository!");
-    logDebug(logger, checkablePlugins.size() + " plugins available for update checks!");
+    logDebug(logger, PluginMessages.LOG_FINISHED_CHECKS.getMessageRaw());
+    logDebug(
+        logger,
+        PluginMessages.LOG_AVAILABLE_COUNT.getMessageRaw(
+            ImmutableMap.of("count", Integer.toString(checkablePlugins.size()))));
 
     return Optional.of(OreAPI.getErrorCounter());
   }
@@ -116,7 +122,7 @@ public class VersionChecker {
   public void checkForPluginUpdates() {
     final Logger logger = AuraUpdateChecker.getLogger();
 
-    logDebug(logger, "Start fetching plugin versions from the Ore Repository...");
+    logDebug(logger, PluginMessages.LOG_START_FETCHING.getMessageRaw());
 
     final Map<PluginContainer, PluginVersionInfo> newVersionInfo = new HashMap<>();
     boolean updatesAvailable = false;
@@ -130,7 +136,7 @@ public class VersionChecker {
       }
     }
 
-    logDebug(logger, "Finished fetching plugin versions from the Ore Repository!");
+    logDebug(logger, PluginMessages.LOG_FINISHED_FETCHING.getMessageRaw());
 
     if (newVersionInfo.equals(versionInfo)) {
       return;
@@ -233,7 +239,10 @@ public class VersionChecker {
 
     final Task task = taskBuilder.submit(AuraUpdateChecker.getInstance());
 
-    AuraUpdateChecker.getLogger().debug("Started task \"" + task.getName() + '"');
+    AuraUpdateChecker.getLogger()
+        .debug(
+            PluginMessages.LOG_AVAILABLE_COUNT.getMessageRaw(
+                ImmutableMap.of("count", task.getName())));
 
     return task;
   }

@@ -25,7 +25,19 @@ public enum PluginMessages implements Message {
   LOG_RECOMMENDED_VERSION("recommendedVersion"),
   LOG_AVAILABLE_VERSIONS("availableVersions"),
   LOG_CONTACTING_URL("contactingURL"),
-  LOG_CONTACTING_ERROR("contactingError");
+  LOG_CONTACTING_ERROR("contactingError"),
+  LOG_STARTING_CHECKS("startingChecks"),
+  LOG_ALREADY_CHECKED("alreadyChecked"),
+  LOG_STARTED_PLUGIN_CHECK("startedPluginCheck"),
+  LLOG_PLUGIN_ON_ORE("pluginOnOre"),
+  LLOG_PLUGIN_NOT_ON_ORE("pluginNotOnOre"),
+  LOG_INTERNET_DOWN("internetDown"),
+  LOG_RUN_RELOAD("runReload"),
+  LOG_FINISHED_CHECKS("finishedChecks"),
+  LOG_AVAILABLE_COUNT("availableCount"),
+  LOG_START_FETCHING("startFetching"),
+  LOG_FINISHED_FETCHING("finishedFetching"),
+  LOG_STARTED_TASK("startedTask");
 
   @Getter private final String stringPath;
 
