@@ -59,6 +59,6 @@ internetDown: "Es scheint so als würde deine Internetverbindung nicht richtig f
 runReload: "Sobald sie wieder funktioniert, führe \"/updatechecker reload\" aus, um die Updateüberprüfung zu reaktivieren."
 finishedChecks: "Verfügbarkeitsprüfung der Plugins auf dem Ore Repository abgeschlossen!"
 availableCount: "%count% Plugins sind verfügbar für Updateüberprüfungen!"
-startFetching: "Begine die Pluginversionen vom Ore Repository abzurufen..."
+startFetching: "Beginne die Pluginversionen vom Ore Repository abzurufen..."
 finishedFetching: "Pluginversionsabrufung vom Ore Repository abgeschlossen!"
 startedTask: "Task \"%task\" gestartet."
