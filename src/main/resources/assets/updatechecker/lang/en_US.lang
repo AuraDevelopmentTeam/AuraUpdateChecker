@@ -46,8 +46,8 @@ updateAvailableLatest: "\n  - Latest version: %version%"
 ####################################################################################################
 # LogMessages
 ####################################################################################################
-recommendedVersion: "Recommended Version for plugin %plugin% is: %version%"
-availableVersions: "Available Versions for plugin %plugin% are:"
+recommendedVersion: "Recommended version for plugin %plugin% is: %version%"
+availableVersions: "Available versions for plugin %plugin% are:"
 contactingURL: "Contacting URL: %url%"
 contactingError: "Could not contact the Ore Repository API for plugin %plugin%"
 startingChecks: "Start checking plugins for availability on Ore Repository..."
@@ -61,4 +61,4 @@ finishedChecks: "Finished checking plugins for availability on Ore Repository!"
 availableCount: "%count% plugins available for update checks!"
 startFetching: "Start fetching plugin versions from the Ore Repository..."
 finishedFetching: "Finished fetching plugin versions from the Ore Repository!"
-startedTask: "Started task \"%task\""
+startedTask: "Started task \"%task\"."
