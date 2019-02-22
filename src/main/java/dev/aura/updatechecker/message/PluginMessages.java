@@ -19,7 +19,12 @@ public enum PluginMessages implements Message {
   NOTIFICATION_UPDATE_AVAILABLE("updateAvailable"),
   NOTIFICATION_UPDATE_AVAILABLE_INSTALLED("updateAvailableInstalled"),
   NOTIFICATION_UPDATE_AVAILABLE_RECOMMENDED("updateAvailableRecommended"),
-  NOTIFICATION_UPDATE_AVAILABLE_LATEST("updateAvailableLatest");
+  NOTIFICATION_UPDATE_AVAILABLE_LATEST("updateAvailableLatest"),
+  // Log Messages
+  LOG_RECOMMENDED_VERSION("recommendedVersion"),
+  LOG_AVAILABLE_VERSIONS("availableVersions"),
+  LOG_CONTACTING_URL("contactingURL"),
+  LOG_CONTACTING_ERROR("contactingError");
 
   @Getter private final String stringPath;
 

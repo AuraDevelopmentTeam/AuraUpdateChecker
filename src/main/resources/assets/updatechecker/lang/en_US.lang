@@ -41,4 +41,12 @@ updateAvailableTitle: "Updates available for:"
 updateAvailable: "\n%plugin%:%installed%%recommended%%latest%\n"
 updateAvailableInstalled: "\n  - Installed version: %version%"
 updateAvailableRecommended: "\n  - Recommended version: %version%"
-updateAvailableLatest: "\n  - Latest version: %version%" 
+updateAvailableLatest: "\n  - Latest version: %version%"
+
+####################################################################################################
+# LogMessages
+####################################################################################################
+recommendedVersion: "Recommended Version for plugin %plugin% is: %version%"
+availableVersions: "Available Versions for plugin %plugin% are:"
+contactingURL: "Contacting URL: %url%"
+contactingError: "Could not contact the Ore Repository API for plugin %plugin%"

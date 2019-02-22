@@ -1,11 +1,13 @@
 package dev.aura.updatechecker.checker;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.aura.lib.version.Version;
 import dev.aura.updatechecker.AuraUpdateChecker;
+import dev.aura.updatechecker.message.PluginMessages;
 import dev.aura.updatechecker.util.PluginContainerUtil;
 import dev.aura.updatechecker.util.PluginVersionInfo;
 import java.io.IOException;
@@ -82,10 +84,12 @@ public class OreAPI {
               .getAsString();
 
       logDebug(
-          "Recommended Version for plugin "
-              + PluginContainerUtil.getPluginString(plugin)
-              + " is: "
-              + recommendedVersion);
+          PluginMessages.LOG_RECOMMENDED_VERSION.getMessageRaw(
+              ImmutableMap.of(
+                  "plugin",
+                  PluginContainerUtil.getPluginString(plugin),
+                  "version",
+                  recommendedVersion)));
 
       return Optional.of(new Version(recommendedVersion));
     } catch (ClassCastException | IOException | URISyntaxException | IllegalStateException e) {
@@ -129,9 +133,8 @@ public class OreAPI {
       }
 
       logDebug(
-          "Available Versions for plugin "
-              + PluginContainerUtil.getPluginString(plugin)
-              + " are: "
+          PluginMessages.LOG_RECOMMENDED_VERSION.getMessageRaw(
+                  ImmutableMap.of("plugin", PluginContainerUtil.getPluginString(plugin)))
               + allVersions
                   .entrySet()
                   .stream()
@@ -168,7 +171,7 @@ public class OreAPI {
       throws ClassCastException, IOException, URISyntaxException {
     String urlStr = API_URL + PluginContainerUtil.replacePluginPlaceHolders(call, plugin);
 
-    logTrace("Contacting URL: " + urlStr);
+    logTrace(PluginMessages.LOG_CONTACTING_URL.getMessageRaw(ImmutableMap.of("url", urlStr)));
 
     URL url = new URL(urlStr);
     // Verify URL
@@ -192,18 +195,24 @@ public class OreAPI {
 
   private static void printErrorMessage(PluginContainer plugin, Throwable e) {
     final Logger logger = AuraUpdateChecker.getLogger();
+    final String message =
+        PluginMessages.LOG_CONTACTING_ERROR.getMessageRaw(
+            ImmutableMap.of("plugin", PluginContainerUtil.getPluginString(plugin)));
 
     if (errorCounter.incrementAndGet() == 1) {
-      logger.warn(
-          "Could not contact the Ore Repository API for plugin "
-              + PluginContainerUtil.getPluginString(plugin),
-          e);
+      logWarn(message, e);
     } else {
-      logger.warn(
-          "Could not contact the Ore Repository API for plugin "
-              + PluginContainerUtil.getPluginString(plugin)
-              + ": "
-              + e.getClass().getName());
+      logger.warn(message, e);
+    }
+  }
+
+  private static void logWarn(String message, Throwable e) {
+    final Logger logger = AuraUpdateChecker.getLogger();
+
+    if (AuraUpdateChecker.getConfig().getGeneral().getDebug()) {
+      logger.warn(message, e);
+    } else {
+      logger.debug(message, e);
     }
   }
 
