@@ -7,3 +7,4 @@ git:
 
 install: "./gradlew assemble --refresh-dependencies"
 script:  "./gradlew build --refresh-dependencies"
+after_failure: "cat run/log/unit-test.log"
