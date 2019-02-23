@@ -26,11 +26,17 @@ public class PluginVersionInfoTest {
   public void pluginContainerTest() {
     final PluginVersionInfo versionInfo =
         new PluginVersionInfo(
+            new DummyPluginContainer("dummy", DUMMY_VERSION_STRING),
+            EMPTY_VERSION,
+            ImmutableMap.of(new Date(0), EMPTY_VERSION));
+    final PluginVersionInfo versionInfoEmpty =
+        new PluginVersionInfo(
             new DummyPluginContainer("dummy"),
             EMPTY_VERSION,
             ImmutableMap.of(new Date(0), EMPTY_VERSION));
 
-    assertEquals(new Version("0.0.0"), versionInfo.getInstalledVersion());
+    assertEquals(DUMMY_VERSION, versionInfo.getInstalledVersion());
+    assertEquals(new Version("0.0.0"), versionInfoEmpty.getInstalledVersion());
   }
 
   @Test
