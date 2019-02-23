@@ -7,9 +7,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.Value;
 import lombok.experimental.Delegate;
@@ -52,7 +52,7 @@ public class PluginVersionInfo {
   }
 
   @Getter
-  @AllArgsConstructor
+  @RequiredArgsConstructor
   @ToString
   public static enum PluginStatus {
     UP_TO_DATE(true, false, false),
