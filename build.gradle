@@ -9,4 +9,6 @@ dependencies {
         transitive = false
     }
     shadowRelocate "dev.aura.lib.version:VersionLib:${versionLib_version}"
+
+    testCompile "io.specto:hoverfly-java:${hoverfly_version}"
 }
