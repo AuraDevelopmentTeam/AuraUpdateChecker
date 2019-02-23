@@ -22,7 +22,7 @@ import ninja.leaping.configurate.objectmapping.GuiceObjectMapperFactory;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
-import org.slf4j.helpers.NOPLogger;
+import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.config.ConfigDir;
@@ -86,7 +86,7 @@ public class AuraUpdateChecker {
   }
 
   public static Logger getLogger() {
-    if ((instance == null) || (instance.logger == null)) return NOPLogger.NOP_LOGGER;
+    if ((instance == null) || (instance.logger == null)) return LoggerFactory.getLogger(NAME);
     else return instance.logger;
   }
 
