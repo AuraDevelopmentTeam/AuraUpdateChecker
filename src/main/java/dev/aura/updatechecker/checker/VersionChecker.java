@@ -35,7 +35,6 @@ public class VersionChecker {
   private final List<Task> scheduledTasks = new LinkedList<>();
   private final AtomicBoolean active = new AtomicBoolean(false);
 
-  @Getter private boolean notifyAdmins = false;
   @Getter private ImmutableMap<PluginContainer, PluginVersionInfo> versionInfo = ImmutableMap.of();
   @Getter private String updateMessage = "";
   @Getter private PaginationList updateMessagePagination = null;
@@ -119,31 +118,71 @@ public class VersionChecker {
     return Optional.of(OreAPI.getErrorCounter());
   }
 
-  public void checkForPluginUpdates() {
+  public void checkForPluginAvailabilityTask(Task self) {
+    final int errorCount = checkForPluginAvailability().orElse(Integer.MAX_VALUE);
+
+    if (errorCount >= availablePlugins.size()) {
+      active.set(false);
+    }
+
+    final Task task =
+        startTask(
+            Task.builder()
+                .execute(this::checkForPluginUpdatesTask)
+                .delay(5, TimeUnit.SECONDS)
+                .interval(config.getTiming().getUpdateVersionInfoInterval(), TimeUnit.MINUTES)
+                .async()
+                .name(AuraUpdateChecker.ID + "-update-check"));
+
+    if (task != null) {
+      scheduledTasks.add(task);
+    }
+
+    scheduledTasks.remove(self);
+  }
+
+  public boolean checkForPluginUpdates() {
     final Logger logger = AuraUpdateChecker.getLogger();
 
     logDebug(logger, PluginMessages.LOG_START_FETCHING.getMessageRaw());
 
     final Map<PluginContainer, PluginVersionInfo> newVersionInfo = new HashMap<>();
-    boolean updatesAvailable = false;
 
     for (PluginContainer plugin : checkablePlugins) {
       final Optional<PluginVersionInfo> pluginInfo = OreAPI.getPluginVersionInfo(plugin);
 
       if (pluginInfo.isPresent()) {
         newVersionInfo.put(plugin, pluginInfo.get());
-        updatesAvailable = updatesAvailable || !pluginInfo.get().isUpToDate();
       }
     }
 
     logDebug(logger, PluginMessages.LOG_FINISHED_FETCHING.getMessageRaw());
 
     if (newVersionInfo.equals(versionInfo)) {
+      return false;
+    }
+
+    versionInfo = ImmutableMap.copyOf(newVersionInfo);
+
+    return true;
+  }
+
+  public void checkForPluginUpdatesTask(Task self) {
+    final Logger logger = AuraUpdateChecker.getLogger();
+    final boolean versionsChanged = checkForPluginUpdates();
+
+    if (!versionsChanged) {
       return;
     }
 
-    notifyAdmins = true;
-    versionInfo = ImmutableMap.copyOf(newVersionInfo);
+    boolean updatesAvailable = false;
+
+    for (PluginVersionInfo pluginInfo : versionInfo.values()) {
+      if (!pluginInfo.isUpToDate()) {
+        updatesAvailable = true;
+        break;
+      }
+    }
 
     if (!updatesAvailable) {
       return;
@@ -202,33 +241,6 @@ public class VersionChecker {
             player ->
                 player.hasPermission(PermissionRegistry.NOTIFICATION_UPDATE_AVAIABLE_PERIODIC))
         .forEach(updateMessagePagination::sendTo);
-  }
-
-  public void checkForPluginUpdatesTask(Task self) {
-    checkForPluginUpdates();
-  }
-
-  public void checkForPluginAvailabilityTask(Task self) {
-    final int errorCount = checkForPluginAvailability().orElse(Integer.MAX_VALUE);
-
-    if (errorCount >= availablePlugins.size()) {
-      active.set(false);
-    }
-
-    final Task task =
-        startTask(
-            Task.builder()
-                .execute(this::checkForPluginUpdatesTask)
-                .delay(5, TimeUnit.SECONDS)
-                .interval(config.getTiming().getUpdateVersionInfoInterval(), TimeUnit.MINUTES)
-                .async()
-                .name(AuraUpdateChecker.ID + "-update-check"));
-
-    if (task != null) {
-      scheduledTasks.add(task);
-    }
-
-    scheduledTasks.remove(self);
   }
 
   @Nullable
