@@ -19,4 +19,8 @@ public class DummyPluginContainer implements PluginContainer {
   public DummyPluginContainer(String id) {
     this(id, Optional.empty());
   }
+
+  public DummyPluginContainer(String id, String version) {
+    this(id, Optional.ofNullable(version));
+  }
 }
