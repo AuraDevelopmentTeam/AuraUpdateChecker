@@ -4,14 +4,22 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import dev.aura.updatechecker.AuraUpdateChecker;
+import io.specto.hoverfly.junit.core.SimulationSource;
+import io.specto.hoverfly.junit.rule.HoverflyRule;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.spongepowered.api.plugin.PluginContainer;
 
 public class OreAPITest {
+  @ClassRule
+  public static HoverflyRule hoverflyRule =
+      HoverflyRule.inSimulationMode(SimulationSource.defaultPath("simulation.json"));
+
   @Before
   @After
   public void resetCounter() {
@@ -20,12 +28,11 @@ public class OreAPITest {
 
   @Test
   public void availablityTest() {
-    // TODO: Replace with AuraUpdateChecker.ID
-    final PluginContainer existingContainer = new DummyPluginContainer("invsync");
+    final PluginContainer existingContainer = new DummyPluginContainer(AuraUpdateChecker.ID);
     final PluginContainer nonExistingContainer =
         new DummyPluginContainer("thisIDdoesntexistbfjsdgbhjbhghhsfgdsghfh");
 
-    assertTrue("Expected invsync to be available", OreAPI.isOnOre(existingContainer));
+    assertTrue("Expected updatechecker to be available", OreAPI.isOnOre(existingContainer));
     assertFalse(
         "Expected thisIDdoesntexistbfjsdgbhjbhghhsfgdsghfh not to be available",
         OreAPI.isOnOre(nonExistingContainer));
