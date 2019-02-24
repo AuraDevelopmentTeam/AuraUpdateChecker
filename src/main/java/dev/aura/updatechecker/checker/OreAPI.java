@@ -146,7 +146,7 @@ public class OreAPI {
                               dateFormat.format(entry.getKey())
                                   + ": "
                                   + entry.getValue().getInput())
-                      .collect(Collectors.joining("\t", "\n\t", "")))));
+                      .collect(Collectors.joining("\n\t", "\t", "")))));
 
       return Optional.of(allVersions);
     } catch (ClassCastException | IOException | URISyntaxException | ParseException e) {
