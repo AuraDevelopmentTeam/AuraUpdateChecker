@@ -6,5 +6,5 @@ git:
   depth: false
 
 install: "./gradlew assemble --refresh-dependencies"
-script:  "./gradlew build --refresh-dependencies"
+script:  "./gradlew build --refresh-dependencies --max-workers 1"
 after_failure: "cat run/logs/unit-test.log"
