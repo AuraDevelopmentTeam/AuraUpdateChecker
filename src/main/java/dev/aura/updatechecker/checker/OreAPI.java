@@ -133,7 +133,7 @@ public class OreAPI {
       }
 
       logDebug(
-          PluginMessages.LOG_RECOMMENDED_VERSION.getMessageRaw(
+          PluginMessages.LOG_AVAILABLE_VERSIONS.getMessageRaw(
                   ImmutableMap.of("plugin", PluginContainerUtil.getPluginString(plugin)))
               + allVersions
                   .entrySet()
