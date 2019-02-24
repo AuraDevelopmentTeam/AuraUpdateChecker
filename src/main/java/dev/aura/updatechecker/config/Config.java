@@ -10,8 +10,6 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 @Data
 @Setter(AccessLevel.NONE)
 public class Config {
-  public static final Config DEFAULT_CONFIG = new Config();
-
   @Setting private General general = new General();
   @Setting private Timing timing = new Timing();
 

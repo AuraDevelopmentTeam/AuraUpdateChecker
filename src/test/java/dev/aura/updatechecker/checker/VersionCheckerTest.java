@@ -5,19 +5,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import dev.aura.updatechecker.AuraUpdateChecker;
-import dev.aura.updatechecker.config.Config;
-import io.specto.hoverfly.junit.core.SimulationSource;
-import io.specto.hoverfly.junit.rule.HoverflyRule;
+import dev.aura.updatechecker.TestApi;
 import java.util.Arrays;
 import java.util.Optional;
-import org.junit.ClassRule;
 import org.junit.Test;
 
-public class VersionCheckerTest {
-  @ClassRule
-  public static HoverflyRule hoverflyRule =
-      HoverflyRule.inSimulationMode(SimulationSource.defaultPath("simulation.json"));
-
+public class VersionCheckerTest extends TestApi {
   @Test
   public void allErrorAvailabilitTest() {
     final VersionChecker checker =
@@ -26,7 +19,7 @@ public class VersionCheckerTest {
                 new DummyPluginContainer("error!&!&&!&##"),
                 new DummyPluginContainer("error!&!&&!&##"),
                 new DummyPluginContainer("error!&!&&!&##")),
-            Config.DEFAULT_CONFIG);
+            DEFAULT_CONFIG);
 
     assertEquals("Expected 3 errors", Optional.of(3), checker.checkForPluginAvailability());
   }
@@ -39,7 +32,7 @@ public class VersionCheckerTest {
                 new DummyPluginContainer(AuraUpdateChecker.ID),
                 new DummyPluginContainer("notavailablegfndfngkd"),
                 new DummyPluginContainer("error!&!&&!&##")),
-            Config.DEFAULT_CONFIG);
+            DEFAULT_CONFIG);
 
     assertEquals("Expected 1 error", Optional.of(1), checker.checkForPluginAvailability());
   }
@@ -51,7 +44,7 @@ public class VersionCheckerTest {
             Arrays.asList(
                 new DummyPluginContainer(AuraUpdateChecker.ID),
                 new DummyPluginContainer("nucleus")),
-            Config.DEFAULT_CONFIG);
+            DEFAULT_CONFIG);
 
     // No errors here
     assertEquals("Expected 0 errors", Optional.of(0), checker.checkForPluginAvailability());

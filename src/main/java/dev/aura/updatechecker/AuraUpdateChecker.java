@@ -22,7 +22,6 @@ import ninja.leaping.configurate.objectmapping.GuiceObjectMapperFactory;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.config.ConfigDir;
@@ -79,15 +78,14 @@ public class AuraUpdateChecker {
   protected PermissionRegistry permissionRegistry;
   protected List<Object> eventListeners = new LinkedList<>();
 
-  public AuraUpdateChecker() {
+  protected AuraUpdateChecker() {
     if (instance != null) throw new IllegalStateException("Instance already exists!");
 
     instance = this;
   }
 
   public static Logger getLogger() {
-    if ((instance == null) || (instance.logger == null)) return LoggerFactory.getLogger(NAME);
-    else return instance.logger;
+    return instance.logger;
   }
 
   public static Path getConfigDir() {
@@ -99,13 +97,11 @@ public class AuraUpdateChecker {
   }
 
   public static Config getConfig() {
-    if ((instance == null) || (instance.logger == null)) return Config.DEFAULT_CONFIG;
-    else return instance.config;
+    return instance.config;
   }
 
   public static MessagesTranslator getTranslator() {
-    if ((instance == null) || (instance.translator == null)) return null;
-    else return instance.translator;
+    return instance.translator;
   }
 
   @Listener

@@ -5,21 +5,15 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import dev.aura.updatechecker.AuraUpdateChecker;
-import io.specto.hoverfly.junit.core.SimulationSource;
-import io.specto.hoverfly.junit.rule.HoverflyRule;
+import dev.aura.updatechecker.TestApi;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.ClassRule;
 import org.junit.Test;
 import org.spongepowered.api.plugin.PluginContainer;
 
-public class OreAPITest {
-  @ClassRule
-  public static HoverflyRule hoverflyRule =
-      HoverflyRule.inSimulationMode(SimulationSource.defaultPath("simulation.json"));
-
+public class OreAPITest extends TestApi {
   @Before
   @After
   public void resetCounter() {
