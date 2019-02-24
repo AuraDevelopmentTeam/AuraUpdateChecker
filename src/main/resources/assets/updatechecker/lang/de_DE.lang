@@ -47,7 +47,7 @@ updateAvailableLatest: "\n  - Aktuellste Version: %version%"
 # LogMessages
 ####################################################################################################
 recommendedVersion: "Empfohlene Version für das Plugin %plugin% ist: %version%"
-availableVersions: "Verfügbare Versionen für das Plugin %plugin% sind:"
+availableVersions: "Verfügbare Versionen für das Plugin %plugin% sind:\n%versions%"
 contactingURL: "Kontaktiere URL: %url%"
 contactingError: "Konnte die Ore Repository API nicht erreichen beim Versuch das Plugin %plugin% abzurufen"
 startingChecks: "Beginne damit die Verfügbarkeit der Plugins auf dem Ore Repository zu überprüfen..."

@@ -134,14 +134,19 @@ public class OreAPI {
 
       logDebug(
           PluginMessages.LOG_AVAILABLE_VERSIONS.getMessageRaw(
-                  ImmutableMap.of("plugin", PluginContainerUtil.getPluginString(plugin)))
-              + allVersions
-                  .entrySet()
-                  .stream()
-                  .map(
-                      entry ->
-                          dateFormat.format(entry.getKey()) + ": " + entry.getValue().getInput())
-                  .collect(Collectors.joining("\n\t", "\n\t", "")));
+              ImmutableMap.of(
+                  "plugin",
+                  PluginContainerUtil.getPluginString(plugin),
+                  "versions",
+                  allVersions
+                      .entrySet()
+                      .stream()
+                      .map(
+                          entry ->
+                              dateFormat.format(entry.getKey())
+                                  + ": "
+                                  + entry.getValue().getInput())
+                      .collect(Collectors.joining("\t", "\n\t", "")))));
 
       return Optional.of(allVersions);
     } catch (ClassCastException | IOException | URISyntaxException | ParseException e) {
