@@ -1,3 +1,9 @@
+Version 1.0.1
+-------------
+
+\* Fixed minor issues with translations.  
+
+
 Version 1.0.0
 -------------
 

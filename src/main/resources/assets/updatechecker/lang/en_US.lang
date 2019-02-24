@@ -47,7 +47,7 @@ updateAvailableLatest: "\n  - Latest version: %version%"
 # LogMessages
 ####################################################################################################
 recommendedVersion: "Recommended version for plugin %plugin% is: %version%"
-availableVersions: "Available versions for plugin %plugin% are:"
+availableVersions: "Available versions for plugin %plugin% are:\n%versions%"
 contactingURL: "Contacting URL: %url%"
 contactingError: "Could not contact the Ore Repository API for plugin %plugin%"
 startingChecks: "Start checking plugins for availability on Ore Repository..."
