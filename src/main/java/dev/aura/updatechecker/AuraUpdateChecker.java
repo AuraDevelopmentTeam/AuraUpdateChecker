@@ -3,6 +3,7 @@ package dev.aura.updatechecker;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import dev.aura.lib.messagestranslator.MessagesTranslator;
+import dev.aura.lib.messagestranslator.PluginMessagesTranslator;
 import dev.aura.updatechecker.checker.VersionChecker;
 import dev.aura.updatechecker.command.CommandBase;
 import dev.aura.updatechecker.config.Config;
@@ -125,7 +126,7 @@ public class AuraUpdateChecker {
     }
 
     translator =
-        new MessagesTranslator(
+        new PluginMessagesTranslator(
             new File(getConfigDir().toFile(), "lang"), config.getGeneral().getLanguage(), this, ID);
 
     CommandBase.register(this);

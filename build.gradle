@@ -10,5 +10,6 @@ dependencies {
     }
     shadowRelocate "dev.aura.lib.version:VersionLib:${versionLib_version}"
 
+    testCompile "dev.aura.lib.messagestranslator.unittesthelper:MessagesTranslator-UnitTestHelper:${messagesTranslator_version}"
     testCompile "io.specto:hoverfly-java:${hoverfly_version}"
 }
