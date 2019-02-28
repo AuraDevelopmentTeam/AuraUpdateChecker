@@ -84,7 +84,7 @@ public class VersionChecker {
                   final String pluginName = PluginContainerUtil.getPluginString(plugin);
                   logTrace(
                       logger,
-                      PluginMessages.LOG_ALREADY_CHECKED.getMessageRaw(
+                      PluginMessages.LOG_STARTED_PLUGIN_CHECK.getMessageRaw(
                           ImmutableMap.of("plugin", pluginName)));
 
                   final boolean isOnOre = OreAPI.isOnOre(plugin);
@@ -92,12 +92,12 @@ public class VersionChecker {
                   if (isOnOre) {
                     logDebug(
                         logger,
-                        PluginMessages.LLOG_PLUGIN_ON_ORE.getMessageRaw(
+                        PluginMessages.LOG_PLUGIN_ON_ORE.getMessageRaw(
                             ImmutableMap.of("plugin", pluginName)));
                   } else {
                     logDebug(
                         logger,
-                        PluginMessages.LLOG_PLUGIN_NOT_ON_ORE.getMessageRaw(
+                        PluginMessages.LOG_PLUGIN_NOT_ON_ORE.getMessageRaw(
                             ImmutableMap.of("plugin", pluginName)));
                   }
 
@@ -241,7 +241,7 @@ public class VersionChecker {
 
     AuraUpdateChecker.getLogger()
         .debug(
-            PluginMessages.LOG_AVAILABLE_COUNT.getMessageRaw(
+            PluginMessages.LOG_STARTED_TASK.getMessageRaw(
                 ImmutableMap.of("count", task.getName())));
 
     return task;
