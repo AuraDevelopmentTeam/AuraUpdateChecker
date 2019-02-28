@@ -21,6 +21,7 @@ public enum PluginMessages implements Message {
   NOTIFICATION_UPDATE_AVAILABLE_INSTALLED("updateAvailableInstalled"),
   NOTIFICATION_UPDATE_AVAILABLE_RECOMMENDED("updateAvailableRecommended"),
   NOTIFICATION_UPDATE_AVAILABLE_LATEST("updateAvailableLatest"),
+  NOTIFICATION_NO_UPDATE_AVAILABLE("noUpdateAvailable"),
   // Log Messages
   LOG_RECOMMENDED_VERSION("recommendedVersion"),
   LOG_AVAILABLE_VERSIONS("availableVersions"),

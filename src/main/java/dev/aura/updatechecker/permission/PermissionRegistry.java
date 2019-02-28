@@ -2,6 +2,7 @@ package dev.aura.updatechecker.permission;
 
 import dev.aura.updatechecker.AuraUpdateChecker;
 import dev.aura.updatechecker.command.CommandReload;
+import dev.aura.updatechecker.command.CommandShow;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.spongepowered.api.Sponge;
@@ -46,6 +47,10 @@ public class PermissionRegistry {
     registerPermission(
         CommandReload.RELOAD_PERMISSION,
         "Permission to be able to reload the plugin",
+        PermissionDescription.ROLE_ADMIN);
+    registerPermission(
+        CommandShow.SHOW_PERMISSION,
+        "Permission to be able to show the available updates",
         PermissionDescription.ROLE_ADMIN);
   }
 

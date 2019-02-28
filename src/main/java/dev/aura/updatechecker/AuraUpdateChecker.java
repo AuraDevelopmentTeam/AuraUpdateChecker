@@ -72,11 +72,11 @@ public class AuraUpdateChecker {
   @NonNull
   protected Path configDir;
 
-  @NonNull protected VersionChecker versionChecker;
   @NonNull protected Config config;
+  protected PermissionRegistry permissionRegistry;
+  @NonNull protected VersionChecker versionChecker;
   @NonNull protected MessagesTranslator translator;
 
-  protected PermissionRegistry permissionRegistry;
   protected List<Object> eventListeners = new LinkedList<>();
 
   public AuraUpdateChecker() {
@@ -128,6 +128,7 @@ public class AuraUpdateChecker {
       logger.debug("Registered permissions");
     }
 
+    versionChecker = new VersionChecker(Sponge.getPluginManager().getPlugins(), config);
     translator =
         new MessagesTranslator(
             new File(getConfigDir().toFile(), "lang"), config.getGeneral().getLanguage(), this, ID);
@@ -158,8 +159,6 @@ public class AuraUpdateChecker {
 
   @Listener
   public void serverStarted(GameStartedServerEvent event) {
-    versionChecker = new VersionChecker(Sponge.getPluginManager().getPlugins(), config);
-
     versionChecker.start();
   }
 
