@@ -43,6 +43,13 @@ public class Config {
 
     @Setting(
       comment =
+          "Specifies the time (in seconds) to wait to show the available updates message after an admin joined.\n"
+              + "If the message is hidden by other plugins/messages, increase this value."
+    )
+    private int joinMessageDelay = 5;
+
+    @Setting(
+      comment =
           "Specifies the interval (in minutes) in which the plugin will check the OreAPI for plugin updates.\n"
               + "This is to to prevent spamming the API and still allowing for timely notifications when an update has been released. If\n"
               + "any new updates have been found during one of these updates, all admins will receive a notification."
