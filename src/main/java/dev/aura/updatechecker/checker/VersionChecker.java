@@ -1,5 +1,6 @@
 package dev.aura.updatechecker.checker;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import dev.aura.updatechecker.AuraUpdateChecker;
 import dev.aura.updatechecker.config.Config;
@@ -21,6 +22,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.pagination.PaginationList;
@@ -38,7 +40,7 @@ public class VersionChecker {
   @Getter private boolean notifyAdmins = false;
   @Getter private ImmutableMap<PluginContainer, PluginVersionInfo> versionInfo = ImmutableMap.of();
   @Getter private String updateMessage = "";
-  @Getter private PaginationList updateMessagePagination = null;
+  @Getter @VisibleForTesting PaginationList updateMessagePagination = null;
 
   public void start() {
     active.set(true);
@@ -195,13 +197,7 @@ public class VersionChecker {
             .build();
 
     // Inform all admins
-    Sponge.getServer()
-        .getOnlinePlayers()
-        .stream()
-        .filter(
-            player ->
-                player.hasPermission(PermissionRegistry.NOTIFICATION_UPDATE_AVAIABLE_PERIODIC))
-        .forEach(updateMessagePagination::sendTo);
+    Sponge.getServer().getOnlinePlayers().stream().forEach(this::showUpdateMessage);
   }
 
   public void checkForPluginUpdatesTask(Task self) {
@@ -229,6 +225,19 @@ public class VersionChecker {
     }
 
     scheduledTasks.remove(self);
+  }
+
+  public boolean canShowUpdateMessage(Player player) {
+    return (player != null)
+        && (updateMessagePagination != null)
+        && player.isOnline()
+        && player.hasPermission(PermissionRegistry.NOTIFICATION_UPDATE_AVAIABLE_JOIN);
+  }
+
+  public void showUpdateMessage(Player player) {
+    if (canShowUpdateMessage(player)) {
+      updateMessagePagination.sendTo(player);
+    }
   }
 
   @Nullable
