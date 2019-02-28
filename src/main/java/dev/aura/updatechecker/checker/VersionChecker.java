@@ -1,5 +1,6 @@
 package dev.aura.updatechecker.checker;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import dev.aura.updatechecker.AuraUpdateChecker;
 import dev.aura.updatechecker.config.Config;
@@ -21,9 +22,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.pagination.PaginationList;
+import org.spongepowered.api.text.channel.MessageReceiver;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 @RequiredArgsConstructor
@@ -37,7 +40,7 @@ public class VersionChecker {
 
   @Getter private ImmutableMap<PluginContainer, PluginVersionInfo> versionInfo = ImmutableMap.of();
   @Getter private String updateMessage = "";
-  @Getter private PaginationList updateMessagePagination = null;
+  @Getter @VisibleForTesting PaginationList updateMessagePagination = null;
 
   public void start() {
     active.set(true);
@@ -83,7 +86,7 @@ public class VersionChecker {
                   final String pluginName = PluginContainerUtil.getPluginString(plugin);
                   logTrace(
                       logger,
-                      PluginMessages.LOG_ALREADY_CHECKED.getMessageRaw(
+                      PluginMessages.LOG_STARTED_PLUGIN_CHECK.getMessageRaw(
                           ImmutableMap.of("plugin", pluginName)));
 
                   final boolean isOnOre = OreAPI.isOnOre(plugin);
@@ -91,12 +94,12 @@ public class VersionChecker {
                   if (isOnOre) {
                     logDebug(
                         logger,
-                        PluginMessages.LLOG_PLUGIN_ON_ORE.getMessageRaw(
+                        PluginMessages.LOG_PLUGIN_ON_ORE.getMessageRaw(
                             ImmutableMap.of("plugin", pluginName)));
                   } else {
                     logDebug(
                         logger,
-                        PluginMessages.LLOG_PLUGIN_NOT_ON_ORE.getMessageRaw(
+                        PluginMessages.LOG_PLUGIN_NOT_ON_ORE.getMessageRaw(
                             ImmutableMap.of("plugin", pluginName)));
                   }
 
@@ -168,7 +171,6 @@ public class VersionChecker {
   }
 
   public void checkForPluginUpdatesTask(Task self) {
-    final Logger logger = AuraUpdateChecker.getLogger();
     final boolean versionsChanged = checkForPluginUpdates();
 
     if (!versionsChanged) {
@@ -223,8 +225,6 @@ public class VersionChecker {
     }
 
     updateMessage = message.toString();
-    logger.info(
-        PluginMessages.NOTIFICATION_UPDATE_AVAILABLE_TITLE.getMessageRaw() + '\n' + updateMessage);
 
     updateMessagePagination =
         PaginationList.builder()
@@ -233,14 +233,32 @@ public class VersionChecker {
             .contents(TextSerializers.FORMATTING_CODE.deserialize(updateMessage))
             .build();
 
-    // Inform all admins
-    Sponge.getServer()
-        .getOnlinePlayers()
-        .stream()
-        .filter(
-            player ->
-                player.hasPermission(PermissionRegistry.NOTIFICATION_UPDATE_AVAIABLE_PERIODIC))
-        .forEach(updateMessagePagination::sendTo);
+    // Inform all admins and console
+    showUpdateMessage(Sponge.getServer().getConsole());
+    Sponge.getServer().getOnlinePlayers().stream().forEach(this::showUpdateMessage);
+  }
+
+  public boolean canShowUpdateMessage(MessageReceiver messageReceiver) {
+    return (messageReceiver != null)
+        && (updateMessagePagination != null)
+        && (!(messageReceiver instanceof Player)
+            || (((Player) messageReceiver).isOnline()
+                && ((Player) messageReceiver)
+                    .hasPermission(PermissionRegistry.NOTIFICATION_UPDATE_AVAIABLE_JOIN)));
+  }
+
+  public void showUpdateMessage(MessageReceiver messageReceiver) {
+    if (canShowUpdateMessage(messageReceiver)) {
+      if (messageReceiver instanceof Player) {
+        updateMessagePagination.sendTo(messageReceiver);
+      } else {
+        messageReceiver.sendMessage(
+            TextSerializers.FORMATTING_CODE.deserialize(
+                PluginMessages.NOTIFICATION_UPDATE_AVAILABLE_TITLE.getMessageRaw()
+                    + '\n'
+                    + updateMessage));
+      }
+    }
   }
 
   @Nullable
@@ -253,7 +271,7 @@ public class VersionChecker {
 
     AuraUpdateChecker.getLogger()
         .debug(
-            PluginMessages.LOG_AVAILABLE_COUNT.getMessageRaw(
+            PluginMessages.LOG_STARTED_TASK.getMessageRaw(
                 ImmutableMap.of("count", task.getName())));
 
     return task;

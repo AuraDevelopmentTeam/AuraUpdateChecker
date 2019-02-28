@@ -42,6 +42,7 @@ updateAvailable: "\n%plugin%:%installed%%recommended%%latest%\n"
 updateAvailableInstalled: "\n  - Installed version: %version%"
 updateAvailableRecommended: "\n  - Recommended version: %version%"
 updateAvailableLatest: "\n  - Latest version: %version%"
+noUpdateAvailable: "No updates available!"
 
 ####################################################################################################
 # LogMessages

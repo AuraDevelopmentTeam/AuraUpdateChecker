@@ -14,6 +14,7 @@ public class CommandBase {
         CommandSpec.builder()
             .description(Text.of("Base command for the plugin. Does nothing on its own."))
             .child(CommandReload.create(plugin), "reload", "r", "rl", "re", "rel")
+            .child(CommandShow.create(), "show", "s", "sh", "view", "v")
             .build();
 
     Sponge.getCommandManager()

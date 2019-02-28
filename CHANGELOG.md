@@ -1,3 +1,11 @@
+Version 1.1.0
+-------------
+
+\+ Added `/updatechecker reload` command to show the person running the command the list of updates. (Or that there are none.)  
+\* Fixed an NullPointerException when there were no updates.  
+\* Fixed some issues with translations.  
+
+
 Version 1.0.1
 -------------
 

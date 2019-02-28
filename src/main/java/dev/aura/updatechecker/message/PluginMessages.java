@@ -21,6 +21,7 @@ public enum PluginMessages implements Message {
   NOTIFICATION_UPDATE_AVAILABLE_INSTALLED("updateAvailableInstalled"),
   NOTIFICATION_UPDATE_AVAILABLE_RECOMMENDED("updateAvailableRecommended"),
   NOTIFICATION_UPDATE_AVAILABLE_LATEST("updateAvailableLatest"),
+  NOTIFICATION_NO_UPDATE_AVAILABLE("noUpdateAvailable"),
   // Log Messages
   LOG_RECOMMENDED_VERSION("recommendedVersion"),
   LOG_AVAILABLE_VERSIONS("availableVersions"),
@@ -29,8 +30,8 @@ public enum PluginMessages implements Message {
   LOG_STARTING_CHECKS("startingChecks"),
   LOG_ALREADY_CHECKED("alreadyChecked"),
   LOG_STARTED_PLUGIN_CHECK("startedPluginCheck"),
-  LLOG_PLUGIN_ON_ORE("pluginOnOre"),
-  LLOG_PLUGIN_NOT_ON_ORE("pluginNotOnOre"),
+  LOG_PLUGIN_ON_ORE("pluginOnOre"),
+  LOG_PLUGIN_NOT_ON_ORE("pluginNotOnOre"),
   LOG_INTERNET_DOWN("internetDown"),
   LOG_RUN_RELOAD("runReload"),
   LOG_FINISHED_CHECKS("finishedChecks"),
