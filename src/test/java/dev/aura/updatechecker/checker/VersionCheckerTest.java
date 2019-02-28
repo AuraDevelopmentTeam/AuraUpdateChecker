@@ -38,6 +38,7 @@ public class VersionCheckerTest {
     assertEquals("Expected 1 error", Optional.of(1), checker.checkForPluginAvailability());
   }
 
+  // TODO: Also check for console
   @Test
   public void canShowUpdateMessageTest() {
     final Player player = Mockito.mock(Player.class);
@@ -60,6 +61,7 @@ public class VersionCheckerTest {
     assertTrue(checker.canShowUpdateMessage(player));
   }
 
+  // TODO: Also check for console
   @Test
   public void showUpdateMessageTest() {
     final Player player = Mockito.mock(Player.class);

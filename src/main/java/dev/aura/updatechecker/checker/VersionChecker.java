@@ -26,6 +26,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.service.pagination.PaginationList;
+import org.spongepowered.api.text.channel.MessageReceiver;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 @RequiredArgsConstructor
@@ -186,8 +187,6 @@ public class VersionChecker {
     }
 
     updateMessage = message.toString();
-    logger.info(
-        PluginMessages.NOTIFICATION_UPDATE_AVAILABLE_TITLE.getMessageRaw() + '\n' + updateMessage);
 
     updateMessagePagination =
         PaginationList.builder()
@@ -196,7 +195,8 @@ public class VersionChecker {
             .contents(TextSerializers.FORMATTING_CODE.deserialize(updateMessage))
             .build();
 
-    // Inform all admins
+    // Inform all admins and console
+    showUpdateMessage(Sponge.getServer().getConsole());
     Sponge.getServer().getOnlinePlayers().stream().forEach(this::showUpdateMessage);
   }
 
@@ -227,16 +227,26 @@ public class VersionChecker {
     scheduledTasks.remove(self);
   }
 
-  public boolean canShowUpdateMessage(Player player) {
-    return (player != null)
+  public boolean canShowUpdateMessage(MessageReceiver messageReceiver) {
+    return (messageReceiver != null)
         && (updateMessagePagination != null)
-        && player.isOnline()
-        && player.hasPermission(PermissionRegistry.NOTIFICATION_UPDATE_AVAIABLE_JOIN);
+        && (!(messageReceiver instanceof Player)
+            || (((Player) messageReceiver).isOnline()
+                && ((Player) messageReceiver)
+                    .hasPermission(PermissionRegistry.NOTIFICATION_UPDATE_AVAIABLE_JOIN)));
   }
 
-  public void showUpdateMessage(Player player) {
-    if (canShowUpdateMessage(player)) {
-      updateMessagePagination.sendTo(player);
+  public void showUpdateMessage(MessageReceiver messageReceiver) {
+    if (canShowUpdateMessage(messageReceiver)) {
+      if (messageReceiver instanceof Player) {
+        updateMessagePagination.sendTo(messageReceiver);
+      } else {
+        messageReceiver.sendMessage(
+            TextSerializers.FORMATTING_CODE.deserialize(
+                PluginMessages.NOTIFICATION_UPDATE_AVAILABLE_TITLE.getMessageRaw()
+                    + '\n'
+                    + updateMessage));
+      }
     }
   }
 
