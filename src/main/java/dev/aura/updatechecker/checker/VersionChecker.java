@@ -10,14 +10,12 @@ import dev.aura.updatechecker.util.PluginContainerUtil;
 import dev.aura.updatechecker.util.PluginVersionInfo;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -35,7 +33,6 @@ public class VersionChecker {
   private final Config config;
 
   private List<PluginContainer> checkablePlugins = null;
-  private final List<Task> scheduledTasks = new LinkedList<>();
   private final AtomicBoolean active = new AtomicBoolean(false);
 
   @Getter private boolean notifyAdmins = false;
@@ -47,23 +44,16 @@ public class VersionChecker {
     active.set(true);
 
     // Starting new task to discover checkable plugins
-    final Task task =
-        startTask(
-            Task.builder()
-                .execute(this::checkForPluginAvailabilityTask)
-                .delay(5, TimeUnit.SECONDS)
-                .async()
-                .name(AuraUpdateChecker.ID + "-availablity-check"));
-
-    if (task != null) {
-      scheduledTasks.add(task);
-    }
+    startTask(
+        Task.builder()
+            .execute(this::checkForPluginAvailabilityTask)
+            .delay(5, TimeUnit.SECONDS)
+            .async()
+            .name(AuraUpdateChecker.ID + "-availablity-check"));
   }
 
   public void stop() {
     active.set(false);
-
-    scheduledTasks.forEach(Task::cancel);
   }
 
   public Optional<Integer> checkForPluginAvailability() {
@@ -211,20 +201,13 @@ public class VersionChecker {
       active.set(false);
     }
 
-    final Task task =
-        startTask(
-            Task.builder()
-                .execute(this::checkForPluginUpdatesTask)
-                .delay(5, TimeUnit.SECONDS)
-                .interval(config.getTiming().getUpdateVersionInfoInterval(), TimeUnit.MINUTES)
-                .async()
-                .name(AuraUpdateChecker.ID + "-update-check"));
-
-    if (task != null) {
-      scheduledTasks.add(task);
-    }
-
-    scheduledTasks.remove(self);
+    startTask(
+        Task.builder()
+            .execute(this::checkForPluginUpdatesTask)
+            .delay(5, TimeUnit.SECONDS)
+            .interval(config.getTiming().getUpdateVersionInfoInterval(), TimeUnit.MINUTES)
+            .async()
+            .name(AuraUpdateChecker.ID + "-update-check"));
   }
 
   public boolean canShowUpdateMessage(MessageReceiver messageReceiver) {
@@ -250,10 +233,9 @@ public class VersionChecker {
     }
   }
 
-  @Nullable
-  private Task startTask(Task.Builder taskBuilder) {
+  private void startTask(Task.Builder taskBuilder) {
     if (!active.get()) {
-      return null;
+      return;
     }
 
     final Task task = taskBuilder.submit(AuraUpdateChecker.getInstance());
@@ -262,8 +244,6 @@ public class VersionChecker {
         .debug(
             PluginMessages.LOG_STARTED_TASK.getMessageRaw(
                 ImmutableMap.of("count", task.getName())));
-
-    return task;
   }
 
   private void logDebug(Logger logger, String message) {

@@ -38,6 +38,8 @@ import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.scheduler.Scheduler;
+import org.spongepowered.api.scheduler.Task;
 
 @Plugin(
   id = AuraUpdateChecker.ID,
@@ -192,6 +194,9 @@ public class AuraUpdateChecker {
       versionChecker.stop();
     }
 
+    stopTasks();
+    logger.debug("Stopped tasks");
+
     removeCommands();
     logger.debug("Unregistered commands");
 
@@ -214,6 +219,12 @@ public class AuraUpdateChecker {
     final CommandManager commandManager = Sponge.getCommandManager();
 
     commandManager.getOwnedBy(this).forEach(commandManager::removeMapping);
+  }
+
+  private void stopTasks() {
+    final Scheduler scheduler = Sponge.getScheduler();
+
+    scheduler.getScheduledTasks(this).forEach(Task::cancel);
   }
 
   private void removeEventListeners() throws Exception {
