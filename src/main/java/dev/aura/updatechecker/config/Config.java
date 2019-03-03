@@ -1,13 +1,18 @@
 package dev.aura.updatechecker.config;
 
+import dev.aura.lib.messagestranslator.MessagesTranslator;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
 @ConfigSerializable
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Setter(AccessLevel.NONE)
 public class Config {
   @Setting private General general = new General();
@@ -15,6 +20,8 @@ public class Config {
 
   @ConfigSerializable
   @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
   @Setter(AccessLevel.NONE)
   public static class General {
     @Setting(comment = "Enable debug logging")
@@ -25,11 +32,13 @@ public class Config {
           "Select which language from the lang dir to use.\n"
               + "You can add your own translations in there. If you name your file \"test.lang\", choose \"test\" here."
     )
-    private String language = "en_US";
+    private String language = MessagesTranslator.DEFAULT_LANGUAGE;
   }
 
   @ConfigSerializable
   @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
   @Setter(AccessLevel.NONE)
   public static class Timing {
     @Setting(
