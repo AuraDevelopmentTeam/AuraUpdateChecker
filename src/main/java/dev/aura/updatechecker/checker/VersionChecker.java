@@ -34,7 +34,7 @@ public class VersionChecker {
   private final Collection<PluginContainer> availablePlugins;
   private final Config config;
 
-  private List<PluginContainer> checkablePlugins = null;
+  @VisibleForTesting List<PluginContainer> checkablePlugins = null;
   private final List<Task> scheduledTasks = new LinkedList<>();
   private final AtomicBoolean active = new AtomicBoolean(false);
 

@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import dev.aura.updatechecker.AuraUpdateChecker;
 import dev.aura.updatechecker.TestApi;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -22,14 +21,18 @@ public class OreAPITest extends TestApi {
 
   @Test
   public void availablityTest() {
-    final PluginContainer existingContainer = new DummyPluginContainer(AuraUpdateChecker.ID);
-    final PluginContainer nonExistingContainer =
-        new DummyPluginContainer("thisIDdoesntexistbfjsdgbhjbhghhsfgdsghfh");
+    for (String project : PROJECTS) {
+      assertTrue(
+          "Expected " + project + " to be available",
+          OreAPI.isOnOre(new DummyPluginContainer(project)));
+    }
 
-    assertTrue("Expected updatechecker to be available", OreAPI.isOnOre(existingContainer));
-    assertFalse(
-        "Expected thisIDdoesntexistbfjsdgbhjbhghhsfgdsghfh not to be available",
-        OreAPI.isOnOre(nonExistingContainer));
+    for (String project : MISSING_PROJECTS) {
+      assertFalse(
+          "Expected " + project + " not to be available",
+          OreAPI.isOnOre(new DummyPluginContainer(project)));
+    }
+
     assertEquals("No errors should have happend", 0, OreAPI.getErrorCounter());
   }
 
@@ -50,11 +53,12 @@ public class OreAPITest extends TestApi {
       throws NoSuchFieldException, SecurityException, IllegalArgumentException,
           IllegalAccessException {
     final int count = 10;
-    final PluginContainer errorContainer = new DummyPluginContainer("Spaces are bad&!?&=?");
+    final PluginContainer errorContainer = new DummyPluginContainer(ERROR_PROJECT1);
 
     for (int i = 0; i < count; ++i) {
       assertFalse(
-          "Expected \"Spaces are bad&!?&=?\" not to be available", OreAPI.isOnOre(errorContainer));
+          "Expected \"" + ERROR_PROJECT1 + "\" not to be available",
+          OreAPI.isOnOre(errorContainer));
     }
 
     assertEquals(count + " errors should have happend", count, OreAPI.getErrorCounter());

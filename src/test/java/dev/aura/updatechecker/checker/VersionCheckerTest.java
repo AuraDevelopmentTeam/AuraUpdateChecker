@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import dev.aura.updatechecker.AuraUpdateChecker;
 import dev.aura.updatechecker.TestApi;
 import dev.aura.updatechecker.permission.PermissionRegistry;
 import java.util.Arrays;
@@ -20,9 +19,9 @@ public class VersionCheckerTest extends TestApi {
     final VersionChecker checker =
         new VersionChecker(
             Arrays.asList(
-                new DummyPluginContainer("error!&!&&!&##"),
-                new DummyPluginContainer("error!&!&&!&##"),
-                new DummyPluginContainer("error!&!&&!&##")),
+                new DummyPluginContainer(ERROR_PROJECT1),
+                new DummyPluginContainer(ERROR_PROJECT2),
+                new DummyPluginContainer(ERROR_PROJECT3)),
             DEFAULT_CONFIG);
 
     assertEquals("Expected 3 errors", Optional.of(3), checker.checkForPluginAvailability());
@@ -33,12 +32,13 @@ public class VersionCheckerTest extends TestApi {
     final VersionChecker checker =
         new VersionChecker(
             Arrays.asList(
-                new DummyPluginContainer(AuraUpdateChecker.ID),
-                new DummyPluginContainer("notavailablegfndfngkd"),
-                new DummyPluginContainer("error!&!&&!&##")),
+                new DummyPluginContainer(PROJECT1),
+                new DummyPluginContainer(MISSING_PROJECT1),
+                new DummyPluginContainer(ERROR_PROJECT1)),
             DEFAULT_CONFIG);
 
     assertEquals("Expected 1 error", Optional.of(1), checker.checkForPluginAvailability());
+    assertEquals("Expected 1 plugin to be available", 1, checker.checkablePlugins.size());
   }
 
   @Test
@@ -46,8 +46,9 @@ public class VersionCheckerTest extends TestApi {
     final VersionChecker checker =
         new VersionChecker(
             Arrays.asList(
-                new DummyPluginContainer(AuraUpdateChecker.ID),
-                new DummyPluginContainer("nucleus")),
+                new DummyPluginContainer(PROJECT1),
+                new DummyPluginContainer(PROJECT2),
+                new DummyPluginContainer(PROJECT3)),
             DEFAULT_CONFIG);
 
     // No errors here
