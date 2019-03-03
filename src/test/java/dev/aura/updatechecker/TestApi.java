@@ -12,7 +12,7 @@ public class TestApi extends TestBase {
 
   protected static final String PROJECT1 = "project1";
   protected static final String PROJECT2 = "project2";
-  protected static final String PROJECT3 = "project2";
+  protected static final String PROJECT3 = "project3";
   protected static final ImmutableList<String> PROJECTS =
       ImmutableList.of(PROJECT1, PROJECT2, PROJECT3);
 
