@@ -9,6 +9,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.spongepowered.api.plugin.PluginContainer;
 
@@ -36,6 +37,7 @@ public class OreAPITest extends TestApi {
     assertEquals("No errors should have happend", 0, OreAPI.getErrorCounter());
   }
 
+  @Ignore("Ignoring for debugging")
   @Test(expected = UnsupportedOperationException.class)
   public void constructorTest() throws Throwable {
     try {
@@ -48,6 +50,7 @@ public class OreAPITest extends TestApi {
     }
   }
 
+  @Ignore("Ignoring for debugging")
   @Test
   public void errorTest()
       throws NoSuchFieldException, SecurityException, IllegalArgumentException,
