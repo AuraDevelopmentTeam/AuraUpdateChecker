@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 public class TestBase {
   protected static final Logger DEFAULT_LOGGER = LoggerFactory.getLogger(AuraUpdateChecker.NAME);
   protected static final Config DEFAULT_CONFIG =
-      new Config(new Config.General(), new Config.Timing(10000, 5, 30));
+      new Config(new Config.General(), new Config.Timing().setConnectionTimeout(10_000));
   protected static final MessagesTranslator DEFAULT_TRANSLATOR =
       new UnitTestMessagesTranslator(AuraUpdateChecker.ID);
 
