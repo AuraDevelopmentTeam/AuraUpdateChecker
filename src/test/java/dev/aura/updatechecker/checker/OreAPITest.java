@@ -2,9 +2,11 @@ package dev.aura.updatechecker.checker;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import dev.aura.updatechecker.TestApi;
+import dev.aura.updatechecker.util.PluginVersionInfo;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import org.junit.After;
@@ -32,6 +34,33 @@ public class OreAPITest extends TestApi {
           "Expected " + project + " not to be available",
           OreAPI.isOnOre(new DummyPluginContainer(project)));
     }
+
+    assertEquals("No errors should have happend", 0, OreAPI.getErrorCounter());
+  }
+
+  @Test
+  public void versionTest() {
+    final PluginContainer upToDate = new DummyPluginContainer(PROJECT3, "3.3.4");
+    final PluginContainer newLatest = new DummyPluginContainer(PROJECT3, "3.3.3");
+    final PluginContainer newRecommended = new DummyPluginContainer(PROJECT2, "2.2.1");
+    final PluginContainer newBoth = new DummyPluginContainer(PROJECT3, "3.3.2");
+
+    assertSame(
+        PluginVersionInfo.PluginStatus.UP_TO_DATE,
+        OreAPI.getPluginVersionInfo(upToDate).map(PluginVersionInfo::getPluginStatus).orElse(null));
+    assertSame(
+        PluginVersionInfo.PluginStatus.NEW_LATEST,
+        OreAPI.getPluginVersionInfo(newLatest)
+            .map(PluginVersionInfo::getPluginStatus)
+            .orElse(null));
+    assertSame(
+        PluginVersionInfo.PluginStatus.NEW_RECOMMENDED,
+        OreAPI.getPluginVersionInfo(newRecommended)
+            .map(PluginVersionInfo::getPluginStatus)
+            .orElse(null));
+    assertSame(
+        PluginVersionInfo.PluginStatus.NEW_BOTH,
+        OreAPI.getPluginVersionInfo(newBoth).map(PluginVersionInfo::getPluginStatus).orElse(null));
 
     assertEquals("No errors should have happend", 0, OreAPI.getErrorCounter());
   }
