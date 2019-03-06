@@ -60,7 +60,7 @@ public class Config {
     @Setting(
       comment =
           "Specifies the interval (in minutes) in which the console will be reminded that there are plugin updates.\n"
-              + "If the value is 0 or below, admins won't be reminded. Also no reminders of no updates."
+              + "If the value is 0 or below, the console won't be reminded. Also no reminders of no updates."
     )
     private int remindConsoleInterval = 0;
 
