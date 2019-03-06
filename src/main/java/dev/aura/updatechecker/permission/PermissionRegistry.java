@@ -41,7 +41,7 @@ public class PermissionRegistry {
         PermissionDescription.ROLE_ADMIN);
     registerPermission(
         NOTIFICATION_UPDATE_AVAIABLE_PERIODIC,
-        "Permission to receive the update available notifcation when a new update has been released while the server is running",
+        "Permission to receive the update available notifcation when a new update has been released while the server is running or once every reminder interval (config value)",
         PermissionDescription.ROLE_ADMIN);
 
     registerPermission(
