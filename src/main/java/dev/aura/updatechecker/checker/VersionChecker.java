@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -29,11 +30,14 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 
 @RequiredArgsConstructor
 public class VersionChecker {
+  private static final UUID CONSOLE_UUID = new UUID(0, 0);
+
   private final Collection<PluginContainer> availablePlugins;
   private final Config config;
 
   @VisibleForTesting List<PluginContainer> checkablePlugins = null;
   private final AtomicBoolean active = new AtomicBoolean(false);
+  private final Map<UUID, Task> reminderTasks = new HashMap<>();
 
   @Getter private ImmutableMap<PluginContainer, PluginVersionInfo> versionInfo = ImmutableMap.of();
   @Getter private String updateMessage = "";
@@ -216,9 +220,22 @@ public class VersionChecker {
             .contents(TextSerializers.FORMATTING_CODE.deserialize(updateMessage))
             .build();
 
+    reminderTasks.values().forEach(Task::cancel);
+    reminderTasks.clear();
+
     // Inform all admins and console
-    showUpdateMessage(Sponge.getServer().getConsole());
-    Sponge.getServer().getOnlinePlayers().stream().forEach(this::showUpdateMessage);
+    final MessageReceiver console = Sponge.getServer().getConsole();
+
+    showUpdateMessage(console);
+    startReminderTask(console);
+
+    Sponge.getServer()
+        .getOnlinePlayers()
+        .forEach(
+            player -> {
+              showUpdateMessage(player);
+              startReminderTask(player);
+            });
   }
 
   public boolean canShowUpdateMessage(MessageReceiver messageReceiver) {
@@ -242,6 +259,47 @@ public class VersionChecker {
                     + updateMessage));
       }
     }
+  }
+
+  public void startReminderTask(MessageReceiver messageReceiver) {
+    if (!canShowUpdateMessage(messageReceiver)) {
+      return;
+    }
+
+    final UUID uuid = getUUID(messageReceiver);
+    final int interval =
+        (messageReceiver instanceof Player)
+            ? config.getTiming().getRemindAdminInterval()
+            : config.getTiming().getRemindConsoleInterval();
+
+    if (interval <= 0) {
+      return;
+    }
+
+    final Task newTask =
+        Sponge.getScheduler()
+            .createTaskBuilder()
+            .async()
+            .delay(interval, TimeUnit.MINUTES)
+            .interval(interval, TimeUnit.MINUTES)
+            .execute(
+                task -> {
+                  if (!canShowUpdateMessage(messageReceiver)) {
+                    task.cancel();
+                    return;
+                  }
+
+                  showUpdateMessage(messageReceiver);
+                })
+            .submit(AuraUpdateChecker.getInstance());
+    reminderTasks.put(uuid, newTask);
+  }
+
+  public void stopReminderTask(MessageReceiver messageReceiver) {
+    final UUID uuid = getUUID(messageReceiver);
+    final Task task = reminderTasks.remove(uuid);
+
+    if (task != null) task.cancel();
   }
 
   private void startTask(Task.Builder taskBuilder) {
@@ -271,5 +329,11 @@ public class VersionChecker {
     } else {
       logger.trace(message);
     }
+  }
+
+  private static UUID getUUID(MessageReceiver messageReceiver) {
+    return (messageReceiver instanceof Player)
+        ? ((Player) messageReceiver).getUniqueId()
+        : CONSOLE_UUID;
   }
 }

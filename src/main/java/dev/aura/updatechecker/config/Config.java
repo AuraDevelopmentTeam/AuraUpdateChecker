@@ -52,6 +52,20 @@ public class Config {
 
     @Setting(
       comment =
+          "Specifies the interval (in minutes) in which admins will be reminded that there are plugin updates.\n"
+              + "If the value is 0 or below, admins won't be reminded. Also no reminders of no updates."
+    )
+    private int remindAdminInterval = 30;
+
+    @Setting(
+      comment =
+          "Specifies the interval (in minutes) in which the console will be reminded that there are plugin updates.\n"
+              + "If the value is 0 or below, admins won't be reminded. Also no reminders of no updates."
+    )
+    private int remindConsoleInterval = 0;
+
+    @Setting(
+      comment =
           "Specifies the interval (in minutes) in which the plugin will check the OreAPI for plugin updates.\n"
               + "This is to to prevent spamming the API and still allowing for timely notifications when an update has been released. If\n"
               + "any new updates have been found during one of these updates, all admins will receive a notification."

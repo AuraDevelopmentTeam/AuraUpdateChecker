@@ -21,8 +21,20 @@ public class PlayerEvents {
           .createTaskBuilder()
           .async()
           .delay(AuraUpdateChecker.getConfig().getTiming().getJoinMessageDelay(), TimeUnit.SECONDS)
-          .execute(() -> checker.showUpdateMessage(player))
+          .execute(
+              () -> {
+                checker.showUpdateMessage(player);
+                checker.startReminderTask(player);
+              })
           .submit(AuraUpdateChecker.getInstance());
     }
+  }
+
+  @Listener(order = Order.POST)
+  public void onPlayerLeave(ClientConnectionEvent.Disconnect event) {
+    final Player player = event.getTargetEntity();
+    final VersionChecker checker = AuraUpdateChecker.getVersionChecker();
+
+    checker.stopReminderTask(player);
   }
 }
