@@ -1,7 +1,14 @@
+Version 1.1.1
+-------------
+
+\+ Added reminder messages for console and admins with a separately configurable interval.  
+\* Massively expanded tests to ensure bug free communication with the Ore API.  
+
+
 Version 1.1.0
 -------------
 
-\+ Added `/updatechecker reload` command to show the person running the command the list of updates. (Or that there are none.)  
+\+ Added `/updatechecker show` command to show the person running the command the list of updates. (Or that there are none.)  
 \* Fixed an NullPointerException when there were no updates.  
 \* Fixed some issues with translations.  
 
