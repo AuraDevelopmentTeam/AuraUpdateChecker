@@ -1,7 +1,7 @@
 # [AuraUpdateChecker](https://github.com/AuraDevelopmentTeam/AuraUpdateChecker)
 
-[![Build Status](https://gitlab.project-creative.de/AuraDev/AuraUpdateChecker/badges/master/build.svg)](https://gitlab.project-creative.de/AuraDev/AuraUpdateChecker/pipelines)
-[![Coverage Report](https://gitlab.project-creative.de/AuraDev/AuraUpdateChecker/badges/master/coverage.svg)](https://gitlab.project-creative.de/AuraDev/AuraUpdateChecker/pipelines)
+[![Build Status](https://gitlab.aura-dev.team/AuraDev/AuraUpdateChecker/badges/master/build.svg)](https://gitlab.aura-dev.team/AuraDev/AuraUpdateChecker/pipelines)
+[![Coverage Report](https://gitlab.aura-dev.team/AuraDev/AuraUpdateChecker/badges/master/coverage.svg)](https://gitlab.aura-dev.team/AuraDev/AuraUpdateChecker/pipelines)
 
 Simple plugin to limit how many of a type of block a player can place
 
@@ -11,8 +11,8 @@ You can download all builds from either:
 
 - Ore: https://ore.spongepowered.org/AuraDevelopmentTeam/AuraUpdateChecker
 - Maven:
-  - Releases: https://maven.project-creative.de/repository/auradev-releases/
-  - Snapshots: https://maven.project-creative.de/repository/auradev-snapshots/
+  - Releases: https://maven.aura-dev.team/repository/auradev-releases/
+  - Snapshots: https://maven.aura-dev.team/repository/auradev-snapshots/
 
 ## [Issue Reporting](https://github.com/AuraDevelopmentTeam/AuraUpdateChecker/issues)
 
@@ -49,8 +49,8 @@ maven repository. (Replace `{version}` with the appropriate version!)
     <repositories>
         <repository>
             <id>AuraDevelopmentTeam/id>
-            <url>https://maven.project-creative.de/repository/auradev-releases/</url>
-            <!--<url>https://maven.project-creative.de/repository/auradev-snapshots/</url>-->
+            <url>https://maven.aura-dev.team/repository/auradev-releases/</url>
+            <!--<url>https://maven.aura-dev.team/repository/auradev-snapshots/</url>-->
         </repository>
     </repositories>
 
@@ -68,8 +68,8 @@ maven repository. (Replace `{version}` with the appropriate version!)
     repositories {
         maven {
             name "AuraDevelopmentTeam"
-            url "https://maven.project-creative.de/repository/auradev-releases/"
-            // url "https://maven.project-creative.de/repository/auradev-snapshots/"
+            url "https://maven.aura-dev.team/repository/auradev-releases/"
+            // url "https://maven.aura-dev.team/repository/auradev-snapshots/"
         }
     }
 
@@ -89,7 +89,7 @@ maven repository. (Replace `{version}` with the appropriate version!)
 Between each offical release there are several bleeding edge development builds, which you can also use. But be aware that they might contain unfinished
 features and therefore won't work properly.
 
-You can find the builds here: https://gitlab.project-creative.de/AuraDev/AuraUpdateChecker/pipelines
+You can find the builds here: https://gitlab.aura-dev.team/AuraDev/AuraUpdateChecker/pipelines
 
 On the right is a download symbol, click that a dropdown will open. Select "build". Then you'll download a zip file containing all atrifacts including the
 plugin jar.
