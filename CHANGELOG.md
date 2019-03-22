@@ -1,3 +1,10 @@
+Version 1.1.2
+-------------
+
+\+ Feniksovich: Added ru_RU.lang  
+\* Fixed URLs in docs.  
+
+
 Version 1.1.1
 -------------
 
