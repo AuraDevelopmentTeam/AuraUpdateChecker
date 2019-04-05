@@ -1,7 +1,10 @@
 # [AuraUpdateChecker](https://github.com/AuraDevelopmentTeam/AuraUpdateChecker)
 
+[![Current Version](https://badge.fury.io/gh/AuraDevelopmentTeam%2FAuraUpdateChecker.svg)](https://maven.aura-dev.team/service/rest/repository/browse/auradev-releases/dev/aura/updatechecker/AuraUpdateChecker/)
 [![Build Status](https://gitlab.aura-dev.team/AuraDev/AuraUpdateChecker/badges/master/build.svg)](https://gitlab.aura-dev.team/AuraDev/AuraUpdateChecker/pipelines)
 [![Coverage Report](https://gitlab.aura-dev.team/AuraDev/AuraUpdateChecker/badges/master/coverage.svg)](https://gitlab.aura-dev.team/AuraDev/AuraUpdateChecker/pipelines)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fb88e096f754439ba197f601617c77b9)](https://www.codacy.com/app/AuraDevelopmentTeam/AuraUpdateChecker?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AuraDevelopmentTeam/AuraUpdateChecker&amp;utm_campaign=Badge_Grade)
+[![License](https://img.shields.io/github/license/AuraDevelopmentTeam/AuraUpdateChecker.svg)](https://github.com/AuraDevelopmentTeam/AuraUpdateChecker/blob/master/LICENSE)
 
 Simple plugin to limit how many of a type of block a player can place
 
