@@ -24,16 +24,17 @@ public class PluginContainerUtil {
 
   public static String replacePluginPlaceHolders(String template, PluginContainer plugin) {
     Matcher match;
+    String result = template;
 
     for (Entry<Pattern, Function<PluginContainer, String>> placeHolder : placeHolders.entrySet()) {
-      match = placeHolder.getKey().matcher(template);
+      match = placeHolder.getKey().matcher(result);
 
       if (match.find()) {
-        template = match.replaceAll(placeHolder.getValue().apply(plugin));
+        result = match.replaceAll(placeHolder.getValue().apply(plugin));
       }
     }
 
-    return template;
+    return result;
   }
 
   static {

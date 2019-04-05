@@ -157,6 +157,8 @@ public class VersionChecker {
     return true;
   }
 
+  // TODO: Refactor
+  // (https://app.codacy.com/app/AuraDevelopmentTeam/AuraUpdateChecker/file/33296187827/issues/source?bid=12195929&fileBranchId=12195929#l160)
   public void checkForPluginUpdatesTask(Task self) {
     final boolean versionsChanged = checkForPluginUpdates();
 
