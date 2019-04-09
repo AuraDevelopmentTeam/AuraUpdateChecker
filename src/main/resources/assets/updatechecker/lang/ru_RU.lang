@@ -36,13 +36,13 @@ reloadNotSuccessful: "&cВо время перезагрузки плагина 
 ####################################################################################################
 # Notifications
 ####################################################################################################
-updateAvailablePadding: "&f="
-updateAvailableTitle: "Доступны обновления:"
+updateAvailablePadding: "&7&m-"
+updateAvailableTitle: "&6Доступны обновления:"
 updateAvailable: "\n%plugin%:%installed%%recommended%%latest%\n"
-updateAvailableInstalled: "\n  - Установленная версия: %version%"
-updateAvailableRecommended: "\n  - Рекомендуемая версия: %version%"
-updateAvailableLatest: "\n  - Последняя версия: %version%"
-noUpdateAvailable: "Обновлений не найдено."
+updateAvailableInstalled: "\n  &d- &7Установленная версия&8: &6%version%"
+updateAvailableRecommended: "\n  &d- &7Рекомендуемая версия&8: &6%version%"
+updateAvailableLatest: "\n  &d- &7Последняя версия&8: &6%version%"
+noUpdateAvailable: "&aОбновлений не найдено."
 
 ####################################################################################################
 # LogMessages

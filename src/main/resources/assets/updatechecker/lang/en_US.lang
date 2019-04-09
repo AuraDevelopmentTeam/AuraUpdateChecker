@@ -36,13 +36,13 @@ reloadNotSuccessful: "&cError while reloading the plugin: %error%\n&cSee console
 ####################################################################################################
 # Notifications
 ####################################################################################################
-updateAvailablePadding: "&f="
-updateAvailableTitle: "Updates available for:"
+updateAvailablePadding: "&7&m-"
+updateAvailableTitle: "&6Updates available for:"
 updateAvailable: "\n%plugin%:%installed%%recommended%%latest%\n"
-updateAvailableInstalled: "\n  - Installed version: %version%"
-updateAvailableRecommended: "\n  - Recommended version: %version%"
-updateAvailableLatest: "\n  - Latest version: %version%"
-noUpdateAvailable: "No updates available!"
+updateAvailableInstalled: "\n  &d- &7Installed Version&8: &6%version%"
+updateAvailableRecommended: "\n  &d- &7Recommended Version&8: &6%version%"
+updateAvailableLatest: "\n  &d- &7Latest Version&8: &6%version%"
+noUpdateAvailable: "&aNo Updates Available!"
 
 ####################################################################################################
 # LogMessages

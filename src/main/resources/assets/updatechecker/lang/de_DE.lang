@@ -36,13 +36,13 @@ reloadNotSuccessful: "&cFehler beim Neuladen des Plugins: %error%\n&cEine detail
 ####################################################################################################
 # Notifications
 ####################################################################################################
-updateAvailablePadding: "&f="
-updateAvailableTitle: "Updates verfügbar für:"
+updateAvailablePadding: "&7&m-"
+updateAvailableTitle: "&6Updates verfügbar für:"
 updateAvailable: "\n%plugin%:%installed%%recommended%%latest%\n"
-updateAvailableInstalled: "\n  - Installierte Version: %version%"
-updateAvailableRecommended: "\n  - Empfohlene Version: %version%"
-updateAvailableLatest: "\n  - Aktuellste Version: %version%"
-noUpdateAvailable: "Keine Updates verfügbar!"
+updateAvailableInstalled: "\n  &d- &7Installierte Version&8: &6%version%"
+updateAvailableRecommended: "\n  &d- &7Empfohlene Version&8: &6%version%"
+updateAvailableLatest: "\n  &d- &7Aktuellste Version&8: &6%version%"
+noUpdateAvailable: "&aKeine Updates verfügbar!"
 
 ####################################################################################################
 # LogMessages
