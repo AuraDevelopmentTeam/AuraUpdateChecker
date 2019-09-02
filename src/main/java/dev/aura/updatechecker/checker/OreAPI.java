@@ -13,6 +13,7 @@ import dev.aura.updatechecker.util.PluginVersionInfo;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ProtocolException;
+import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -57,7 +58,7 @@ public class OreAPI {
       connection.connect();
 
       return connection.getResponseCode() == 200;
-    } catch (ClassCastException | IOException | URISyntaxException e) {
+    } catch (ClassCastException | IOException | URISyntaxException | SocketTimeoutException e) {
       printErrorMessage(plugin, e);
 
       return false;
@@ -92,7 +93,7 @@ public class OreAPI {
                   recommendedVersion)));
 
       return Optional.of(new Version(recommendedVersion));
-    } catch (ClassCastException | IOException | URISyntaxException | IllegalStateException e) {
+    } catch (ClassCastException | IOException | URISyntaxException | IllegalStateException | SocketTimeoutException e) {
       printErrorMessage(plugin, e);
 
       return Optional.empty();
@@ -149,7 +150,7 @@ public class OreAPI {
                       .collect(Collectors.joining("\n\t", "\t", "")))));
 
       return Optional.of(allVersions);
-    } catch (ClassCastException | IOException | URISyntaxException | ParseException e) {
+    } catch (ClassCastException | IOException | URISyntaxException | ParseException | SocketTimeoutException e) {
       printErrorMessage(plugin, e);
 
       return Optional.empty();
