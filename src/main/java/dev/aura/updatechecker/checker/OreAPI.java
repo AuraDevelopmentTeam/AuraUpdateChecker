@@ -13,6 +13,7 @@ import dev.aura.updatechecker.util.PluginVersionInfo;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ProtocolException;
+import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -57,11 +58,13 @@ public class OreAPI {
       connection.connect();
 
       return connection.getResponseCode() == 200;
+    } catch (SocketTimeoutException e) {
+      printNetworkError(plugin, e);
     } catch (ClassCastException | IOException | URISyntaxException e) {
       printErrorMessage(plugin, e);
-
-      return false;
     }
+
+    return false;
   }
 
   public static Optional<Version> getRecommendedVersion(PluginContainer plugin) {
@@ -92,11 +95,13 @@ public class OreAPI {
                   recommendedVersion)));
 
       return Optional.of(new Version(recommendedVersion));
+    } catch (SocketTimeoutException e) {
+      printNetworkError(plugin, e);
     } catch (ClassCastException | IOException | URISyntaxException | IllegalStateException e) {
       printErrorMessage(plugin, e);
-
-      return Optional.empty();
     }
+
+    return Optional.empty();
   }
 
   public static Optional<SortedMap<Date, Version>> getAllVersions(PluginContainer plugin) {
@@ -149,11 +154,13 @@ public class OreAPI {
                       .collect(Collectors.joining("\n\t", "\t", "")))));
 
       return Optional.of(allVersions);
+    } catch (SocketTimeoutException e) {
+      printNetworkError(plugin, e);
     } catch (ClassCastException | IOException | URISyntaxException | ParseException e) {
       printErrorMessage(plugin, e);
-
-      return Optional.empty();
     }
+
+    return Optional.empty();
   }
 
   public static Optional<PluginVersionInfo> getPluginVersionInfo(PluginContainer plugin) {
@@ -208,6 +215,21 @@ public class OreAPI {
       logWarn(message, e);
     } else {
       logger.warn(message, e);
+    }
+  }
+
+  private static void printNetworkError(PluginContainer plugin, Throwable e) {
+    final Logger logger = AuraUpdateChecker.getLogger();
+    final String message =
+        PluginMessages.LOG_CONTACTING_ERROR.getMessageRaw(
+            ImmutableMap.of("plugin", PluginContainerUtil.getPluginString(plugin)));
+
+    logger.warn(message);
+
+    if (AuraUpdateChecker.getConfig().getGeneral().getDebug()) {
+      logger.info("[Debug]: " + message, e);
+    } else {
+      logger.debug(message, e);
     }
   }
 
