@@ -1,3 +1,10 @@
+Version 1.1.3
+-------------
+
+\* d4julian: Made default messages look nicer
+\* Fixed network errors spamming console (Fixes [#3](https://github.com/AuraDevelopmentTeam/AuraUpdateChecker/issues/3))  
+
+
 Version 1.1.2
 -------------
 
