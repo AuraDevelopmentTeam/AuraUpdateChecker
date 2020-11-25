@@ -143,9 +143,7 @@ public class OreAPI {
                   "plugin",
                   PluginContainerUtil.getPluginString(plugin),
                   "versions",
-                  allVersions
-                      .entrySet()
-                      .stream()
+                  allVersions.entrySet().stream()
                       .map(
                           entry ->
                               dateFormat.format(entry.getKey())

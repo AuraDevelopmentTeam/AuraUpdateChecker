@@ -42,13 +42,12 @@ import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
 
 @Plugin(
-  id = AuraUpdateChecker.ID,
-  name = AuraUpdateChecker.NAME,
-  version = AuraUpdateChecker.VERSION,
-  description = AuraUpdateChecker.DESCRIPTION,
-  url = AuraUpdateChecker.URL,
-  authors = {AuraUpdateChecker.AUTHOR_BRAINSTONE}
-)
+    id = AuraUpdateChecker.ID,
+    name = AuraUpdateChecker.NAME,
+    version = AuraUpdateChecker.VERSION,
+    description = AuraUpdateChecker.DESCRIPTION,
+    url = AuraUpdateChecker.URL,
+    authors = {AuraUpdateChecker.AUTHOR_BRAINSTONE})
 public class AuraUpdateChecker {
   public static final String ID = "@id@";
   public static final String NAME = "@name@";

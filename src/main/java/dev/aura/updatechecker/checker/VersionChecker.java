@@ -73,8 +73,7 @@ public class VersionChecker {
     OreAPI.resetErrorCounter();
 
     checkablePlugins =
-        availablePlugins
-            .stream()
+        availablePlugins.stream()
             .filter(
                 plugin -> {
                   final String pluginName = PluginContainerUtil.getPluginString(plugin);
