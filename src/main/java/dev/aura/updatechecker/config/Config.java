@@ -39,7 +39,7 @@ public class Config {
         comment =
             "Specifies the connection timeout (in milliseconds) for all connections to the OreAPI.\n"
                 + "If you get timeouts from this plugin, increase this value.")
-    private int connectionTimeout = 500;
+    private int connectionTimeout = 1000;
 
     @Setting(
         comment =

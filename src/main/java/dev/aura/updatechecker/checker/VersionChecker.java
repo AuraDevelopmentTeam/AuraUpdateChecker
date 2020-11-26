@@ -71,6 +71,21 @@ public class VersionChecker {
     }
 
     OreAPI.resetErrorCounter();
+    final boolean authenticated = OreAPI.authenticate();
+
+    if (OreAPI.getErrorCounter() >= availablePlugins.size()) {
+      logger.warn(PluginMessages.LOG_INTERNET_DOWN.getMessageRaw());
+      logger.info(PluginMessages.LOG_RUN_RELOAD.getMessageRaw());
+
+      return Optional.empty();
+    }
+
+    if (!authenticated) {
+      logger.warn("Error authenticating");
+      logger.info(PluginMessages.LOG_RUN_RELOAD.getMessageRaw());
+
+      return Optional.empty();
+    }
 
     checkablePlugins =
         availablePlugins.stream()
