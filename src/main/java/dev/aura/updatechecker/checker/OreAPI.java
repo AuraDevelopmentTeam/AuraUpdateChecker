@@ -19,11 +19,12 @@ import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -68,7 +69,8 @@ public class OreAPI {
 
       try (OutputStream os = connection.getOutputStream()) {
         try (OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8")) {
-          osw.write("{\"expires_in\":60}");
+          // 10 minutes to be save
+          osw.write("{\"expires_in\":600}");
           osw.flush();
         }
       }
@@ -156,10 +158,9 @@ public class OreAPI {
     return Optional.empty();
   }
 
-  public static Optional<SortedMap<Date, Version>> getAllVersions(PluginContainer plugin) {
+  public static Optional<SortedMap<Instant, Version>> getAllVersions(PluginContainer plugin) {
     try {
-      final SortedMap<Date, Version> allVersions = new TreeMap<>(Comparator.reverseOrder());
-      final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+      final SortedMap<Instant, Version> allVersions = new TreeMap<>(Comparator.reverseOrder());
 
       for (int i = 0; true; i += 10) {
         @Cleanup("disconnect")
@@ -172,22 +173,27 @@ public class OreAPI {
 
         final JsonArray versions =
             gson.fromJson(
-                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8),
-                JsonArray.class);
+                    new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8),
+                    JsonObject.class)
+                .get("result")
+                .getAsJsonArray();
 
         for (JsonElement version : versions) {
-          final Date date =
-              dateFormat.parse(version.getAsJsonObject().get("createdAt").getAsString());
+          final Instant instant =
+              Instant.parse(version.getAsJsonObject().get("created_at").getAsString());
           final Version pluginVersion =
               new Version(version.getAsJsonObject().get("name").getAsString());
 
-          allVersions.put(date, pluginVersion);
+          allVersions.put(instant, pluginVersion);
         }
 
         if (versions.size() < 10) {
           break;
         }
       }
+
+      final DateTimeFormatter formatter =
+          DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.from(ZoneOffset.UTC));
 
       logDebug(
           PluginMessages.LOG_AVAILABLE_VERSIONS.getMessageRaw(
@@ -198,15 +204,13 @@ public class OreAPI {
                   allVersions.entrySet().stream()
                       .map(
                           entry ->
-                              dateFormat.format(entry.getKey())
-                                  + ": "
-                                  + entry.getValue().getInput())
+                              formatter.format(entry.getKey()) + ": " + entry.getValue().getInput())
                       .collect(Collectors.joining("\n\t", "\t", "")))));
 
       return Optional.of(allVersions);
     } catch (SocketTimeoutException e) {
       printNetworkError(plugin, e);
-    } catch (ClassCastException | IOException | URISyntaxException | ParseException e) {
+    } catch (ClassCastException | IOException | URISyntaxException | DateTimeParseException e) {
       printErrorMessage(plugin, e);
     }
 
@@ -220,7 +224,7 @@ public class OreAPI {
       return Optional.empty();
     }
 
-    final Optional<SortedMap<Date, Version>> allVersions = getAllVersions(plugin);
+    final Optional<SortedMap<Instant, Version>> allVersions = getAllVersions(plugin);
 
     if (!allVersions.isPresent()) {
       return Optional.empty();

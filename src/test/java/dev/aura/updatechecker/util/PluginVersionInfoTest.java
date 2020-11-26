@@ -6,7 +6,7 @@ import static org.junit.Assert.assertSame;
 import com.google.common.collect.ImmutableMap;
 import dev.aura.lib.version.Version;
 import dev.aura.updatechecker.checker.DummyPluginContainer;
-import java.util.Date;
+import java.time.Instant;
 import org.junit.Test;
 
 public class PluginVersionInfoTest {
@@ -28,12 +28,12 @@ public class PluginVersionInfoTest {
         new PluginVersionInfo(
             new DummyPluginContainer("dummy", DUMMY_VERSION_STRING),
             EMPTY_VERSION,
-            ImmutableMap.of(new Date(0), EMPTY_VERSION));
+            ImmutableMap.of(Instant.EPOCH, EMPTY_VERSION));
     final PluginVersionInfo versionInfoEmpty =
         new PluginVersionInfo(
             new DummyPluginContainer("dummy"),
             EMPTY_VERSION,
-            ImmutableMap.of(new Date(0), EMPTY_VERSION));
+            ImmutableMap.of(Instant.EPOCH, EMPTY_VERSION));
 
     assertEquals(DUMMY_VERSION, versionInfo.getInstalledVersion());
     assertEquals(new Version("0.0.0"), versionInfoEmpty.getInstalledVersion());
@@ -48,11 +48,11 @@ public class PluginVersionInfoTest {
             EMPTY_VERSION,
             EMPTY_VERSION,
             ImmutableMap.of(
-                new Date(5),
+                Instant.ofEpochSecond(5),
                 new Version("0.1.1"),
-                new Date(10),
+                Instant.ofEpochSecond(10),
                 latestVersion,
-                new Date(0),
+                Instant.ofEpochSecond(0),
                 new Version("2.4.6")));
 
     assertSame(latestVersion, versionInfo.getLatestVersion());
@@ -66,21 +66,22 @@ public class PluginVersionInfoTest {
     final Version newVersion = new Version("1.2.4");
     final Version superNewVersion = new Version("1.2.5");
 
-    final Date date = new Date(0);
+    final Instant instant = Instant.EPOCH;
 
     final PluginVersionInfo upToDateSame =
         new PluginVersionInfo(
-            installedVersion, installedVersion, ImmutableMap.of(date, installedVersion));
+            installedVersion, installedVersion, ImmutableMap.of(instant, installedVersion));
     final PluginVersionInfo upToDateOld =
-        new PluginVersionInfo(installedVersion, oldVersion, ImmutableMap.of(date, oldVersion));
+        new PluginVersionInfo(installedVersion, oldVersion, ImmutableMap.of(instant, oldVersion));
     final PluginVersionInfo newRecommendedOldLatest =
-        new PluginVersionInfo(installedVersion, newVersion, ImmutableMap.of(date, oldVersion));
+        new PluginVersionInfo(installedVersion, newVersion, ImmutableMap.of(instant, oldVersion));
     final PluginVersionInfo newRecommendedNewLatest =
-        new PluginVersionInfo(installedVersion, newVersion, ImmutableMap.of(date, newVersion));
+        new PluginVersionInfo(installedVersion, newVersion, ImmutableMap.of(instant, newVersion));
     final PluginVersionInfo newLatest =
-        new PluginVersionInfo(installedVersion, oldVersion, ImmutableMap.of(date, newVersion));
+        new PluginVersionInfo(installedVersion, oldVersion, ImmutableMap.of(instant, newVersion));
     final PluginVersionInfo newBoth =
-        new PluginVersionInfo(installedVersion, newVersion, ImmutableMap.of(date, superNewVersion));
+        new PluginVersionInfo(
+            installedVersion, newVersion, ImmutableMap.of(instant, superNewVersion));
 
     verifyPluginStatus(upToDateSame, PluginVersionInfo.PluginStatus.UP_TO_DATE);
     verifyPluginStatus(upToDateOld, PluginVersionInfo.PluginStatus.UP_TO_DATE);

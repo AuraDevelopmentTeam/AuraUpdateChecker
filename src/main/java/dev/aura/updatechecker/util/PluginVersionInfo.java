@@ -2,8 +2,8 @@ package dev.aura.updatechecker.util;
 
 import com.google.common.collect.ImmutableMap;
 import dev.aura.lib.version.Version;
+import java.time.Instant;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -20,20 +20,20 @@ public class PluginVersionInfo {
   private final Version installedVersion;
   private final Version recommendedVersion;
   @EqualsAndHashCode.Exclude private final Version latestVersion;
-  private final ImmutableMap<Date, Version> allVersions;
+  private final ImmutableMap<Instant, Version> allVersions;
 
   @Delegate(excludes = Enum.class)
   @EqualsAndHashCode.Exclude
   private final PluginStatus pluginStatus;
 
   public PluginVersionInfo(
-      PluginContainer plugin, Version recommendedVersion, Map<Date, Version> allVersions) {
+      PluginContainer plugin, Version recommendedVersion, Map<Instant, Version> allVersions) {
     this(new Version(plugin.getVersion().orElse("0.0.0")), recommendedVersion, allVersions);
   }
 
   public PluginVersionInfo(
-      Version installedVersion, Version recommendedVersion, Map<Date, Version> allVersions) {
-    final SortedMap<Date, Version> allVersionsSorted = new TreeMap<>(Comparator.reverseOrder());
+      Version installedVersion, Version recommendedVersion, Map<Instant, Version> allVersions) {
+    final SortedMap<Instant, Version> allVersionsSorted = new TreeMap<>(Comparator.reverseOrder());
     allVersionsSorted.putAll(allVersions);
 
     this.recommendedVersion = recommendedVersion;
