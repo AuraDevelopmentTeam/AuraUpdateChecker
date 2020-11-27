@@ -3,28 +3,54 @@
         "pairs": [
             {
                 "request": {
+                    
+                },
+                "response": {
+                    "status": 401,
+                    "headers": {
+                        "Connection": [
+                            "close"
+                        ],
+                        "Content-Type": [
+                            "application/json"
+                        ]
+                    },
+                    "bodyFile": "../../../../../../..\\Users\\Yannick\\Modding\\AuraUpdateChecker\\src/test/resources/hoverfly/responses/invalid_session.json"
+                }
+            },
+            {
+                "request": {
+                    "method": [
+                        {
+                            "value": "POST",
+                            "matcher": "exact"
+                        }
+                    ],
                     "path": [
                         {
                             "value": "/api/v2/authenticate",
                             "matcher": "exact"
                         }
                     ],
-                    "method": [
+                    "request": [
                         {
-                            "value": "POST",
-                            "matcher": "exact"
+                            "value": "$.expires_in",
+                            "matcher": "jsonpath"
                         }
                     ]
                 },
                 "response": {
                     "status": 200,
                     "headers": {
+                        "Connection": [
+                            "close"
+                        ],
                         "Content-Type": [
                             "application/json"
                         ]
                     },
                     "templated": true,
-                    "bodyFile": "./responses/authenticate.json"
+                    "bodyFile": "../../../../../../..\\Users\\Yannick\\Modding\\AuraUpdateChecker\\src/test/resources/hoverfly/responses/authenticate.json"
                 }
             },
             {
@@ -34,17 +60,28 @@
                             "value": "/api/v2/projects/*",
                             "matcher": "glob"
                         }
-                    ]
+                    ],
+                    "headers": {
+                        "Authorization": [
+                            {
+                                "value": "OreApi session=\"01234567-89ab-cdef-0123-456789abcdef\"",
+                                "matcher": "exact"
+                            }
+                        ]
+                    }
                 },
                 "response": {
                     "status": 200,
                     "headers": {
+                        "Connection": [
+                            "close"
+                        ],
                         "Content-Type": [
                             "application/json"
                         ]
                     },
                     "templated": true,
-                    "bodyFile": "./responses/project.json"
+                    "bodyFile": "../../../../../../..\\Users\\Yannick\\Modding\\AuraUpdateChecker\\src/test/resources/hoverfly/responses/project.json"
                 }
             },
             {
@@ -54,10 +91,24 @@
                             "value": "/api/v2/projects/missing_*",
                             "matcher": "glob"
                         }
-                    ]
+                    ],
+                    "headers": {
+                        "Authorization": [
+                            {
+                                "value": "OreApi session=\"01234567-89ab-cdef-0123-456789abcdef\"",
+                                "matcher": "exact"
+                            }
+                        ]
+                    }
                 },
                 "response": {
-                    "status": 404
+                    "status": 404,
+                    "headers": {
+                        "Connection": [
+                            "close"
+                        ]
+                    },
+                    "body": ""
                 }
             },
             {
@@ -464,6 +515,6 @@
         }
     },
     "meta": {
-        "schemaVersion": "v5"
+        "schemaVersion": "v5.1"
     }
 }
