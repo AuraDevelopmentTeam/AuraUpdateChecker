@@ -1,0 +1,84 @@
+{
+    "created_at": "2017-01-10T19:55:36.92Z",
+    "plugin_id": "{{ Request.Path.[3] }}",
+    "name": "Dummy Plugin",
+    "namespace": {
+        "owner": "Dummy Man",
+        "slug": "dman"
+    },
+    "promoted_versions": [
+        {
+            "version": "2.2.3",
+            "tags": [
+                {
+                    "name": "Sponge",
+                    "data": "7.3",
+                    "display_data": "7.3",
+                    "minecraft_version": null,
+                    "color": {
+                        "foreground": "#333333",
+                        "background": "#F7Cf0D"
+                    }
+                }
+            ]
+        },
+        {
+            "version": "1.1.9.1-LTS-S6.0",
+            "tags": [
+                {
+                    "name": "Sponge",
+                    "data": "6.0.0",
+                    "display_data": "6.0",
+                    "minecraft_version": null,
+                    "color": {
+                        "foreground": "#333333",
+                        "background": "#F7Cf0D"
+                    }
+                }
+            ]
+        },
+        {
+            "version": "1.1.9.1-LTS-S5.1",
+            "tags": [
+                {
+                    "name": "Sponge",
+                    "data": "5.1.0",
+                    "display_data": "5.1",
+                    "minecraft_version": null,
+                    "color": {
+                        "foreground": "#333333",
+                        "background": "#F7Cf0D"
+                    }
+                }
+            ]
+        }
+    ],
+    "stats": {
+        "views": 211111,
+        "downloads": 91151,
+        "recent_views": 9187,
+        "recent_downloads": 3225,
+        "stars": 121,
+        "watchers": 96
+    },
+    "category": "misc",
+    "description": "The Ultimate Dummy Plugin.",
+    "last_updated": "2020-10-21T19:13:22.232Z",
+    "visibility": "public",
+    "user_actions": {
+        "starred": false,
+        "watching": false
+    },
+    "settings": {
+        "homepage": "https://dummy.org",
+        "issues": "https://github.com/dman/Dummy/issues",
+        "sources": "https://github.com/dman/Dummy",
+        "support": "https://discord.gg/dman",
+        "license": {
+            "name": "MIT licence",
+            "url": "https://github.com/dman/Dummy/blob/sponge-api/7/LICENSE.txt"
+        },
+        "forum_sync": true
+    },
+    "icon_url": "https://ore.spongepowered.org/dman/Dummy/icon"
+}

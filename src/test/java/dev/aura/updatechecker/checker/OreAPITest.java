@@ -23,6 +23,8 @@ public class OreAPITest extends TestApi {
 
   @Test
   public void availablityTest() {
+    assertTrue("Expected to be able to authenticate", OreAPI.authenticate());
+
     for (String project : PROJECTS) {
       assertTrue(
           "Expected " + project + " to be available",
@@ -40,6 +42,8 @@ public class OreAPITest extends TestApi {
 
   @Test
   public void versionTest() {
+    assertTrue("Expected to be able to authenticate", OreAPI.authenticate());
+
     final PluginContainer upToDate = new DummyPluginContainer(PROJECT3, "3.3.4");
     final PluginContainer newLatest = new DummyPluginContainer(PROJECT3, "3.3.3");
     final PluginContainer newRecommended = new DummyPluginContainer(PROJECT2, "2.2.1");

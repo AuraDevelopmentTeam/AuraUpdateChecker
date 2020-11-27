@@ -1,14 +1,18 @@
 package dev.aura.updatechecker;
 
 import com.google.common.collect.ImmutableList;
+import io.specto.hoverfly.junit.core.HoverflyConfig;
 import io.specto.hoverfly.junit.core.SimulationSource;
+import io.specto.hoverfly.junit.core.config.LogLevel;
 import io.specto.hoverfly.junit.rule.HoverflyRule;
 import org.junit.ClassRule;
 
 public class TestApi extends TestBase {
   @ClassRule
   public static HoverflyRule hoverflyRule =
-      HoverflyRule.inSimulationMode(SimulationSource.defaultPath("simulation.json"));
+      HoverflyRule.inSimulationMode(
+          SimulationSource.defaultPath("simulation.json"),
+          HoverflyConfig.localConfigs().logLevel(LogLevel.DEBUG));
 
   protected static final String PROJECT1 = "project1";
   protected static final String PROJECT2 = "project2";
