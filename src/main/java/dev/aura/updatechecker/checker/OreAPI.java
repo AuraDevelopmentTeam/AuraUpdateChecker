@@ -1,5 +1,6 @@
 package dev.aura.updatechecker.checker;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -47,7 +48,7 @@ public class OreAPI {
   private static final AtomicInteger errorCounter = new AtomicInteger(0);
   private static final Gson gson = new Gson();
 
-  private static String authHeader = null;
+  @VisibleForTesting static String authHeader = null;
 
   public static int getErrorCounter() {
     return errorCounter.get();

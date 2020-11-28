@@ -9,16 +9,15 @@ import dev.aura.updatechecker.TestApi;
 import dev.aura.updatechecker.util.PluginVersionInfo;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.spongepowered.api.plugin.PluginContainer;
 
 public class OreAPITest extends TestApi {
   @Before
-  @After
   public void resetCounter() {
     OreAPI.resetErrorCounter();
+    OreAPI.authHeader = null;
   }
 
   @Test
@@ -38,6 +37,9 @@ public class OreAPITest extends TestApi {
     }
 
     assertEquals("No errors should have happend", 0, OreAPI.getErrorCounter());
+
+    // +1 OK for the auth
+    assertRequestCountMatch(PROJECTS.size() + 1L, MISSING_PROJECTS.size());
   }
 
   @Test
