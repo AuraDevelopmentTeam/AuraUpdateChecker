@@ -23,7 +23,7 @@ import org.junit.ClassRule;
 
 public class TestApi extends TestBase {
   @ClassRule
-  public static HoverflyRule hoverflyRule =
+  public static final HoverflyRule hoverflyRule =
       HoverflyRule.inSimulationMode(
           SimulationSource.defaultPath("simulation.json"),
           HoverflyConfig.localConfigs().logLevel(LogLevel.DEBUG));
@@ -62,9 +62,10 @@ public class TestApi extends TestBase {
           statusCodeCounts.putIfAbsent(HttpsURLConnection.HTTP_OK, 0L);
           statusCodeCounts.putIfAbsent(HttpsURLConnection.HTTP_NOT_FOUND, 0L);
 
-          final Supplier<String> totalCounts = () ->
-              ("\n\nTotal Counts:\n"
-                  + Joiner.on("\n").withKeyValueSeparator(": ").join(statusCodeCounts));
+          final Supplier<String> totalCounts =
+              () ->
+                  ("\n\nTotal Counts:\n"
+                      + Joiner.on("\n").withKeyValueSeparator(": ").join(statusCodeCounts));
 
           if (statusCodeCounts.get(HttpsURLConnection.HTTP_OK) != expectedHTTP_OK) {
             throw new HoverflyVerificationError(

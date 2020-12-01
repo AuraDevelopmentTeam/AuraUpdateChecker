@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import dev.aura.updatechecker.TestApi;
 import dev.aura.updatechecker.util.PluginVersionInfo;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import org.junit.Before;
@@ -14,6 +15,10 @@ import org.junit.Test;
 import org.spongepowered.api.plugin.PluginContainer;
 
 public class OreAPITest extends TestApi {
+  @SuppressFBWarnings(
+      value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+      justification =
+          "Not an issue as if there actually are parallelization issues it'll crash elsewhere.")
   @Before
   public void resetCounter() {
     OreAPI.resetErrorCounter();
@@ -21,7 +26,7 @@ public class OreAPITest extends TestApi {
   }
 
   @Test
-  public void availablityTest() {
+  public void availabilityTest() {
     assertTrue("Expected to be able to authenticate", OreAPI.authenticate());
 
     for (String project : PROJECTS) {
@@ -36,7 +41,7 @@ public class OreAPITest extends TestApi {
           OreAPI.isOnOre(new DummyPluginContainer(project)));
     }
 
-    assertEquals("No errors should have happend", 0, OreAPI.getErrorCounter());
+    assertEquals("No errors should have happened", 0, OreAPI.getErrorCounter());
 
     // +1 OK for the auth
     assertRequestCountMatch(PROJECTS.size() + 1L, MISSING_PROJECTS.size());
@@ -68,15 +73,15 @@ public class OreAPITest extends TestApi {
         PluginVersionInfo.PluginStatus.NEW_BOTH,
         OreAPI.getPluginVersionInfo(newBoth).map(PluginVersionInfo::getPluginStatus).orElse(null));
 
-    assertEquals("No errors should have happend", 0, OreAPI.getErrorCounter());
+    assertEquals("No errors should have happened", 0, OreAPI.getErrorCounter());
   }
 
   @Test(expected = UnsupportedOperationException.class)
   public void constructorTest() throws Throwable {
     try {
-      Constructor<OreAPI> contructor = OreAPI.class.getDeclaredConstructor();
-      contructor.setAccessible(true);
-      contructor.newInstance();
+      Constructor<OreAPI> constructor = OreAPI.class.getDeclaredConstructor();
+      constructor.setAccessible(true);
+      constructor.newInstance();
     } catch (InvocationTargetException e) {
       if (e.getCause().getClass() == UnsupportedOperationException.class) throw e.getCause();
       else throw e;
@@ -96,6 +101,6 @@ public class OreAPITest extends TestApi {
           OreAPI.isOnOre(errorContainer));
     }
 
-    assertEquals(count + " errors should have happend", count, OreAPI.getErrorCounter());
+    assertEquals(count + " errors should have happened", count, OreAPI.getErrorCounter());
   }
 }

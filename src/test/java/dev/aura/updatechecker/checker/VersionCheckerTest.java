@@ -15,7 +15,7 @@ import org.spongepowered.api.service.pagination.PaginationList;
 
 public class VersionCheckerTest extends TestApi {
   @Test
-  public void allErrorAvailabilitTest() {
+  public void allErrorAvailabilityTest() {
     final VersionChecker checker =
         new VersionChecker(
             Arrays.asList(
