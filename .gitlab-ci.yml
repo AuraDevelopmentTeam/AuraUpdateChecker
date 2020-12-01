@@ -158,7 +158,7 @@ sendCoverage:
   script:
   - ./gradlew --console=plain sendCoverageToCodacy
   retry: 2
-  when: always
+  when: on_success
 
 pages:
   stage: deploy
