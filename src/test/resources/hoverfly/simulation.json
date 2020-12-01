@@ -15,7 +15,7 @@
                             "application/json"
                         ]
                     },
-                    "bodyFile": "../../../../../../..\\Users\\Yannick\\Modding\\AuraUpdateChecker\\src/test/resources/hoverfly/responses/invalid_session.json"
+                    "bodyFile": "responses/invalid_session.json"
                 }
             },
             {
@@ -50,7 +50,7 @@
                         ]
                     },
                     "templated": true,
-                    "bodyFile": "../../../../../../..\\Users\\Yannick\\Modding\\AuraUpdateChecker\\src/test/resources/hoverfly/responses/authenticate.json"
+                    "bodyFile": "responses/authenticate.json"
                 }
             },
             {
@@ -81,7 +81,7 @@
                         ]
                     },
                     "templated": true,
-                    "bodyFile": "../../../../../../..\\Users\\Yannick\\Modding\\AuraUpdateChecker\\src/test/resources/hoverfly/responses/project.json"
+                    "bodyFile": "responses/project.json"
                 }
             },
             {
@@ -139,31 +139,24 @@
                             }
                         ]
                     },
-                    "method": [
-                        {
-                            "value": "GET",
-                            "matcher": "exact"
-                        }
-                    ],
-                    "destination": [
-                        {
-                            "value": "ore.spongepowered.org",
-                            "matcher": "exact"
-                        }
-                    ]
+                    "headers": {
+                        "Authorization": [
+                            {
+                                "value": "OreApi session=\"01234567-89ab-cdef-0123-456789abcdef\"",
+                                "matcher": "exact"
+                            }
+                        ]
+                    }
                 },
                 "response": {
                     "body": "[{\"pluginId\":\"project1\",\"author\":\"Test\",\"channel\":{\"name\":\"Release\",\"color\":\"#009600\",\"nonReviewed\":false},\"description\":\"Version 1.1.1\",\"dependencies\":[{\"pluginId\":\"spongeapi\",\"version\":\"7.1.0\"}],\"tags\":[{\"id\":1766,\"name\":\"Sponge\",\"data\":\"7.1.0\",\"backgroundColor\":\"#F7Cf0D\",\"foregroundColor\":\"#333333\"}],\"createdAt\":\"2019-02-28 01:01:01.123\",\"fileSize\":98913,\"downloads\":4,\"name\":\"1.1.1\",\"id\":111,\"href\":\"/Test/Project-1/versions/1.1.1\",\"reviewState\":\"Unreviewed\",\"staffApproved\":false,\"md5\":\"d106a581b655dc556fb17d336b8d1109\"},{\"pluginId\":\"project1\",\"author\":\"Test\",\"channel\":{\"name\":\"Release\",\"color\":\"#009600\",\"nonReviewed\":false},\"description\":\"Version 1.1.0\",\"dependencies\":[{\"pluginId\":\"spongeapi\",\"version\":\"7.1.0\"}],\"tags\":[{\"id\":1766,\"name\":\"Sponge\",\"data\":\"7.1.0\",\"backgroundColor\":\"#F7Cf0D\",\"foregroundColor\":\"#333333\"}],\"createdAt\":\"2019-02-28 01:01:00.123\",\"fileSize\":98913,\"downloads\":4,\"name\":\"1.1.0\",\"id\":110,\"href\":\"/Test/Project-1/versions/1.1.0\",\"reviewState\":\"Unreviewed\",\"staffApproved\":false,\"md5\":\"d106a581b655dc556fb17d336b8d1109\"},{\"pluginId\":\"project1\",\"author\":\"Test\",\"channel\":{\"name\":\"Release\",\"color\":\"#009600\",\"nonReviewed\":false},\"description\":\"Version 1.0.1\",\"dependencies\":[{\"pluginId\":\"spongeapi\",\"version\":\"7.1.0\"}],\"tags\":[{\"id\":1766,\"name\":\"Sponge\",\"data\":\"7.1.0\",\"backgroundColor\":\"#F7Cf0D\",\"foregroundColor\":\"#333333\"}],\"createdAt\":\"2019-02-28 01:00:01.123\",\"fileSize\":98913,\"downloads\":4,\"name\":\"1.0.1\",\"id\":101,\"href\":\"/Test/Project-1/versions/1.0.1\",\"reviewState\":\"Unreviewed\",\"staffApproved\":false,\"md5\":\"d106a581b655dc556fb17d336b8d1109\"},{\"pluginId\":\"project1\",\"author\":\"Test\",\"channel\":{\"name\":\"Release\",\"color\":\"#009600\",\"nonReviewed\":false},\"description\":\"Version 1.0.0\",\"dependencies\":[{\"pluginId\":\"spongeapi\",\"version\":\"7.1.0\"}],\"tags\":[{\"id\":1766,\"name\":\"Sponge\",\"data\":\"7.1.0\",\"backgroundColor\":\"#F7Cf0D\",\"foregroundColor\":\"#333333\"}],\"createdAt\":\"2019-02-28 01:00:00.123\",\"fileSize\":98913,\"downloads\":4,\"name\":\"1.0.0\",\"id\":100,\"href\":\"/Test/Project-1/versions/1.0.0\",\"reviewState\":\"Unreviewed\",\"staffApproved\":false,\"md5\":\"d106a581b655dc556fb17d336b8d1109\"},{\"pluginId\":\"project1\",\"author\":\"Test\",\"channel\":{\"name\":\"Release\",\"color\":\"#009600\",\"nonReviewed\":false},\"description\":\"Version 0.1.1\",\"dependencies\":[{\"pluginId\":\"spongeapi\",\"version\":\"7.1.0\"}],\"tags\":[{\"id\":1766,\"name\":\"Sponge\",\"data\":\"7.1.0\",\"backgroundColor\":\"#F7Cf0D\",\"foregroundColor\":\"#333333\"}],\"createdAt\":\"2019-02-28 00:01:01.123\",\"fileSize\":98913,\"downloads\":4,\"name\":\"0.1.1\",\"id\":11,\"href\":\"/Test/Project-1/versions/0.1.1\",\"reviewState\":\"Unreviewed\",\"staffApproved\":false,\"md5\":\"d106a581b655dc556fb17d336b8d1109\"},{\"pluginId\":\"project1\",\"author\":\"Test\",\"channel\":{\"name\":\"Release\",\"color\":\"#009600\",\"nonReviewed\":false},\"description\":\"Version 0.1.0\",\"dependencies\":[{\"pluginId\":\"spongeapi\",\"version\":\"7.1.0\"}],\"tags\":[{\"id\":1766,\"name\":\"Sponge\",\"data\":\"7.1.0\",\"backgroundColor\":\"#F7Cf0D\",\"foregroundColor\":\"#333333\"}],\"createdAt\":\"2019-02-28 00:01:00.123\",\"fileSize\":98913,\"downloads\":4,\"name\":\"0.1.0\",\"id\":10,\"href\":\"/Test/Project-1/versions/0.1.0\",\"reviewState\":\"Unreviewed\",\"staffApproved\":false,\"md5\":\"d106a581b655dc556fb17d336b8d1109\"},{\"pluginId\":\"project1\",\"author\":\"Test\",\"channel\":{\"name\":\"Release\",\"color\":\"#009600\",\"nonReviewed\":false},\"description\":\"Version 0.0.1\",\"dependencies\":[{\"pluginId\":\"spongeapi\",\"version\":\"7.1.0\"}],\"tags\":[{\"id\":1766,\"name\":\"Sponge\",\"data\":\"7.1.0\",\"backgroundColor\":\"#F7Cf0D\",\"foregroundColor\":\"#333333\"}],\"createdAt\":\"2019-02-28 00:00:01.123\",\"fileSize\":98913,\"downloads\":4,\"name\":\"0.0.1\",\"id\":1,\"href\":\"/Test/Project-1/versions/0.0.1\",\"reviewState\":\"Unreviewed\",\"staffApproved\":false,\"md5\":\"d106a581b655dc556fb17d336b8d1109\"},{\"pluginId\":\"project1\",\"author\":\"Test\",\"channel\":{\"name\":\"Release\",\"color\":\"#009600\",\"nonReviewed\":false},\"description\":\"Version 0.0.0\",\"dependencies\":[{\"pluginId\":\"spongeapi\",\"version\":\"7.1.0\"}],\"tags\":[{\"id\":1766,\"name\":\"Sponge\",\"data\":\"7.1.0\",\"backgroundColor\":\"#F7Cf0D\",\"foregroundColor\":\"#333333\"}],\"createdAt\":\"2019-02-28 00:00:00.123\",\"fileSize\":98913,\"downloads\":4,\"name\":\"0.0.0\",\"id\":0,\"href\":\"/Test/Project-1/versions/0.0.0\",\"reviewState\":\"Unreviewed\",\"staffApproved\":false,\"md5\":\"d106a581b655dc556fb17d336b8d1109\"}]",
                     "status": 200,
                     "headers": {
                         "Connection": [
-                            "keep-alive"
+                            "close"
                         ],
                         "Content-Type": [
                             "application/json"
-                        ],
-                        "Content-Length": [
-                            "4219"
                         ]
                     }
                 }
