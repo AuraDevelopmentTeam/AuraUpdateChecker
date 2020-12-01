@@ -15,6 +15,7 @@ import io.specto.hoverfly.junit.verification.HoverflyVerificationError;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.net.ssl.HttpsURLConnection;
 import org.junit.Before;
@@ -61,9 +62,9 @@ public class TestApi extends TestBase {
           statusCodeCounts.putIfAbsent(HttpsURLConnection.HTTP_OK, 0L);
           statusCodeCounts.putIfAbsent(HttpsURLConnection.HTTP_NOT_FOUND, 0L);
 
-          final String totalCounts =
-              "\n\nTotal Counts:\n"
-                  + Joiner.on("\n").withKeyValueSeparator(": ").join(statusCodeCounts);
+          final Supplier<String> totalCounts = () ->
+              ("\n\nTotal Counts:\n"
+                  + Joiner.on("\n").withKeyValueSeparator(": ").join(statusCodeCounts));
 
           if (statusCodeCounts.get(HttpsURLConnection.HTTP_OK) != expectedHTTP_OK) {
             throw new HoverflyVerificationError(
@@ -72,7 +73,7 @@ public class TestApi extends TestBase {
                     + " times HTTP OK but got "
                     + statusCodeCounts.get(HttpsURLConnection.HTTP_OK)
                     + '.'
-                    + totalCounts);
+                    + totalCounts.get());
           } else if (statusCodeCounts.get(HttpsURLConnection.HTTP_NOT_FOUND)
               != expectedHTTP_NOT_FOUND) {
             throw new HoverflyVerificationError(
@@ -81,10 +82,10 @@ public class TestApi extends TestBase {
                     + " times HTTP NOT_FOUND but got "
                     + statusCodeCounts.get(HttpsURLConnection.HTTP_NOT_FOUND)
                     + '.'
-                    + totalCounts);
+                    + totalCounts.get());
           } else if (statusCodeCounts.size() != 2) {
             throw new HoverflyVerificationError(
-                "Expected to see only HTTP OK and HTTP NOT_FOUND." + totalCounts);
+                "Expected to see only HTTP OK and HTTP NOT_FOUND." + totalCounts.get());
           }
         });
   }
