@@ -6,27 +6,40 @@ import static io.specto.hoverfly.junit.dsl.matchers.HoverflyMatchers.any;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import io.specto.hoverfly.junit.core.HoverflyConfig;
+import io.specto.hoverfly.junit.core.HoverflyConstants;
 import io.specto.hoverfly.junit.core.SimulationSource;
 import io.specto.hoverfly.junit.core.config.LogLevel;
 import io.specto.hoverfly.junit.core.model.JournalEntry;
 import io.specto.hoverfly.junit.core.model.Response;
 import io.specto.hoverfly.junit.rule.HoverflyRule;
 import io.specto.hoverfly.junit.verification.HoverflyVerificationError;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.net.ssl.HttpsURLConnection;
+import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.ClassRule;
 
 public class TestApi extends TestBase {
+  private static final String simulationFile = "simulation.json";
+
   @ClassRule
   public static final HoverflyRule hoverflyRule =
       HoverflyRule.inSimulationMode(
-          SimulationSource.defaultPath("simulation.json"),
-          HoverflyConfig.localConfigs().logLevel(LogLevel.DEBUG));
+          SimulationSource.defaultPath(simulationFile),
+          HoverflyConfig.localConfigs()
+              .logLevel(LogLevel.DEBUG)
+              .addCommands(
+                  "-response-body-files-path",
+                  getPathOfResource(simulationFile).getParent().toAbsolutePath().toString()));
 
   protected static final String PROJECT1 = "project1";
   protected static final String PROJECT2 = "project2";
@@ -45,6 +58,20 @@ public class TestApi extends TestBase {
   protected static final String ERROR_PROJECT3 = "error!&!&&!&##";
   protected static final ImmutableList<String> ERROR_PROJECTS =
       ImmutableList.of(ERROR_PROJECT1, ERROR_PROJECT2, ERROR_PROJECT3);
+
+  private static URL findResourceOnClasspath(String resourceName) {
+    final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    return Optional.ofNullable(classLoader.getResource(resourceName))
+        .orElseThrow(
+            () -> new IllegalArgumentException("Resource not found with name: " + resourceName));
+  }
+
+  @SneakyThrows(URISyntaxException.class)
+  private static Path getPathOfResource(String resource) {
+    return Paths.get(
+        findResourceOnClasspath(HoverflyConstants.DEFAULT_HOVERFLY_RESOURCE_DIR + '/' + resource)
+            .toURI());
+  }
 
   protected static void assertRequestCountMatch(
       final long expectedHTTP_OK, final long expectedHTTP_NOT_FOUND) {
