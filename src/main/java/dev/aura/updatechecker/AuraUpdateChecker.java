@@ -21,7 +21,7 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.GuiceObjectMapperFactory;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import org.bstats.sponge.Metrics2;
+import org.bstats.sponge.MetricsLite2;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandManager;
@@ -59,7 +59,6 @@ public class AuraUpdateChecker {
   @NonNull @Getter private static AuraUpdateChecker instance = null;
 
   @Inject @NonNull protected PluginContainer container;
-  @Inject protected Metrics2 metrics;
   @Inject @NonNull protected Logger logger;
 
   @Inject protected GuiceObjectMapperFactory factory;
@@ -80,10 +79,13 @@ public class AuraUpdateChecker {
 
   protected List<Object> eventListeners = new LinkedList<>();
 
-  protected AuraUpdateChecker() {
+  @Inject
+  public AuraUpdateChecker(MetricsLite2.Factory metricsFactory) {
     if (instance != null) throw new IllegalStateException("Instance already exists!");
 
     instance = this;
+
+    metricsFactory.make(4160);
   }
 
   public static Logger getLogger() {

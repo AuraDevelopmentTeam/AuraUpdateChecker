@@ -5,6 +5,7 @@ import static io.specto.hoverfly.junit.dsl.matchers.HoverflyMatchers.any;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.specto.hoverfly.junit.core.HoverflyConfig;
 import io.specto.hoverfly.junit.core.HoverflyConstants;
 import io.specto.hoverfly.junit.core.SimulationSource;
@@ -28,6 +29,9 @@ import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.ClassRule;
 
+@SuppressFBWarnings(
+    value = "NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE",
+    justification = "If getParent() returns null here (it's a file!) we have bigger issues")
 public class TestApi extends TestBase {
   private static final String simulationFile = "simulation.json";
 
