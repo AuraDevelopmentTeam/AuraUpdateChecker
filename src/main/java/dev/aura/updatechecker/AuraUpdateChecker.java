@@ -125,6 +125,7 @@ public class AuraUpdateChecker {
 
     if (permissionRegistry == null) {
       permissionRegistry = new PermissionRegistry(this);
+      permissionRegistry.registerPermissions();
       logger.debug("Registered permissions");
     }
 
