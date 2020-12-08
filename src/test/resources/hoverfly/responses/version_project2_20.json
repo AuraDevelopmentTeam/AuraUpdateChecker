@@ -1,0 +1,10 @@
+{
+    "pagination": {
+        "limit": 10,
+        "offset": 20,
+        "count": 20
+    },
+    "result": [
+        
+    ]
+}
