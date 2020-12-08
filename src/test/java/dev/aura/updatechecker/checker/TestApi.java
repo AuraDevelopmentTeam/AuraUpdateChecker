@@ -1,10 +1,11 @@
-package dev.aura.updatechecker;
+package dev.aura.updatechecker.checker;
 
 import static io.specto.hoverfly.junit.dsl.HoverflyDsl.service;
 import static io.specto.hoverfly.junit.dsl.matchers.HoverflyMatchers.any;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import dev.aura.updatechecker.TestBase;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.specto.hoverfly.junit.core.HoverflyConfig;
 import io.specto.hoverfly.junit.core.HoverflyConstants;
@@ -125,5 +126,15 @@ public class TestApi extends TestBase {
   @Before
   public void resetJournal() {
     hoverflyRule.resetJournal();
+  }
+
+  @SuppressFBWarnings(
+      value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
+      justification =
+          "Not an issue as if there actually are parallelization issues it'll crash elsewhere.")
+  @Before
+  public void resetCounter() {
+    OreAPI.resetErrorCounter();
+    OreAPI.authHeader = null;
   }
 }

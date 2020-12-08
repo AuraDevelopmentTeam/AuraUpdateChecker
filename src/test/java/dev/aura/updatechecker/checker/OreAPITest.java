@@ -5,26 +5,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import dev.aura.updatechecker.TestApi;
 import dev.aura.updatechecker.util.PluginVersionInfo;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import org.junit.Before;
 import org.junit.Test;
 import org.spongepowered.api.plugin.PluginContainer;
 
 public class OreAPITest extends TestApi {
-  @SuppressFBWarnings(
-      value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD",
-      justification =
-          "Not an issue as if there actually are parallelization issues it'll crash elsewhere.")
-  @Before
-  public void resetCounter() {
-    OreAPI.resetErrorCounter();
-    OreAPI.authHeader = null;
-  }
-
   @Test
   public void availabilityTest() {
     assertTrue("Expected to be able to authenticate", OreAPI.authenticate());
@@ -74,6 +61,8 @@ public class OreAPITest extends TestApi {
         OreAPI.getPluginVersionInfo(newBoth).map(PluginVersionInfo::getPluginStatus).orElse(null));
 
     assertEquals("No errors should have happened", 0, OreAPI.getErrorCounter());
+    // 4 OKs per test (1 for main plugin, 3 for versions) + 1 OK for the auth
+    assertRequestCountMatch(17L, 0L);
   }
 
   @Test(expected = UnsupportedOperationException.class)
@@ -89,9 +78,9 @@ public class OreAPITest extends TestApi {
   }
 
   @Test
-  public void errorTest()
-      throws NoSuchFieldException, SecurityException, IllegalArgumentException,
-          IllegalAccessException {
+  public void errorTest() throws SecurityException, IllegalArgumentException {
+    assertTrue("Expected to be able to authenticate", OreAPI.authenticate());
+
     final int count = 10;
     final PluginContainer errorContainer = new DummyPluginContainer(ERROR_PROJECT1);
 
@@ -102,5 +91,7 @@ public class OreAPITest extends TestApi {
     }
 
     assertEquals(count + " errors should have happened", count, OreAPI.getErrorCounter());
+    // 1 OK for the auth
+    assertRequestCountMatch(1L, 0L);
   }
 }
