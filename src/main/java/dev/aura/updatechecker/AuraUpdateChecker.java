@@ -8,6 +8,7 @@ import dev.aura.updatechecker.checker.VersionChecker;
 import dev.aura.updatechecker.command.CommandBase;
 import dev.aura.updatechecker.config.Config;
 import dev.aura.updatechecker.event.PlayerEvents;
+import dev.aura.updatechecker.metrics.MetricManager;
 import dev.aura.updatechecker.permission.PermissionRegistry;
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +22,7 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.GuiceObjectMapperFactory;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import org.bstats.sponge.MetricsLite2;
+import org.bstats.sponge.Metrics2;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandManager;
@@ -80,12 +81,12 @@ public class AuraUpdateChecker {
   protected List<Object> eventListeners = new LinkedList<>();
 
   @Inject
-  public AuraUpdateChecker(MetricsLite2.Factory metricsFactory) {
+  public AuraUpdateChecker(Metrics2.Factory metricsFactory) {
     if (instance != null) throw new IllegalStateException("Instance already exists!");
 
     instance = this;
 
-    metricsFactory.make(4160);
+    MetricManager.startMetrics(metricsFactory);
   }
 
   public static Logger getLogger() {
