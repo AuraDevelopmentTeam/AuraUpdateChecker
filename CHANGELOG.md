@@ -1,3 +1,9 @@
+Version 1.2.1
+-------------
+
+\* Fixed build issue.  
+
+
 Version 1.2.0
 -------------
 
