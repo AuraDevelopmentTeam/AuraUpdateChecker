@@ -19,7 +19,7 @@ public class PluginContainerUtil {
       new HashMap<>();
 
   public static String getPluginString(PluginContainer plugin) {
-    return '"' + plugin.getName() + "\" (" + plugin.getId() + ')';
+    return (plugin == null) ? "<none>" : ('"' + plugin.getName() + "\" (" + plugin.getId() + ')');
   }
 
   public static String replacePluginPlaceHolders(String template, PluginContainer plugin) {

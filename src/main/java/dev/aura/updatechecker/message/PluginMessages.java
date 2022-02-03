@@ -12,8 +12,8 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 @RequiredArgsConstructor
 public enum PluginMessages implements Message {
   // Admin Messages
-  ADMIN_REALOAD_SUCCESSFUL("reloadSuccessful"),
-  ADMIN_REALOAD_NOT_SUCCESSFUL("reloadNotSuccessful"),
+  ADMIN_RELOAD_SUCCESSFUL("reloadSuccessful"),
+  ADMIN_RELOAD_NOT_SUCCESSFUL("reloadNotSuccessful"),
   // Notifications
   NOTIFICATION_UPDATE_AVAILABLE_PADDING("updateAvailablePadding"),
   NOTIFICATION_UPDATE_AVAILABLE_TITLE("updateAvailableTitle"),

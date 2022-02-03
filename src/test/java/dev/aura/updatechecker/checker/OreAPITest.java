@@ -5,24 +5,17 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import dev.aura.updatechecker.TestApi;
 import dev.aura.updatechecker.util.PluginVersionInfo;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.spongepowered.api.plugin.PluginContainer;
 
 public class OreAPITest extends TestApi {
-  @Before
-  @After
-  public void resetCounter() {
-    OreAPI.resetErrorCounter();
-  }
-
   @Test
-  public void availablityTest() {
+  public void availabilityTest() {
+    assertTrue("Expected to be able to authenticate", OreAPI.authenticate());
+
     for (String project : PROJECTS) {
       assertTrue(
           "Expected " + project + " to be available",
@@ -35,11 +28,16 @@ public class OreAPITest extends TestApi {
           OreAPI.isOnOre(new DummyPluginContainer(project)));
     }
 
-    assertEquals("No errors should have happend", 0, OreAPI.getErrorCounter());
+    assertEquals("No errors should have happened", 0, OreAPI.getErrorCounter());
+
+    // +1 OK for the auth
+    assertRequestCountMatch(PROJECTS.size() + 1L, MISSING_PROJECTS.size());
   }
 
   @Test
   public void versionTest() {
+    assertTrue("Expected to be able to authenticate", OreAPI.authenticate());
+
     final PluginContainer upToDate = new DummyPluginContainer(PROJECT3, "3.3.4");
     final PluginContainer newLatest = new DummyPluginContainer(PROJECT3, "3.3.3");
     final PluginContainer newRecommended = new DummyPluginContainer(PROJECT2, "2.2.1");
@@ -62,15 +60,17 @@ public class OreAPITest extends TestApi {
         PluginVersionInfo.PluginStatus.NEW_BOTH,
         OreAPI.getPluginVersionInfo(newBoth).map(PluginVersionInfo::getPluginStatus).orElse(null));
 
-    assertEquals("No errors should have happend", 0, OreAPI.getErrorCounter());
+    assertEquals("No errors should have happened", 0, OreAPI.getErrorCounter());
+    // 4 OKs per test (1 for main plugin, 3 for versions) + 1 OK for the auth
+    assertRequestCountMatch(17L, 0L);
   }
 
   @Test(expected = UnsupportedOperationException.class)
   public void constructorTest() throws Throwable {
     try {
-      Constructor<OreAPI> contructor = OreAPI.class.getDeclaredConstructor();
-      contructor.setAccessible(true);
-      contructor.newInstance();
+      Constructor<OreAPI> constructor = OreAPI.class.getDeclaredConstructor();
+      constructor.setAccessible(true);
+      constructor.newInstance();
     } catch (InvocationTargetException e) {
       if (e.getCause().getClass() == UnsupportedOperationException.class) throw e.getCause();
       else throw e;
@@ -78,9 +78,9 @@ public class OreAPITest extends TestApi {
   }
 
   @Test
-  public void errorTest()
-      throws NoSuchFieldException, SecurityException, IllegalArgumentException,
-          IllegalAccessException {
+  public void errorTest() throws SecurityException, IllegalArgumentException {
+    assertTrue("Expected to be able to authenticate", OreAPI.authenticate());
+
     final int count = 10;
     final PluginContainer errorContainer = new DummyPluginContainer(ERROR_PROJECT1);
 
@@ -90,6 +90,8 @@ public class OreAPITest extends TestApi {
           OreAPI.isOnOre(errorContainer));
     }
 
-    assertEquals(count + " errors should have happend", count, OreAPI.getErrorCounter());
+    assertEquals(count + " errors should have happened", count, OreAPI.getErrorCounter());
+    // 1 OK for the auth
+    assertRequestCountMatch(1L, 0L);
   }
 }

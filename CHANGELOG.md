@@ -1,7 +1,24 @@
+Version 1.2.1
+-------------
+
+\* Fixed build issue.  
+
+
+Version 1.2.0
+-------------
+
+\+ Shawn Zillen: Added nl_NL.lang  
+\+ CJYKK: Added zh_CN.lang  
+\* Using Ore API v2 now.  
+\* Using new version of MessagesTranslator (introduces a better system to customize the messages).  
+\* Updated metrics.  
+\* Bug fixes and improved unit tests.  
+
+
 Version 1.1.3
 -------------
 
-\* d4julian: Made default messages look nicer
+\* d4julian: Made default messages look nicer  
 \* Fixed network errors spamming console (Fixes [#3](https://github.com/AuraDevelopmentTeam/AuraUpdateChecker/issues/3))  
 
 

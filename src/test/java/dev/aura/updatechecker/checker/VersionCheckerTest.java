@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import dev.aura.updatechecker.TestApi;
 import dev.aura.updatechecker.permission.PermissionRegistry;
 import java.util.Arrays;
 import java.util.Optional;
@@ -15,7 +14,7 @@ import org.spongepowered.api.service.pagination.PaginationList;
 
 public class VersionCheckerTest extends TestApi {
   @Test
-  public void allErrorAvailabilitTest() {
+  public void allErrorAvailabilityTest() {
     final VersionChecker checker =
         new VersionChecker(
             Arrays.asList(
@@ -25,6 +24,8 @@ public class VersionCheckerTest extends TestApi {
             DEFAULT_CONFIG);
 
     assertEquals("Expected 3 errors", Optional.of(3), checker.checkForPluginAvailability());
+    // 1 OK for the auth
+    assertRequestCountMatch(1L, 0L);
   }
 
   @Test
@@ -39,6 +40,8 @@ public class VersionCheckerTest extends TestApi {
 
     assertEquals("Expected 1 error", Optional.of(1), checker.checkForPluginAvailability());
     assertEquals("Expected 1 plugin to be available", 1, checker.checkablePlugins.size());
+    // +1 OK for the auth
+    assertRequestCountMatch(2L, 1L);
   }
 
   @Test
@@ -58,6 +61,9 @@ public class VersionCheckerTest extends TestApi {
     assertTrue(checker.checkForPluginUpdates());
     // Second shouldn't
     assertFalse(checker.checkForPluginUpdates());
+    // 1 OK for availability, 1 for plugin data, 1 (only project1) or 3 for versions. Once for each
+    // project. And twice in total. Excluding the check for availability. + 1 OK for the auth
+    assertRequestCountMatch(24L, 0L);
   }
 
   // TODO: Also check for console

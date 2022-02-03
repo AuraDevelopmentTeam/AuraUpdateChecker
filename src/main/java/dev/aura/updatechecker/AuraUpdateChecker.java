@@ -8,6 +8,7 @@ import dev.aura.updatechecker.checker.VersionChecker;
 import dev.aura.updatechecker.command.CommandBase;
 import dev.aura.updatechecker.config.Config;
 import dev.aura.updatechecker.event.PlayerEvents;
+import dev.aura.updatechecker.metrics.MetricManager;
 import dev.aura.updatechecker.permission.PermissionRegistry;
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +60,6 @@ public class AuraUpdateChecker {
   @NonNull @Getter private static AuraUpdateChecker instance = null;
 
   @Inject @NonNull protected PluginContainer container;
-  @Inject protected Metrics2 metrics;
   @Inject @NonNull protected Logger logger;
 
   @Inject protected GuiceObjectMapperFactory factory;
@@ -80,10 +80,13 @@ public class AuraUpdateChecker {
 
   protected List<Object> eventListeners = new LinkedList<>();
 
-  protected AuraUpdateChecker() {
+  @Inject
+  public AuraUpdateChecker(Metrics2.Factory metricsFactory) {
     if (instance != null) throw new IllegalStateException("Instance already exists!");
 
     instance = this;
+
+    MetricManager.startMetrics(metricsFactory);
   }
 
   public static Logger getLogger() {
@@ -123,6 +126,7 @@ public class AuraUpdateChecker {
 
     if (permissionRegistry == null) {
       permissionRegistry = new PermissionRegistry(this);
+      permissionRegistry.registerPermissions();
       logger.debug("Registered permissions");
     }
 

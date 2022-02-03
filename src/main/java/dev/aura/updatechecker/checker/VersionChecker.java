@@ -59,6 +59,11 @@ public class VersionChecker {
     active.set(false);
   }
 
+  /**
+   * Checks availability for plugins known to this instance
+   *
+   * @return Error count if any
+   */
   public Optional<Integer> checkForPluginAvailability() {
     final Logger logger = AuraUpdateChecker.getLogger();
 
@@ -71,6 +76,21 @@ public class VersionChecker {
     }
 
     OreAPI.resetErrorCounter();
+    final boolean authenticated = OreAPI.authenticate();
+
+    if (OreAPI.getErrorCounter() >= availablePlugins.size()) {
+      logger.warn(PluginMessages.LOG_INTERNET_DOWN.getMessageRaw());
+      logger.info(PluginMessages.LOG_RUN_RELOAD.getMessageRaw());
+
+      return Optional.empty();
+    }
+
+    if (!authenticated) {
+      logger.warn("Error authenticating");
+      logger.info(PluginMessages.LOG_RUN_RELOAD.getMessageRaw());
+
+      return Optional.empty();
+    }
 
     checkablePlugins =
         availablePlugins.stream()
@@ -130,6 +150,11 @@ public class VersionChecker {
             .name(AuraUpdateChecker.ID + "-update-check"));
   }
 
+  /**
+   * Checks for plugin updates for plugins known to this instance
+   *
+   * @return <code>true</code> if anything changed
+   */
   public boolean checkForPluginUpdates() {
     final Logger logger = AuraUpdateChecker.getLogger();
 

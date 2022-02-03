@@ -1,0 +1,409 @@
+{
+    "pagination": {
+        "limit": 10,
+        "offset": 0,
+        "count": 20
+    },
+    "result": [
+        {
+            "created_at": "2019-02-28T02:02:02.123Z",
+            "name": "2.2.2",
+            "dependencies": [
+                {
+                    "plugin_id": "spongeapi",
+                    "version": "7.3"
+                }
+            ],
+            "visibility": "public",
+            "description": "Version 2.2.2",
+            "stats": {
+                "downloads": 1234
+            },
+            "file_info": {
+                "name": "2.2.2",
+                "size_bytes": 1234567,
+                "md5_hash": "0123456789abcdef0123456789abcdef"
+            },
+            "author": "Dummy Man",
+            "review_state": "reviewed",
+            "tags": [
+                {
+                    "name": "Sponge",
+                    "data": "7.3",
+                    "color": {
+                        "foreground": "#333333",
+                        "background": "#F7Cf0D"
+                    }
+                },
+                {
+                    "name": "Channel",
+                    "data": "Release",
+                    "color": {
+                        "foreground": "#FFFFFF",
+                        "background": "#009600"
+                    }
+                }
+            ]
+        },
+        {
+            "created_at": "2019-02-28T02:02:01.123Z",
+            "name": "2.2.1",
+            "dependencies": [
+                {
+                    "plugin_id": "spongeapi",
+                    "version": "7.3"
+                }
+            ],
+            "visibility": "public",
+            "description": "Version 2.2.1",
+            "stats": {
+                "downloads": 1234
+            },
+            "file_info": {
+                "name": "2.2.1",
+                "size_bytes": 1234567,
+                "md5_hash": "0123456789abcdef0123456789abcdef"
+            },
+            "author": "Dummy Man",
+            "review_state": "reviewed",
+            "tags": [
+                {
+                    "name": "Sponge",
+                    "data": "7.3",
+                    "color": {
+                        "foreground": "#333333",
+                        "background": "#F7Cf0D"
+                    }
+                },
+                {
+                    "name": "Channel",
+                    "data": "Release",
+                    "color": {
+                        "foreground": "#FFFFFF",
+                        "background": "#009600"
+                    }
+                }
+            ]
+        },
+        {
+            "created_at": "2019-02-28T02:02:00.123Z",
+            "name": "2.2.0",
+            "dependencies": [
+                {
+                    "plugin_id": "spongeapi",
+                    "version": "7.3"
+                }
+            ],
+            "visibility": "public",
+            "description": "Version 2.2.0",
+            "stats": {
+                "downloads": 1234
+            },
+            "file_info": {
+                "name": "2.2.0",
+                "size_bytes": 1234567,
+                "md5_hash": "0123456789abcdef0123456789abcdef"
+            },
+            "author": "Dummy Man",
+            "review_state": "reviewed",
+            "tags": [
+                {
+                    "name": "Sponge",
+                    "data": "7.3",
+                    "color": {
+                        "foreground": "#333333",
+                        "background": "#F7Cf0D"
+                    }
+                },
+                {
+                    "name": "Channel",
+                    "data": "Release",
+                    "color": {
+                        "foreground": "#FFFFFF",
+                        "background": "#009600"
+                    }
+                }
+            ]
+        },
+        {
+            "created_at": "2019-02-28T02:01:02.123Z",
+            "name": "2.1.2",
+            "dependencies": [
+                {
+                    "plugin_id": "spongeapi",
+                    "version": "7.3"
+                }
+            ],
+            "visibility": "public",
+            "description": "Version 2.1.2",
+            "stats": {
+                "downloads": 1234
+            },
+            "file_info": {
+                "name": "2.1.2",
+                "size_bytes": 1234567,
+                "md5_hash": "0123456789abcdef0123456789abcdef"
+            },
+            "author": "Dummy Man",
+            "review_state": "reviewed",
+            "tags": [
+                {
+                    "name": "Sponge",
+                    "data": "7.3",
+                    "color": {
+                        "foreground": "#333333",
+                        "background": "#F7Cf0D"
+                    }
+                },
+                {
+                    "name": "Channel",
+                    "data": "Release",
+                    "color": {
+                        "foreground": "#FFFFFF",
+                        "background": "#009600"
+                    }
+                }
+            ]
+        },
+        {
+            "created_at": "2019-02-28T02:01:01.123Z",
+            "name": "2.1.1",
+            "dependencies": [
+                {
+                    "plugin_id": "spongeapi",
+                    "version": "7.3"
+                }
+            ],
+            "visibility": "public",
+            "description": "Version 2.1.1",
+            "stats": {
+                "downloads": 1234
+            },
+            "file_info": {
+                "name": "2.1.1",
+                "size_bytes": 1234567,
+                "md5_hash": "0123456789abcdef0123456789abcdef"
+            },
+            "author": "Dummy Man",
+            "review_state": "reviewed",
+            "tags": [
+                {
+                    "name": "Sponge",
+                    "data": "7.3",
+                    "color": {
+                        "foreground": "#333333",
+                        "background": "#F7Cf0D"
+                    }
+                },
+                {
+                    "name": "Channel",
+                    "data": "Release",
+                    "color": {
+                        "foreground": "#FFFFFF",
+                        "background": "#009600"
+                    }
+                }
+            ]
+        },
+        {
+            "created_at": "2019-02-28T02:01:00.123Z",
+            "name": "2.1.0",
+            "dependencies": [
+                {
+                    "plugin_id": "spongeapi",
+                    "version": "7.3"
+                }
+            ],
+            "visibility": "public",
+            "description": "Version 2.1.0",
+            "stats": {
+                "downloads": 1234
+            },
+            "file_info": {
+                "name": "2.1.0",
+                "size_bytes": 1234567,
+                "md5_hash": "0123456789abcdef0123456789abcdef"
+            },
+            "author": "Dummy Man",
+            "review_state": "reviewed",
+            "tags": [
+                {
+                    "name": "Sponge",
+                    "data": "7.3",
+                    "color": {
+                        "foreground": "#333333",
+                        "background": "#F7Cf0D"
+                    }
+                },
+                {
+                    "name": "Channel",
+                    "data": "Release",
+                    "color": {
+                        "foreground": "#FFFFFF",
+                        "background": "#009600"
+                    }
+                }
+            ]
+        },
+        {
+            "created_at": "2019-02-28T02:00:05.123Z",
+            "name": "2.0.5",
+            "dependencies": [
+                {
+                    "plugin_id": "spongeapi",
+                    "version": "7.3"
+                }
+            ],
+            "visibility": "public",
+            "description": "Version 2.0.5",
+            "stats": {
+                "downloads": 1234
+            },
+            "file_info": {
+                "name": "2.0.5",
+                "size_bytes": 1234567,
+                "md5_hash": "0123456789abcdef0123456789abcdef"
+            },
+            "author": "Dummy Man",
+            "review_state": "reviewed",
+            "tags": [
+                {
+                    "name": "Sponge",
+                    "data": "7.3",
+                    "color": {
+                        "foreground": "#333333",
+                        "background": "#F7Cf0D"
+                    }
+                },
+                {
+                    "name": "Channel",
+                    "data": "Release",
+                    "color": {
+                        "foreground": "#FFFFFF",
+                        "background": "#009600"
+                    }
+                }
+            ]
+        },
+        {
+            "created_at": "2019-02-28T02:00:04.123Z",
+            "name": "2.0.4",
+            "dependencies": [
+                {
+                    "plugin_id": "spongeapi",
+                    "version": "7.3"
+                }
+            ],
+            "visibility": "public",
+            "description": "Version 2.0.4",
+            "stats": {
+                "downloads": 1234
+            },
+            "file_info": {
+                "name": "2.0.4",
+                "size_bytes": 1234567,
+                "md5_hash": "0123456789abcdef0123456789abcdef"
+            },
+            "author": "Dummy Man",
+            "review_state": "reviewed",
+            "tags": [
+                {
+                    "name": "Sponge",
+                    "data": "7.3",
+                    "color": {
+                        "foreground": "#333333",
+                        "background": "#F7Cf0D"
+                    }
+                },
+                {
+                    "name": "Channel",
+                    "data": "Release",
+                    "color": {
+                        "foreground": "#FFFFFF",
+                        "background": "#009600"
+                    }
+                }
+            ]
+        },
+        {
+            "created_at": "2019-02-28T02:00:03.123Z",
+            "name": "2.0.3",
+            "dependencies": [
+                {
+                    "plugin_id": "spongeapi",
+                    "version": "7.3"
+                }
+            ],
+            "visibility": "public",
+            "description": "Version 2.0.3",
+            "stats": {
+                "downloads": 1234
+            },
+            "file_info": {
+                "name": "2.0.3",
+                "size_bytes": 1234567,
+                "md5_hash": "0123456789abcdef0123456789abcdef"
+            },
+            "author": "Dummy Man",
+            "review_state": "reviewed",
+            "tags": [
+                {
+                    "name": "Sponge",
+                    "data": "7.3",
+                    "color": {
+                        "foreground": "#333333",
+                        "background": "#F7Cf0D"
+                    }
+                },
+                {
+                    "name": "Channel",
+                    "data": "Release",
+                    "color": {
+                        "foreground": "#FFFFFF",
+                        "background": "#009600"
+                    }
+                }
+            ]
+        },
+        {
+            "created_at": "2019-02-28T02:00:02.123Z",
+            "name": "2.0.2",
+            "dependencies": [
+                {
+                    "plugin_id": "spongeapi",
+                    "version": "7.3"
+                }
+            ],
+            "visibility": "public",
+            "description": "Version 2.0.2",
+            "stats": {
+                "downloads": 1234
+            },
+            "file_info": {
+                "name": "2.0.2",
+                "size_bytes": 1234567,
+                "md5_hash": "0123456789abcdef0123456789abcdef"
+            },
+            "author": "Dummy Man",
+            "review_state": "reviewed",
+            "tags": [
+                {
+                    "name": "Sponge",
+                    "data": "7.3",
+                    "color": {
+                        "foreground": "#333333",
+                        "background": "#F7Cf0D"
+                    }
+                },
+                {
+                    "name": "Channel",
+                    "data": "Release",
+                    "color": {
+                        "foreground": "#FFFFFF",
+                        "background": "#009600"
+                    }
+                }
+            ]
+        }
+    ]
+}

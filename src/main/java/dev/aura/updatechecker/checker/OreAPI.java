@@ -1,5 +1,6 @@
 package dev.aura.updatechecker.checker;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -12,21 +13,25 @@ import dev.aura.updatechecker.util.PluginContainerUtil;
 import dev.aura.updatechecker.util.PluginVersionInfo;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import javax.net.ssl.HttpsURLConnection;
 import lombok.Cleanup;
 import lombok.experimental.UtilityClass;
@@ -35,12 +40,15 @@ import org.spongepowered.api.plugin.PluginContainer;
 
 @UtilityClass
 public class OreAPI {
-  public static final String API_URL = "https://ore.spongepowered.org/api/v1/";
+  public static final String API_URL = "https://ore.spongepowered.org/api/v2/";
+  public static final String AUTHENTICATE_CALL = "authenticate";
   public static final String PROJECT_CALL = "projects/<pluginId>";
   public static final String VERSION_CALL = PROJECT_CALL + "/versions?limit=10&offset=";
 
   private static final AtomicInteger errorCounter = new AtomicInteger(0);
   private static final Gson gson = new Gson();
+
+  @VisibleForTesting static String authHeader = null;
 
   public static int getErrorCounter() {
     return errorCounter.get();
@@ -50,6 +58,47 @@ public class OreAPI {
     errorCounter.set(0);
   }
 
+  public static boolean authenticate() {
+    authHeader = null;
+
+    try {
+      @Cleanup("disconnect")
+      HttpsURLConnection connection = getConnectionForCall(AUTHENTICATE_CALL);
+      connection.setRequestMethod("POST");
+      connection.setRequestProperty("Content-Type", "application/json");
+      connection.setDoOutput(true);
+
+      try (OutputStream os = connection.getOutputStream()) {
+        try (OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8")) {
+          // 10 minutes to be save
+          osw.write("{\"expires_in\":600}");
+          osw.flush();
+        }
+      }
+
+      connection.connect();
+
+      if (connection.getResponseCode() != HttpsURLConnection.HTTP_OK) return false;
+
+      authHeader =
+          "OreApi session=\""
+              + gson.fromJson(
+                      new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8),
+                      JsonObject.class)
+                  .get("session")
+                  .getAsString()
+              + '"';
+
+      return true;
+    } catch (SocketTimeoutException e) {
+      printNetworkError(null, e);
+    } catch (ClassCastException | IOException | URISyntaxException e) {
+      printErrorMessage(null, e);
+    }
+
+    return false;
+  }
+
   public static boolean isOnOre(PluginContainer plugin) {
     try {
       @Cleanup("disconnect")
@@ -57,7 +106,7 @@ public class OreAPI {
       connection.setRequestMethod("HEAD"); // We don't care about the content yet
       connection.connect();
 
-      return connection.getResponseCode() == 200;
+      return connection.getResponseCode() == HttpsURLConnection.HTTP_OK;
     } catch (SocketTimeoutException e) {
       printNetworkError(plugin, e);
     } catch (ClassCastException | IOException | URISyntaxException e) {
@@ -73,28 +122,34 @@ public class OreAPI {
       HttpsURLConnection connection = getConnectionForCall(PROJECT_CALL, plugin);
       connection.connect();
 
-      if (connection.getResponseCode() != 200) {
+      if (connection.getResponseCode() != HttpsURLConnection.HTTP_OK) {
         return Optional.empty();
       }
 
-      final String recommendedVersion =
-          gson.fromJson(
-                  new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8),
-                  JsonObject.class)
-              .get("recommended")
-              .getAsJsonObject()
-              .get("name")
-              .getAsString();
+      final Optional<Version> recommendedVersion =
+          StreamSupport.stream(
+                  gson.fromJson(
+                          new InputStreamReader(
+                              connection.getInputStream(), StandardCharsets.UTF_8),
+                          JsonObject.class)
+                      .get("promoted_versions")
+                      .getAsJsonArray()
+                      .spliterator(),
+                  false)
+              .map(el -> el.getAsJsonObject().get("version").getAsString())
+              .map(Version::new)
+              .max(Comparator.naturalOrder());
 
-      logDebug(
-          PluginMessages.LOG_RECOMMENDED_VERSION.getMessageRaw(
-              ImmutableMap.of(
-                  "plugin",
-                  PluginContainerUtil.getPluginString(plugin),
-                  "version",
-                  recommendedVersion)));
+      if (recommendedVersion.isPresent())
+        logDebug(
+            PluginMessages.LOG_RECOMMENDED_VERSION.getMessageRaw(
+                ImmutableMap.of(
+                    "plugin",
+                    PluginContainerUtil.getPluginString(plugin),
+                    "version",
+                    recommendedVersion.get().getInput())));
 
-      return Optional.of(new Version(recommendedVersion));
+      return recommendedVersion;
     } catch (SocketTimeoutException e) {
       printNetworkError(plugin, e);
     } catch (ClassCastException | IOException | URISyntaxException | IllegalStateException e) {
@@ -104,38 +159,42 @@ public class OreAPI {
     return Optional.empty();
   }
 
-  public static Optional<SortedMap<Date, Version>> getAllVersions(PluginContainer plugin) {
+  public static Optional<SortedMap<Instant, Version>> getAllVersions(PluginContainer plugin) {
     try {
-      final SortedMap<Date, Version> allVersions = new TreeMap<>(Comparator.reverseOrder());
-      final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+      final SortedMap<Instant, Version> allVersions = new TreeMap<>(Comparator.reverseOrder());
 
       for (int i = 0; true; i += 10) {
         @Cleanup("disconnect")
         HttpsURLConnection connection = getConnectionForCall(VERSION_CALL + i, plugin);
         connection.connect();
 
-        if (connection.getResponseCode() != 200) {
+        if (connection.getResponseCode() != HttpsURLConnection.HTTP_OK) {
           return Optional.empty();
         }
 
         final JsonArray versions =
             gson.fromJson(
-                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8),
-                JsonArray.class);
+                    new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8),
+                    JsonObject.class)
+                .get("result")
+                .getAsJsonArray();
 
         for (JsonElement version : versions) {
-          final Date date =
-              dateFormat.parse(version.getAsJsonObject().get("createdAt").getAsString());
+          final Instant instant =
+              Instant.parse(version.getAsJsonObject().get("created_at").getAsString());
           final Version pluginVersion =
               new Version(version.getAsJsonObject().get("name").getAsString());
 
-          allVersions.put(date, pluginVersion);
+          allVersions.put(instant, pluginVersion);
         }
 
         if (versions.size() < 10) {
           break;
         }
       }
+
+      final DateTimeFormatter formatter =
+          DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.from(ZoneOffset.UTC));
 
       logDebug(
           PluginMessages.LOG_AVAILABLE_VERSIONS.getMessageRaw(
@@ -146,15 +205,13 @@ public class OreAPI {
                   allVersions.entrySet().stream()
                       .map(
                           entry ->
-                              dateFormat.format(entry.getKey())
-                                  + ": "
-                                  + entry.getValue().getInput())
+                              formatter.format(entry.getKey()) + ": " + entry.getValue().getInput())
                       .collect(Collectors.joining("\n\t", "\t", "")))));
 
       return Optional.of(allVersions);
     } catch (SocketTimeoutException e) {
       printNetworkError(plugin, e);
-    } catch (ClassCastException | IOException | URISyntaxException | ParseException e) {
+    } catch (ClassCastException | IOException | URISyntaxException | DateTimeParseException e) {
       printErrorMessage(plugin, e);
     }
 
@@ -168,7 +225,7 @@ public class OreAPI {
       return Optional.empty();
     }
 
-    final Optional<SortedMap<Date, Version>> allVersions = getAllVersions(plugin);
+    final Optional<SortedMap<Instant, Version>> allVersions = getAllVersions(plugin);
 
     if (!allVersions.isPresent()) {
       return Optional.empty();
@@ -177,9 +234,9 @@ public class OreAPI {
     return Optional.of(new PluginVersionInfo(plugin, recommendedVersion.get(), allVersions.get()));
   }
 
-  private static HttpsURLConnection getConnectionForCall(String call, PluginContainer plugin)
+  private static HttpsURLConnection getConnectionForCall(String call)
       throws ClassCastException, IOException, URISyntaxException {
-    String urlStr = API_URL + PluginContainerUtil.replacePluginPlaceHolders(call, plugin);
+    String urlStr = API_URL + call;
 
     logTrace(PluginMessages.LOG_CONTACTING_URL.getMessageRaw(ImmutableMap.of("url", urlStr)));
 
@@ -193,6 +250,11 @@ public class OreAPI {
     return httpsConnection;
   }
 
+  private static HttpsURLConnection getConnectionForCall(String call, PluginContainer plugin)
+      throws ClassCastException, IOException, URISyntaxException {
+    return getConnectionForCall(PluginContainerUtil.replacePluginPlaceHolders(call, plugin));
+  }
+
   private static void applyDefaultSettings(HttpsURLConnection connection) throws ProtocolException {
     final int defaultTimeout = AuraUpdateChecker.getConfig().getTiming().getConnectionTimeout();
 
@@ -201,6 +263,13 @@ public class OreAPI {
     connection.setReadTimeout(defaultTimeout);
     connection.setUseCaches(false);
     connection.setInstanceFollowRedirects(true);
+    if (authHeader != null) connection.setRequestProperty("Authorization", authHeader);
+    connection.setRequestProperty(
+        "User-Agent",
+        "Java - Minecraft Sponge Plugin: "
+            + AuraUpdateChecker.NAME
+            + '/'
+            + AuraUpdateChecker.VERSION);
   }
 
   private static void printErrorMessage(PluginContainer plugin, Throwable e) {

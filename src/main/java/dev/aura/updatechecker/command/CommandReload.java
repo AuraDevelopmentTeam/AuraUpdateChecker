@@ -38,11 +38,11 @@ public class CommandReload implements CommandExecutor {
               try {
                 plugin.reload(null);
 
-                src.sendMessage(PluginMessages.ADMIN_REALOAD_SUCCESSFUL.getMessage());
+                src.sendMessage(PluginMessages.ADMIN_RELOAD_SUCCESSFUL.getMessage());
               } catch (Exception e) {
                 AuraUpdateChecker.getLogger().error("Error while reloading the plugin:", e);
                 src.sendMessage(
-                    PluginMessages.ADMIN_REALOAD_NOT_SUCCESSFUL.getMessage(
+                    PluginMessages.ADMIN_RELOAD_NOT_SUCCESSFUL.getMessage(
                         ImmutableMap.of("error", e.getMessage())));
               }
             })
